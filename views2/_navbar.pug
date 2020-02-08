@@ -1,0 +1,42 @@
+nav.navbar.navbar-expand-lg.navbar-absolute.navbar-transparent
+    div.container-fluid
+        div.navbar-wrapper
+            div.navbar-toggle.d-inline
+                button.navbar-toggler(type='button')
+                    span.navbar-toggler-bar.bar1
+                    span.navbar-toggler-bar.bar2
+                    span.navbar-toggler-bar.bar3
+            a.navbar-brand(href='javascript:void(0)') شرکت آب منطقه ای استان سمنان 
+        button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navigation' aria-expanded='false' aria-label='Toggle navigation')
+            span.navbar-toggler-bar.navbar-kebab
+            span.navbar-toggler-bar.navbar-kebab
+            span.navbar-toggler-bar.navbar-kebab
+        div.collapse.navbar-collapse(id='navigation')
+            ul.navbar-nav.mr-auto
+                li.search-bar.input-group
+                    button.btn.btn-link(id='search-button' data-toggle='modal' data-target='#searchModal') 
+                        i.tim-icons.icon-zoom-split
+                        span.d-lg-none.d-md-block Search
+                li.dropdown.nav-item
+                    a.dropdown-toggle.nav-link(href='#' data-toggle='dropdown')
+                        div.photo
+                            img(src='assets/img/anime3.png' alt='Profile Photo')
+                        b.caret.d-none.d-lg-block.d-xl-block
+                        p.d-lg-none Log out
+                    ul.dropdown-menu.dropdown-navbar
+                        li.nav-link
+                            a.nav-item.dropdown-item(href='javascript:void(0)') پروفایل
+                        li.nav-link
+                            a.nav-item.dropdown-item(href='javascript:void(0)') تنظیمات
+                        li.dropdown-divider
+                        li.nav-link
+                            a.nav-item.dropdown-item(href='javascript:void(0)') خروج
+                li.separator.d-lg-none
+div.modal.modal-search.fade(id='searchModal' tabindex='-1' role='dialog' aria-labelledby='searchModal' aria-hidden='true')
+    div.modal-dialog(role='document')
+        div.modal-content
+            div.modal-header
+                input.form-control(type='text' id='inlineFormInputGroup' placeholder='SEARCH')
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                    i.tim-icons.icon-simple-remove
+//- <!-- End Navbar -->

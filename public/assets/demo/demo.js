@@ -349,41 +349,75 @@ demo = {
       }
     };
 
-    var ctx = document.getElementById("chartLinePurple").getContext("2d");
+    // var ctx = document.getElementById("chartLinePurple").getContext("2d");
 
-    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+    // var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
 
-    gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
-    gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+    // gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+    // gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    // gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
 
-    var data = {
-      labels:  ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد'],
-      datasets: [{
-        label: "Data",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#d048b6',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#d048b6',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#d048b6',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [80, 100, 70, 80, 120, 80],
-      }]
-    };
+    // var data = {
+    //   labels:  ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد'],
+    //   datasets: [{
+    //     label: "Data",
+    //     fill: true,
+    //     backgroundColor: gradientStroke,
+    //     borderColor: '#d048b6',
+    //     borderWidth: 2,
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     pointBackgroundColor: '#d048b6',
+    //     pointBorderColor: 'rgba(255,255,255,0)',
+    //     pointHoverBackgroundColor: '#d048b6',
+    //     pointBorderWidth: 20,
+    //     pointHoverRadius: 4,
+    //     pointHoverBorderWidth: 15,
+    //     pointRadius: 4,
+    //     data: [80, 100, 70, 80, 120, 80],
+    //   }]
+    // };
 
-    var myChart = new Chart(ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipPurple
-    });
+    // var myChart = new Chart(ctx, {
+    //   type: 'line',
+    //   data: data,
+    //   options: gradientChartOptionsConfigurationWithTooltipPurple
+    // });
 
+    ///////////////////////////////////////////////////////////////BB
+    // var ctx = document.getElementById("CountryChart").getContext("2d");
+
+    // var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+    // gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
+    // gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
+    // gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
+
+
+    // var myChart = new Chart(ctx, {
+    //   type: 'bar',
+    //   responsive: true,
+    //   legend: {
+    //     display: false
+    //   },
+    //   data: {
+    //     labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد' , 'شهریور'],
+    //     datasets: [{
+    //       label: "Countries",
+    //       fill: true,
+    //       backgroundColor: gradientStroke,
+    //       hoverBackgroundColor: gradientStroke,
+    //       borderColor: '#1f8ef1',
+    //       borderWidth: 2,
+    //       borderDash: [],
+    //       borderDashOffset: 0.0,
+    //       data: [53, 20, 10, 80, 100, 45],
+    //     }]
+    //   },
+    //   options: gradientBarChartConfiguration
+    // });
+
+///////////////////////////////////////////////////////////////EE
 
     var ctxGreen = document.getElementById("chartLineGreen").getContext("2d");
 
@@ -457,6 +491,7 @@ var myChart = new Chart(ctxGreen2, {
 
 });
 ////////////////////////////////////////////////////////////////E
+
 
 
     var chart_labels = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];

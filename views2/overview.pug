@@ -25,4 +25,6 @@ block content
                                 span(id='rain_12') 
                         div.card-body
                             div.chart-area
-                                canvas(id='chartLinePurple')
+                                //- canvas(id='chartLinePurple')
+                                - chart_id = 'CountryChart' + stn.id
+                                canvas(id= chart_id)

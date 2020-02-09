@@ -41,11 +41,13 @@ $(document).ready(() => {
                         }
                     )
                 });
-                $('.card-category').each(function (index, el) {
+                $('.card-body').each(function (index, el) {
+                    var chart_id = 'CountryChart' + rain_stations_names_and_ids[index].id;
+                    $.getScript('assets/js/mychart.js', function () {          
+                        myDrawChart(chart_id);  
+                  });  
+                });
 
-
-            }
-        )
  //   });
 });
 });

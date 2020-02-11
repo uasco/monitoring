@@ -6,23 +6,23 @@ block content
                 div.col-lg-4.text-right
                     div.card.card-chart
                         div.card-header
-                            h3.card-category ایستگاه بارانسنجی #{stn.name}
+                            h3.card-category  ایستگاه بارانسنجی #{stn.name}
                             - i = stn.id
                             h5.card-title(id= i )
                                 i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_status')                        وضعیت بارندگی 
+                                span(id='rain_status') &nbsp&nbsp&nbsp&nbsp&nbsp وضعیت بارندگی 
                                 br
                                 i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_status')                        آلارم ها 
+                                span(id='rain_alarm') &nbsp&nbsp&nbsp&nbsp&nbsp آلارم ها 
                                 br
                                 i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_total')    
+                                span(id='rain_total')  
                                 br
                                 i.tim-icons.icon-bell-55.text-primary
                                 span(id='rain_24')
                                 br
                                 i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_12') 
+                                span(id='rain_12')
                         div.card-body
                             div.chart-area
                                 //- canvas(id='chartLinePurple')

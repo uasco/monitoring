@@ -19,7 +19,7 @@ exports.getAllRainStationsNamesAndIDs = catchAsync(async (req, res, next) => {
 
     //send JSON to Express
     res.json(apiResult); //{"data":[{"id":5,"name":"shahrdari_15"},{"id":6,"name":"16 channel"},{"id":7,"name":"Level_Test"},{"id":8,"name":"r"}]}
-
+    console.log("from rainStationController : ");
     console.log(apiResult.data[0].id);
 
 });

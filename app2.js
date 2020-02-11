@@ -17,6 +17,8 @@ const viewRouter = require('./routes/viewRoutes');
 /////
 const rainStationRouter = require('./routes2/rainStationRoutes');
 const viewRouter2 = require('./routes2/viewRoutes');
+var  mcache = require('memory-cache');
+var flatCache = require('flat-cache')
 
 const app = express();
 
@@ -73,9 +75,62 @@ app.use(
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log("from test middleware: ");
   console.log(req.cookies);
   next();
 });
+
+///// configure cache middleware
+let memCache = new mcache.Cache();
+let cacheMiddleware = (duration) => {
+    return (req, res, next) => {
+        let key =  '__express__' + req.originalUrl || req.url
+        let cacheContent = memCache.get(key);
+        if(cacheContent){
+            res.send( cacheContent );
+            return
+        }else{
+            res.sendResponse = res.send
+            res.send = (body) => {
+                memCache.put(key,body,duration*1000);
+                res.sendResponse(body)
+            }
+            next()
+        }
+    }
+}
+
+
+
+/////load new cache :
+console.log("////////loading the cache/////////////");
+let cache = flatCache.load("rainstationsCache", path.resolve("./cache"));
+let flatCacheMiddleware = (req, res, next) => {
+  let key = "__express__" + req.originalUrl || req.url;
+  let cacheContent = cache.getKey(key);
+  //console.log("key :::::::::::: ");
+  //console.log(key);
+  //console.log("casheeeed:::::");
+  //console.log(cacheContent);
+  if (cacheContent) {
+    console.log("*******************cached happened**********************");
+    res.send(cacheContent);
+    return;
+  } else {
+    console.log("%%%%%%%%%%%%%%%%%%%cached DID NOT happend %%%%%%%%%%%%%%%");
+    res.sendResponse = res.send;
+    res.send = body => {
+      cache.setKey(key, body);
+      cache.save(true);
+      res.sendResponse(body);
+    };
+    next();
+  }
+};
+
+/////how to use:
+/////     app.get('/products', flatCacheMiddleware, function(req, res){
+
 
 // 3) ROUTES
 /////app.use('/', viewRouter);
@@ -84,7 +139,11 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 /////
 app.use('/', viewRouter2);
-app.use('/api/rainstations', rainStationRouter);
+//app.use('/',flatCacheMiddleware, viewRouter2);
+
+//app.use('/api/rainstations',cacheMiddleware(30), rainStationRouter);//with memory cache
+app.use('/api/rainstations',flatCacheMiddleware, rainStationRouter);//with flat cache
+//app.use('/api/rainstations', rainStationRouter);//without cache
 
 
 app.all('*', (req, res, next) => {

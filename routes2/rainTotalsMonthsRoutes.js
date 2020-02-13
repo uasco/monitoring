@@ -1,5 +1,5 @@
 const express = require('express');
-const rainStationController = require('../controllers2/rainStationController');
+const rainTotalsMonthsController = require('../controllers2/rainTotalsMonthsController');
 const authController = require('../controllers/authController');
 const reviewRouter = require('../routes/reviewRoutes');
 
@@ -11,13 +11,16 @@ const router = express.Router();
 // GET /tour/234fad4/reviews
 
 //////////////////////////////////////////////////////////////////B
-router
-  .route('/')
-  .get(rainStationController.getAllRainStationsNamesAndIDs)
+
+  router
+  .route('/:id')
+  .get(rainTotalsMonthsController.getRainTotalsOfPastMonths)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
   );
+
+
 
 //////////////////////////////////////////////////////////////////E
 

@@ -1,5 +1,5 @@
 const express = require('express');
-const rainStationController = require('../controllers2/rainStationController');
+const rainValuesController = require('../controllers2/rainValuesController');
 const authController = require('../controllers/authController');
 const reviewRouter = require('../routes/reviewRoutes');
 
@@ -12,12 +12,15 @@ const router = express.Router();
 
 //////////////////////////////////////////////////////////////////B
 router
-  .route('/')
-  .get(rainStationController.getAllRainStationsNamesAndIDs)
+  .route('/:id')
+  .get(rainValuesController.getRainStationRainValues)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
   );
+
+
+
 
 //////////////////////////////////////////////////////////////////E
 

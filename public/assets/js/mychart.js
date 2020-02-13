@@ -24,7 +24,7 @@ gradientBarChartConfiguration = {
           zeroLineColor: "transparent",
         },
         ticks: {
-          suggestedMin: 60,
+          suggestedMin: 10,
           suggestedMax: 120,
           padding: 20,
           fontColor: "#9e9e9e"
@@ -45,7 +45,11 @@ gradientBarChartConfiguration = {
       }]
     }
   };
-  function myDrawChart(chart_id) {  
+
+
+  
+  function myDrawChart(chart_id,months,values) {  
+    
     var ctx = document.getElementById(chart_id).getContext("2d");
 
     var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
@@ -62,9 +66,10 @@ gradientBarChartConfiguration = {
         display: false
       },
       data: {
-        labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد' , 'شهریور'],
+        // labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد' , 'شهریور'],
+        labels: months,
         datasets: [{
-          label: "Countries",
+          label: "باران تجمیعی",
           fill: true,
           backgroundColor: gradientStroke,
           hoverBackgroundColor: gradientStroke,
@@ -72,7 +77,8 @@ gradientBarChartConfiguration = {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: [53, 20, 10, 80, 100, 45],
+          // data: [53, 20, 10, 80, 100, 45],
+          data: values,
         }]
       },
       options: gradientBarChartConfiguration

@@ -24,10 +24,11 @@ gradientBarChartConfiguration = {
           zeroLineColor: "transparent",
         },
         ticks: {
-          suggestedMin: 10,
+          suggestedMin: 0,
           suggestedMax: 120,
-          padding: 20,
-          fontColor: "#9e9e9e"
+          padding: 10,
+          fontColor: "#9e9e9e",
+          fontFamily: "Bahij"
         }
       }],
 
@@ -39,8 +40,10 @@ gradientBarChartConfiguration = {
           zeroLineColor: "transparent",
         },
         ticks: {
-          padding: 20,
-          fontColor: "#9e9e9e"
+          padding:20,
+          fontColor: "#9e9e9e",
+          fontFamily: "Yekan",
+          fontSize: 10
         }
       }]
     }
@@ -78,6 +81,7 @@ gradientBarChartConfiguration = {
           borderDash: [],
           borderDashOffset: 0.0,
           // data: [53, 20, 10, 80, 100, 45],
+          //data: [۵۳, ۲۰, ۱۰, ۸۰, ۱۰۰, ۴۵],
           data: values,
         }]
       },

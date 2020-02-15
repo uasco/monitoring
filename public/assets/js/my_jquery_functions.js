@@ -1,12 +1,27 @@
-// insert = function insert(main_string, ins_string, pos) {
-//     if(typeof(pos) == "undefined") {
-//      pos = 0;
-//    }
-//     if(typeof(ins_string) == "undefined") {
-//      ins_string = '';
-//    }
-//     return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
-// }
+
+function lntpn(ln){
+    return $.latin2Arabic.toArabic(ln);s//ln must be string
+}
+function convertNumsLabelToNamesLabel(numsLabel){
+    var collection = {1:'فروردین',2:'اردیبهشت',3:'خرداد',4:'تیر',5:'مرداد',6:'شهریور',7:'مهر',8:'آبان',9:'آذر',10:'دی',11:'بهمن',12:'اسفند'};
+    var namesLabel=[]
+    numsLabel.map(el=>{
+        namesLabel.push(collection[el]);
+    })
+    return namesLabel;
+}
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+  }
+function calcEachMonth(values){
+    for(i=11;i>=0;i--){   
+        x=values[i] - values[i-1];
+        x=round(x, 2);
+        values[i]=x;
+        
+    } 
+    return values;
+}
 function drawCharts(station_ID,labels,valus){
     
         var chart_id = 'CountryChart' + station_ID;
@@ -29,6 +44,9 @@ function getRainValues(rain_stations_names_and_ids,index){
                 var rt = JSON.stringify(response.data[2].value);
                 var r24 = JSON.stringify(response.data[1].value);
                 var r12 = JSON.stringify(response.data[0].value);
+                // rt = lntpn(rt);
+                // r24 = lntpn(r24);
+                // r12 = lntpn(r12);
 
                 $('#' + i + ' span' + '#rain_total').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append('باران تجمیعی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspمیلیمتر") // ->rain_total 
                 $('#' + i + ' span' + '#rain_total_value').text("").append(rt).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
@@ -83,9 +101,11 @@ function getRainTotalOfEndOfPastMonthsForDrawingCharts(){
                         var labels=[];
                         var values=[];
                         rain_total_of_past_months.map(el =>{
-                            labels.push(el[0]);
+                            labels.push(el[0]+1);
                             values.push(el[1]);
                         })
+                        labels=convertNumsLabelToNamesLabel(labels);
+                        values=calcEachMonth(values);
             
                         drawCharts(station_ID,labels,values);
             
@@ -106,7 +126,9 @@ $(document).ready(() => {
     });
   
     getRainTotalOfEndOfPastMonthsForDrawingCharts();
-    
+    //$('*').persiaNumber();
+    $('*').persianNum();
+
 });
 // setInterval(function(){
 //     getRainStationsNamesAndIDs(); // this will run after every 5 seconds

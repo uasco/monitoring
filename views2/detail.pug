@@ -1,0 +1,18 @@
+extends base
+include _navbar
+include _sidebar
+include _detailCard
+include _title
+block navbar
+    +navbar
+block sidebar
+    +sidebar()
+        li
+            div.row
+                div.col-sm-12.text-right
+                    h3.card-category(style='display:flex;justify-content: center')
+                        button.btn
+                            a(href='/')
+                                i.return.fas.fa-undo(style='font-size : 30px ')
+block content
+    +

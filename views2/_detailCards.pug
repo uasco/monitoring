@@ -1,0 +1,9 @@
+include _detailCard
+mixin detailCardrl(stn,stnType)
+    if(stnType === 'rain')
+        +raincard(stn)
+    if(stnType === 'level')
+        +levelcard(stn)
+mixin detailCardc(stn,stnType,sensor)
+    if(stnType === 'clima')
+        +climacard(stn,sensor)

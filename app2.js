@@ -15,13 +15,15 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 /////
-const rainStationRouter = require('./routes2/rainStationRoutes');
-const rainValuesRouter = require('./routes2/rainValuesRoutes');
-const rainTotalsMonthsRouter = require('./routes2/rainTotalsMonthsRoutes');
+const stationRouter = require('./routes2/stationRoutes');
+const valueRouter = require('./routes2/valueRoutes');
 
 const viewRouter2 = require('./routes2/viewRoutes');
-var  mcache = require('memory-cache');
-var flatCache = require('flat-cache')
+
+const statusRouter = require('./routes2/statusRoutes');
+
+var helpers = require('./utils/helpers.js');
+
 
 const app = express();
 
@@ -56,159 +58,58 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
 // Data sanitization against NoSQL query injection
-app.use(mongoSanitize());
+// app.use(mongoSanitize());
 
 // Data sanitization against XSS
-app.use(xss());
+// app.use(xss());
 
 // Prevent parameter pollution
-app.use(
-  hpp({
-    whitelist: [
-      'duration',
-      'ratingsQuantity',
-      'ratingsAverage',
-      'maxGroupSize',
-      'difficulty',
-      'price'
-    ]
-  })
-);
+// app.use(
+//   hpp({
+//     whitelist: [
+//       'duration',
+//       'ratingsQuantity',
+//       'ratingsAverage',
+//       'maxGroupSize',
+//       'difficulty',
+//       'price',
+//       'codeview'
+//     ]
+//   })
+// );
 
+app.locals.range = helpers.range;
 // Test middleware
-app.use((req, res, next) => {
-  req.requestTime = new Date().toISOString();
-  console.log("from test middleware: ");
-  console.log(req.cookies);
-  next();
-});
-
-///// configure cache middleware
-let memCache = new mcache.Cache();
-let cacheMiddleWare = (duration) => {
-    return (req, res, next) => {
-        let key =  '__express__' + req.originalUrl || req.url
-        let cacheContent = memCache.get(key);
-        if(cacheContent){
-            res.send( cacheContent );
-            return
-        }else{
-            res.sendResponse = res.send
-            res.send = (body) => {
-                memCache.put(key,body,duration*1000);
-                res.sendResponse(body)
-            }
-            next()
-        }
-    }
-}
+// app.use((req, res, next) => {
+//   req.requestTime = new Date().toISOString();
+//   console.log("from test middleware: ");
+//   console.log(req.cookies);
+//   next();
+// });
 
 
-
-/////load new cache :
-console.log("////////loading the rainStattions cache/////////////");
-let rainStationsCache = flatCache.load("rainStationsCache", path.resolve("./cache"));
-let rainStationsFlatCacheMiddleWare = (req, res, next) => {
-  let key = "__express__" + req.originalUrl || req.url;
-  let cacheContent = rainStationsCache.getKey(key);
-  //console.log("key :::::::::::: ");
-  //console.log(key);
-  //console.log("casheeeed:::::");
-  //console.log(cacheContent);
-  if (cacheContent) {
-    console.log("*******************rainStattions cached happened**********************");
-    res.send(cacheContent);
-    return;
-  } else {
-    console.log("%%%%%%%%%%%%%%%%%%%rainStattions cached DID NOT happend %%%%%%%%%%%%%%%");
-    res.sendResponse = res.send;
-    res.send = body => {
-      rainStationsCache.setKey(key, body);
-      rainStationsCache.save(true);
-      res.sendResponse(body);
-    };
-    next();
-  }
-};
-
-
-/////load new cache :
-console.log("////////loading the rainValues cache/////////////");
-let rainValuesCache = flatCache.load("rainValuesCache", path.resolve("./cache"));
-let rainValuesFlatCacheMiddleWare = (req, res, next) => {
-  let key = "__express__" + req.originalUrl || req.url;
-  let cacheContent = rainValuesCache.getKey(key);
-  //console.log("key :::::::::::: ");
-  //console.log(key);
-  //console.log("casheeeed:::::");
-  //console.log(cacheContent);
-  if (cacheContent) {
-    console.log("*******************rainValues cached happened**********************");
-    res.send(cacheContent);
-    return;
-  } else {
-    console.log("%%%%%%%%%%%%%%%%%%%rainValues cached DID NOT happend %%%%%%%%%%%%%%%");
-    res.sendResponse = res.send;
-    res.send = body => {
-      rainValuesCache.setKey(key, body);
-      rainValuesCache.save(true);
-      res.sendResponse(body);
-    };
-    next();
-  }
-};
-
-
-/////load new cache :
-console.log("////////loading the rainTotalsMonths cache/////////////");
-let rainTotalsMonthsCache = flatCache.load("rainTotalsMonthsCache", path.resolve("./cache"));
-let rainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
-  let key = "__express__" + req.originalUrl || req.url;
-  let cacheContent = rainTotalsMonthsCache.getKey(key);
-  //console.log("key :::::::::::: ");
-  //console.log(key);
-  //console.log("casheeeed:::::");
-  //console.log(cacheContent);
-  if (cacheContent) {
-    console.log("*******************rainTotalsMonths cached happened**********************");
-    res.send(cacheContent);
-    return;
-  } else {
-    console.log("%%%%%%%%%%%%%%%%%%%rainTotalsMonths cached DID NOT happend %%%%%%%%%%%%%%%");
-    res.sendResponse = res.send;
-    res.send = body => {
-      rainTotalsMonthsCache.setKey(key, body);
-      rainTotalsMonthsCache.save(true);
-      res.sendResponse(body);
-    };
-    next();
-  }
-};
-
-/////how to use:
-/////     app.get('/products', flatCacheMiddleware, function(req, res){
 
 
 // 3) ROUTES
 /////app.use('/', viewRouter);
+/////
+app.use('/', viewRouter2);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
-/////
-app.use('/', viewRouter2);
-//app.use('/',flatCacheMiddleware, viewRouter2);
 
-//app.use('/api/rainstations',cacheMiddleWare(30), rainStationRouter);//with memory cache
 
-//app.use('/api/rainstations', rainStationRouter);//without cache
-app.use('/api/rainstations',rainStationsFlatCacheMiddleWare, rainStationRouter);//without cache
 
-//app.use('/api/rainvalues', rainValuesRouter);//without flat cache
-app.use('/api/rainvalues',rainValuesFlatCacheMiddleWare, rainValuesRouter);//with flat cache
+//app.use('/api/stations',cacheMiddleWare(30), stationRouter);//with memory cache
 
-//app.use('/api/raintotalsmonths', rainTotalsMonthsRouter);//without flat cache
-app.use('/api/raintotalsmonths',rainTotalsMonthsFlatCacheMiddleWare, rainTotalsMonthsRouter);//with flat cache
 
+app.use('/api/stations', stationRouter);
+
+
+app.use('/api/values', valueRouter);
+
+
+app.use('/api/status', statusRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -1,32 +1,31 @@
-div.content
-    div.row
-        div.col-lg-4.text-right
-            div.card.card-chart
-                div.card-header
-                    h5.card-category ایستگاه بارانسنجی بنکوه
-                    h3.card-title
-                        i.tim-icons.icon-bell-55.text-primary
-                        span    225 
-                div.card-body
-                    div.chart-area
-                        canvas(id='chartLinePurple')
-        div.col-lg-4.text-right
-            div.card.card-chart
-                div.card-header
-                    h5.card-category ایستگاه بارانسنجی خیرآباد     
-                    h3.card-title
-                        i.tim-icons.icon-send.text-success  
-                        span    125
-                div.card-body
-                    div.chart-area
-                        canvas(id='chartLineGreen')
-        div.col-lg-4.text-right
-            div.card.card-chart
-                div.card-header
-                    h5.card-category ایستگاه بارانسنجی مجن 
-                    h3.card-title 
-                        i.tim-icons.icon-send.text-success  
-                        span    58
-                div.card-body
-                    div.chart-area
-                        canvas(id='chartLineGreen2')
+.siema
+    if(rStations)
+        each rS8 in rStations
+            - var n = 0;
+            div.content(style='z-index:20')
+                +title('ایستگاه های باران سنجی')
+                div.row
+                    while n < rS8.length
+                        +cardsrl(rS8[n],'rain')
+                        - n++
+                
+    if(lStations)
+        each lS8 in lStations
+            - var n = 0;
+            div.content(style='z-index:20')
+                +title('ایستگاه های سطح سنجی')
+                div.row
+                    while n < lS8.length
+                        +cardsrl(lS8[n],'level')
+                        - n++
+    if(cStations)
+        each stn in cStations  
+            - var n = 0;
+            div.content(style='z-index:20')
+                - t = 'ایستگاه هواشناسی '+ stn.position
+                +title(t)
+                div.row
+                    while n < 8
+                        +cardsc(stn,'clima',sensores[n++])
+    div.content.ad
+        img.ad(src='/img/uas.png')

@@ -1,36 +1,47 @@
 extends base
+include _navbar
+include _sidebar
+include _cards
+include _title
+block navbar
+  +navbar
+block sidebar
+  +sidebar()
+    li
+      div.row
+        div.col-sm-12.text-right
+          h3.card-category(style='display:flex;justify-content: center')
+            button.btn
+              a(href='/')
+                i.return.fas.fa-undo(style='font-size : 30px ')
 block content
-    div.content
-        div.row
-            each stn in stations
-                div.col-lg-4.text-right
-                    div.card.card-chart
-                        div.card-header
-                            h3.card-category  ایستگاه بارانسنجی #{stn.name}
-                            - i = stn.id
-                            h5.card-title(id= i )
-                                i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_status') &nbsp&nbsp&nbsp&nbsp&nbsp وضعیت بارندگی 
-                                br
-                                i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_alarm') &nbsp&nbsp&nbsp&nbsp&nbsp آلارم ها 
-                                br
-                                i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_total')
-                                span(id='rain_total_value')
-                                span(id='rain_total_unit')  
-                                br
-                                i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_24')
-                                span(id='rain_24_value')
-                                span(id='rain_24_unit')
-                                br
-                                i.tim-icons.icon-bell-55.text-primary
-                                span(id='rain_12')
-                                span(id='rain_12_value')
-                                span(id='rain_12_unit')
-                        div.card-body
-                            div.chart-area
-                                //- canvas(id='chartLinePurple')
-                                - chart_id = 'CountryChart' + stn.id
-                                canvas(id= chart_id)
+  include _content
+      
+  //- script(src ='/assets/js/siema.min.js')
+  //- script.
+  //-     const mySiema = new Siema({
+  //-     selector: '.siema',
+  //-     duration: 2000,
+  //-     //- easing: 'ease-out',
+  //-     easing: 'cubic-bezier(.17,.67,.32,1.34)',
+  //-     perPage: 1,
+  //-     startIndex: 0,
+  //-     draggable: true,
+  //-     multipleDrag: true,
+  //-     threshold: 10,
+  //-     loop: true,
+  //-     rtl: true,
+  //-     onInit: () => {},
+  //-     onChange: () => {},
+  //-     });
+  //-     document.querySelector('.prev').addEventListener('click', ()=>mySiema.prev());
+  //-     document.querySelector('.next').addEventListener('click', ()=>mySiema.next());
+
+
+      //- setInterval(() => mySiema.next(), 1000)
+      //- perPage: {
+      //-   800: 2, // 2 items for viewport wider than 800px
+      //-   1240: 3 // 3 items for viewport wider than 1240px
+      //- }
+
+

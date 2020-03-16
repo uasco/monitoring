@@ -1,21 +1,19 @@
 const util = require('util')
 const mysql = require('mysql')
+const mysql_database = process.env.MYSQL_DATABASE2;
+const mysql_database_name = process.env.MYSQL_DATABASE_NAME2;
+const mysql_database_user = process.env.MYSQL_DATABASE_USER2;
+const mysql_database_password = process.env.MYSQL_DATABASE_PASSWORD2;
+const mysql_database_port = process.env.MYSQL_DATABASE_PORT2;
 const pool = mysql.createPool({
+  multipleStatements: true,
   connectionLimit: 10,
-  // host: '185.165.40.216',
-  // user: 'rails',
-  // password: 'ruby0ruby0',
-  // database: 'uascoshahrdari15',
-  // port: '4406'
-  // timezone: 'utc-3:30'  
-  //host: '127.0.0.1',
-  host: '10.88.169.35',
-  user: 'root',
-  password: 'adminmy%A',
-  database: 'uasco',
-  //port: '4406',
-  port: '3306',
-  timezone: 'utc-3:30'  
+  host: mysql_database,
+  user: mysql_database_user,
+  password: mysql_database_password,
+  database: mysql_database_name,
+  port: mysql_database_port,
+  timezone: 'utc-3:30'
 })
 
 // Ping database to check for common exception errors.

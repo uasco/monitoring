@@ -1,0 +1,35 @@
+script(src ='https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js')
+div.content
+    div.row
+        div.col-md-12
+            div.classcard.card-plain
+                div.card-body
+                    //- div(id='map' class='map')
+                    //- div.fluid-wrapper 
+                    //- div
+                    //-     iframe.mymap(src='https://goo.gl/maps/6EBfAkxfz33LC7xy8' width='1000' height='700' frameborder='0' style='border:0;' allowfullscreen='')
+                    div.map(id='map')
+                    script.
+                        var map = new ol.Map({
+                          target: 'map',
+                          layers: [
+                            new ol.layer.Tile({
+                              source: new ol.source.OSM()
+                            })
+                          ],
+                          view: new ol.View({
+                            center: ol.proj.fromLonLat([54.7668, 35.6573]),
+                            zoom: 7
+                          })
+                        });
+
+
+//- div
+//-     p
+//-         iframe(width='940' height='774' frameborder='0' scrolling='no' marginheight='0' marginwidth='0' src='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=fa&amp;geocode=&amp;q=%D8%B3%D9%85%D9%86%D8%A7%D9%86&amp;aq=&amp;sll=31.89661,54.36068&amp;sspn=0.323543,0.672226&amp;ie=UTF8&amp;hq=&amp;hnear=%D8%B3%D9%85%D9%86%D8%A7%D9%86%D8%8C+%D8%A7%DB%8C%D8%B1%D8%A7%D9%86&amp;t=m&amp;z=12&amp;ll=35.572269,53.396049&amp;output=embed')
+
+
+//- https://goo.gl/maps/6EBfAkxfz33LC7xy8
+//- iframe(src='https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d1656565.6685356202!2d54.55339287580144!3d35.812701567162804!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfa!2suk!4v1583588564460!5m2!1sfa!2suk' width='600' height='450' frameborder='0' style='border:0;' allowfullscreen='')
+
+//- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1613870.8382354751!2d54.33725882829683!3d35.591848261054686!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f9d058a8161bd1b%3A0xddcc3cb317cd26cd!2z2KfYs9iq2KfZhiDYs9mF2YbYp9mG2Iwg2KfbjNix2KfZhg!5e0!3m2!1sfa!2suk!4v1583594011758!5m2!1sfa!2suk" width="1000" height="600" frameborder="0" style="border:0;" allowfullscreen=""></iframe>

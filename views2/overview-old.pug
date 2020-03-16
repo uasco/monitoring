@@ -1,0 +1,85 @@
+extends base
+include _navbar
+include _sidebar
+block navbar
+    +navbar
+block sidebar
+    +sidebar
+block content
+    div.content
+        div.row
+            each rainStn in rainStations
+                div.col-md-3.text-right
+                    div.card.card-chart
+                        div.card-header
+                            //- h3.card-category  ایستگاه بارانسنجی # rainStn.name}
+                            h3.card-category  #{rainStn.position}
+                            - i = rainStn.id
+                            h4.card-title(id= i )
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_status') &nbsp&nbsp&nbsp وضعیت بارندگی 
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_alarm') &nbsp&nbsp&nbsp آلارم ها 
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_total')
+                                i(id='rain_total_value')
+                                i(id='rain_total_unit')  
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_24')
+                                i(id='rain_24_value')
+                                i(id='rain_24_unit')
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_12')
+                                i(id='rain_12_value')
+                                i(id='rain_12_unit')
+                                br
+                                //- i.tim-icons.icon-bell-55.text-primary
+                                i(id='date_of_last_recieved_data_label')
+                                i(id='date_of_last_recieved_data_value')
+                        div.card-body
+                            div.chart-area
+                                //- canvas(id='chartLinePurple')
+                                - chart_id = 'CountryChart' + rainStn.id
+                                canvas(id= chart_id)
+            //- //////////////////////////////////////////////////////////////
+            each rainStn in rainStations
+                div.col-md-3.text-right
+                    div.card.card-chart
+                        div.card-header
+                            //- h3.card-category  ایستگاه بارانسنجی # rainStn.name}
+                            h3.card-category  #{rainStn.position}
+                            - i = rainStn.id
+                            h4.card-title(id= i )
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_status') &nbsp&nbsp&nbsp وضعیت بارندگی 
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_alarm') &nbsp&nbsp&nbsp آلارم ها 
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_total')
+                                i(id='rain_total_value')
+                                i(id='rain_total_unit')  
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_24')
+                                i(id='rain_24_value')
+                                i(id='rain_24_unit')
+                                br
+                                i.tim-icons.icon-bell-55.text-primary
+                                i(id='rain_12')
+                                i(id='rain_12_value')
+                                i(id='rain_12_unit')
+                                br
+                                //- i.tim-icons.icon-bell-55.text-primary
+                                i(id='date_of_last_recieved_data_label')
+                                i(id='date_of_last_recieved_data_value')
+                        div.card-body
+                            div.chart-area
+                                //- canvas(id='chartLinePurple')
+                                - chart_id = 'CountryChart' + rainStn.id
+                                canvas(id= chart_id)

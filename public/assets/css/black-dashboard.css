@@ -50,6 +50,8 @@
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
+  /* ///// */
+  --font-family: Yekan
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -632,6 +634,7 @@ pre code {
 
 .container-fluid {
   width: 100%;
+  /* /////padding-right: 15px; */
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
@@ -728,8 +731,8 @@ pre code {
 .col-xl-auto {
   position: relative;
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 1px;
+  padding-left: 1px;
 }
 
 .col {
@@ -4965,9 +4968,14 @@ input[type="button"].btn-block {
     padding-left: 1rem;
   }
 
-  .navbar-expand-lg>.container,
+  /*///// .navbar-expand-lg>.container,
   .navbar-expand-lg>.container-fluid {
     flex-wrap: nowrap;
+  } */
+  .navbar-expand-lg>.container,
+  .navbar-expand-lg>.container-fluid {
+    flex-wrap: wrap;
+    /* align-items: flex-start; */
   }
 
   .navbar-expand-lg .navbar-collapse {
@@ -13997,6 +14005,51 @@ fieldset[disabled] .btn-link.active {
   color: #e3e3e3;
   font-weight: 600;
 }
+/* /////B */
+.align-r {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #e3e3e3;
+  font-weight: 600;
+}
+.align-l {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #e3e3e3;
+  font-weight: 600;
+}
+.play {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #e3e3e3;
+  font-weight: 600;
+}
+.pause {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  color: #e3e3e3;
+  font-weight: 600;
+}
+.siema {
+  z-index: 1080;
+}
+.control-box {
+  position: fixed;
+  right: 4vh;
+  width: 65px;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  border-radius: 8px 8px 8px 8px;
+  text-align: center;
+  /* /////top: 130px; */
+  top: 70vh; 
+  
+}
+/* /////E */
 
 .btn-link:hover {
   box-shadow: none !important;
@@ -15876,7 +15929,7 @@ img {
   margin-left: 17px;
   margin-top: 3px;
   text-transform: uppercase;
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .navbar .navbar-toggle button:focus,
@@ -16472,7 +16525,8 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: "Poppins", sans-serif;
+  /* /////font-family: "Poppins", sans-serif; */
+  font-family: Yekan;
 }
 
 .card h1,
@@ -16532,7 +16586,8 @@ h3,
 
 h4,
 .h4 {
-  line-height: 1.45em;
+  /* /////line-height: 1.45em; */
+  line-height: 1em;
   margin-bottom: 15px;
 }
 
@@ -17009,13 +17064,14 @@ table.tablesorter thead tr .headerSortDown {
 
 .fixed-plugin {
   position: fixed;
-  right: 0;
+  right: 4vh;
   width: 64px;
   background: rgba(0, 0, 0, 0.3);
   z-index: 1031;
-  border-radius: 8px 0 0 8px;
+  border-radius: 8px 8px 8px 8px;
   text-align: center;
-  top: 130px;
+  /* /////top: 130px; */
+  top: 62vh;
 }
 
 .fixed-plugin li>a,
@@ -17343,7 +17399,9 @@ table.tablesorter thead tr .headerSortDown {
   background: -moz-linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
   background: linear-gradient(0deg, #ba54f5 0%, #e14eca 100%);
   height: calc(100vh - 90px);
-  width: 230px;
+  /* /////width: 230px; */
+  /* width: 12%; */
+  width: 170px;
   position: fixed;
   top: 0;
   left: 0;
@@ -17352,7 +17410,8 @@ table.tablesorter thead tr .headerSortDown {
   background-position: center center;
   display: block;
   box-shadow: 0px 0px 45px 0px rgba(0, 0, 0, 0.6);
-  margin-top: 80px;
+  /* /////margin-top: 80px; */
+  margin-top: 55px;
   margin-left: 20px;
   border-radius: 5px;
   transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
@@ -17621,6 +17680,24 @@ table.tablesorter thead tr .headerSortDown {
   color: rgba(255, 255, 255, 0.8);
   position: relative;
 }
+/* /////B */
+.sidebar .nav div,
+.off-canvas-sidebar .nav div {
+  font-size: 20px;
+  float: center;
+  /* /////margin-right: 2%; */
+  margin-right: 0.1%;
+  line-height: 30px;
+  width: 100%;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.8);
+  position: relative;
+}
+.sidebar .nav div button {
+  /* /////margin-right: 4%; */
+  margin-right: 4%;
+}
+/* /////E */
 
 .sidebar .logo,
 .off-canvas-sidebar .logo {
@@ -18624,7 +18701,8 @@ code {
 }
 
 .rtl .main-panel .content {
-  padding: 80px 280px 30px 30px;
+  /* /////padding: 80px 280px 30px 30px; */
+  padding: 60px 220px 30px 30px;
 }
 
 .rtl .footer {
@@ -18687,7 +18765,7 @@ code {
 }
 
 .rtl .search-bar {
-  margin-left: 0;
+  margin-left: 0px;
 }
 
 .rtl .modal-search .modal-header .close {
@@ -18763,6 +18841,8 @@ code {
 
 .rtl .main-panel {
   position: fixed;
+  /* ///// original without top: */
+  top: -10px;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -19178,6 +19258,7 @@ textarea.form-control:active {
   border-radius: 25px;
   z-index: 4;
   margin-bottom: 0;
+  /* /////height: 43px; */
   height: 43px;
   padding-right: 5px;
 }
@@ -19936,7 +20017,8 @@ Copyright (c) 2015 Daniel Eden
   border: 0;
   position: relative;
   width: 100%;
-  margin-bottom: 30px;
+  /* /////margin-bottom: 30px; */
+  margin-bottom: 10px;
   box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
@@ -19945,11 +20027,14 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .card .card-title {
-  margin-bottom: .75rem;
+  /* /////margin-bottom: .75rem; */
+  margin-bottom: .01rem;
 }
 
 .card .card-body {
-  padding: 15px;
+  /* /////padding: 15px; */
+  padding: 1px;
+
 }
 
 .card .card-body.table-full-width {
@@ -19970,7 +20055,8 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .card .card-header {
-  padding: 15px 15px 0;
+  /* /////padding: 15px 15px 0; */
+  padding: 1px 5px 0;
   border: 0;
   color: rgba(255, 255, 255, 0.8);
 }
@@ -20211,13 +20297,16 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .card-chart .card-header .card-title i {
-  font-size: 16px;
-  margin-right: 5px;
-  margin-bottom: 3px;
+  font-size: 1.2vw;
+  /* /////margin-right: 5px;
+  margin-bottom: 3px; */
+  margin-right: 1px;
+  margin-bottom: 1px;
 }
 
 .card-chart .card-header .card-category {
-  margin-bottom: 5px;
+  /* ///// margin-bottom: 5px; */
+  margin-bottom: 1px;
 }
 
 .card-chart .card-body {
@@ -20244,12 +20333,14 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .card-chart .chart-area {
-  height: 220px;
+  /* /////height: 220px; */
+  height: 20vh;
   width: 100%;
 }
 
 .card-chart .card-footer {
-  margin-top: 15px;
+  /* /////margin-top: 15px; */
+  margin-top: 1px;
 }
 
 .card-chart .card-footer .stats {
@@ -20281,6 +20372,8 @@ Copyright (c) 2015 Daniel Eden
 
 .map {
   height: 500px;
+  /* ///// */
+  width: 100%;
 }
 
 .card-user {
@@ -20407,7 +20500,7 @@ Copyright (c) 2015 Daniel Eden
 }
 
 .card-tasks .card-header .title {
-  margin-right: 20px;
+  margin-right: 2px;
   font-weight: 400;
 }
 
@@ -20443,3 +20536,23 @@ Copyright (c) 2015 Daniel Eden
 }
 
 /*# sourceMappingURL=dashboard-free.css.map */
+/* /////B */
+ 	
+.fluid-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.fluid-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+      border: none;
+}
+.mymap {
+  width: 600;
+  height: 600;
+}
+/* /////E */

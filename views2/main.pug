@@ -1,0 +1,26 @@
+extends base
+include _navbar
+include _sidebar
+block navbar
+  +navbar
+block sidebar
+  +sidebar
+    each typ in types
+      li
+        div.row
+          div.col-sm-12.text-right
+            div.card.card-chart
+              div.card-header
+                h3.card-category(style='display:flex;justify-content:flex-start;align-items:baseline') 
+                  span &nbsp
+                  input.mycheck(type='checkbox' id=typ.id )
+                  span &nbsp&nbsp
+                  label.mylabel(id=typ.id) #{typ.label}
+    div.col-md-12.text-right
+      h3.card-category(style='display:flex;justify-content: center')
+        button.btn( onclick='displayOverview()' type='submit') نمایش
+block content
+  include _map
+  script.
+    //- $('.sidebar')[0].style.display = "none";
+  

@@ -1,0 +1,53 @@
+div.content
+    div.row
+        div.col-lg-6.text-right
+            div.card
+                div.card-header
+                    div.w3-main
+                        div.w3-container.w3-margin-top.w3-padding-16.w3-color(id='timepicker' )
+                            label(for="timeString") picked time
+                            input(id='timeString' onclick='pickTime(event)' type='text' placeholder='Click to pick a time...')
+        div.w3-main
+            div.w3-container.w3-margin-top.w3-padding-16.w3-color(id='timepicker2')
+                label(for="timeString") picked time
+                input(id='timeString2' onclick='pickTime2(event)' type='text' placeholder='Click to pick a time...')
+script(type='text/javascript').
+    //-timepicker B
+    'use strict';
+    const mypicker = new Timepicker();
+    const mypicker2 = new Timepicker();
+    const container = document.getElementById('timepicker');
+    const container2 = document.getElementById('timepicker2');
+    const pickerElm = mypicker.getElement();
+    const pickerElm2 = mypicker2.getElement();
+    // pickerElm.style.marginLeft = 'calc(50% - 120px)';
+    // pickerElm.style.marginTop = '12px';
+    // container.appendChild(pickerElm);
+    mypicker.attachTo(document.getElementById('timepicker'));
+    mypicker2.attachTo(document.getElementById('timepicker2'));
+    mypicker.onpicked = function () {
+        const timeStr = document.getElementById('timeString');
+        // document.getElementById('visibilityHide').checked = true;
+        timeStr.value = mypicker.getTimeString();
+        timeStr.focus()
+    };
+    mypicker2.onpicked = function () {
+        const timeStr2 = document.getElementById('timeString2');
+        // document.getElementById('visibilityHide').checked = true;
+        timeStr2.value = mypicker2.getTimeString();
+        timeStr2.focus()
+    };
+    function pickTime(ev) {
+        mypicker.set24Hour(true);
+        mypicker.setLightTheme(true)
+        mypicker.show();
+    }
+    function pickTime2(ev) {
+        mypicker2.set24Hour(true);
+        mypicker2.setLightTheme(true)
+        mypicker2.show();
+    }
+
+
+
+    //-timepicker E

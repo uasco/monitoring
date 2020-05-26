@@ -1,0 +1,52 @@
+extends base
+include _navbar
+include _sidebar
+block navbar
+    +navbar
+block sidebar
+    +sidebar
+        ul.nav
+            each typ in types
+                .container
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                        span &nbsp
+                                        input.mycheck(type='checkbox' id=typ.id onchange='checkSubItems(this)' )
+                                        span &nbsp&nbsp
+                                        label.mylabel(id=typ.id)
+                                        a.page-link(data-toggle='collapse', href='#a'+typ.id) #{typ.label}
+                            div.panel-collapse.collapse(id='a'+typ.id)
+                                if(typ.id === 'rain')
+                                    ul.list-group
+                                        each stn in rStations
+                                            div(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                span &nbsp&nbsp&nbsp&nbsp
+                                                input.mycheck-r(type='checkbox' id=stn.id )
+                                                span &nbsp&nbsp
+                                                label.mylabel(id=stn.id) #{stn.position}
+                                if(typ.id === 'level')
+                                    ul.list-group
+                                        each stn in lStations
+                                            div(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                span &nbsp&nbsp&nbsp&nbsp
+                                                input.mycheck-l(type='checkbox' id=stn.id )
+                                                span &nbsp&nbsp
+                                                label.mylabel(id=stn.id) #{stn.position}
+                                if(typ.id === 'clima')
+                                    ul.list-group
+                                        each stn in cStations
+                                            div(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                span &nbsp&nbsp&nbsp&nbsp
+                                                input.mycheck-c(type='checkbox' id=stn.id )
+                                                span &nbsp&nbsp
+                                                label.mylabel(id=stn.id) #{stn.position}
+        ul.nav
+            div(style='display:flex;justify-content: center')
+                button.btn.btn-default( onclick='displayOverview()' type='submit') نمایش
+block content
+    include _map
+    script.
+        //- $('.sidebar')[0].style.display = "none";

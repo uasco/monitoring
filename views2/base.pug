@@ -1,183 +1,136 @@
+//- include _navbar
 doctype html
 html
-    head
-        meta(charset='utf-8')
-        meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
-        link(rel='apple-touch-icon' sizes='76x76' href='assets/img/apple-icon.png')
-        link(rel='shortcut icon' type='image/png' href='assets/img/favicon.png')
-        title سامانه مانیتورینگ
-        //-  Fonts and icons
-        link(rel='stylesheet' href='assets/css/farsi-fonts.css')
-        link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800')
-        link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.6/css/all.css')
-        //- Nucleo Icons
-        link(rel='stylesheet' href='assets/css/nucleo-icons.css')
-        //- CSS Files
-        link(rel='stylesheet' href='assets/css/black-dashboard.css')
-        link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-rtl/3.4.0/css/bootstrap-rtl.css')
-        //- CSS Just for demo purpose, don't include it in your project
-        link(rel='stylesheet' href='assets/demo/demo.css')
-    body.rtl.menu-on-right
-        div.wrapper
-            include _sidebar
-            div.main-panel
-                //- Navbar
-                include _navbar
-                //- include _content
-                block content
-                  h1 this is a plase holder heading
-        include _fixed-plugin
-        //- <!--   Core JS Files   -->
-        script(src='assets/js/core/jquery.min.js')
-        script(src='assets/js/core/popper.min.js')
-        script(src='assets/js/core/bootstrap.min.js')
-        script(src='assets/js/plugins/perfect-scrollbar.jquery.min.js')
-        //- <!--  Google Maps Plugin    -->
-        //- <!-- Place this tag in your head or just before your close body tag. -->
-        script(src='https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE')
-        //- <!-- Chart JS -->
-        script(src='assets/js/plugins/chartjs.min.js')
-        //- <!--  Notifications Plugin    -->
-        script(src='assets/js/plugins/bootstrap-notify.js')
-        //- <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
-        script(src='assets/js/black-dashboard.min.js?v=1.0.0')
-        //- <!-- Black Dashboard DEMO methods, don't include it in your project! -->
-        script(src='assets/demo/demo.js')
-        //-/////
-        script.
-            $(document).ready(function() {
-            $().ready(function() {
-                $sidebar = $('.sidebar');
-                $navbar = $('.navbar');
-                $main_panel = $('.main-panel');
+  head
+    meta(charset='utf-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    link(rel='apple-touch-icon' sizes='76x76' href='/assets/img/apple-icon.png')
+    link(rel='shortcut icon' type='image/png' href='/assets/img/favicon.png')
+    title سامانه مانیتورینگ
+    //-  Fonts and icons
+    link(rel='stylesheet' href='/assets/css/farsi-fonts.css')
 
-                $full_page = $('.full-page');
-
-                $sidebar_responsive = $('body > .navbar-collapse');
-                sidebar_mini_active = true;
-                white_color = false;
-
-                window_width = $(window).width();
-
-                fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+    //- link(rel='stylesheet' href='https://use.fontawesome.com/releases/v5.0.6/css/all.css')
+    link(rel='stylesheet' href='/assets/fontawesome/css/all.min.css')
+    //- Nucleo Icons
+    link(rel='stylesheet' href='/assets/css/nucleo-icons.css')
+    //- CSS Files
+    link(rel='stylesheet' href='/assets/css/bootstrap-rtl.css')
+    link(rel='stylesheet' href='/assets/css/mdb.css')
+    link(rel='stylesheet' href='/assets/css/black-dashboard.css')
+    link(rel='stylesheet' href='/assets/css/bootstrap-select.css')
+    link(rel='stylesheet' href='/assets/css/leaflet.css')
+    //-link(href='https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css', rel='stylesheet')
+    link(href='/assets/css/mapbox-gl.css', rel='stylesheet')
 
 
 
-                $('.fixed-plugin a').click(function(event) {
-                if ($(this).hasClass('switch-trigger')) {
-                    if (event.stopPropagation) {
-                    event.stopPropagation();
-                    } else if (window.event) {
-                    window.event.cancelBubble = true;
-                    }
-                }
-                });
 
-                $('.fixed-plugin .background-color span').click(function() {
-                $(this).siblings().removeClass('active');
-                $(this).addClass('active');
+    link(rel='stylesheet' href='/assets/weather-icons-master/css/weather-icons.min.css')
 
-                var new_color = $(this).data('color');
-
-                if ($sidebar.length != 0) {
-                    $sidebar.attr('data', new_color);
-                }
-
-                if ($main_panel.length != 0) {
-                    $main_panel.attr('data', new_color);
-                }
-
-                if ($full_page.length != 0) {
-                    $full_page.attr('filter-color', new_color);
-                }
-
-                if ($sidebar_responsive.length != 0) {
-                    $sidebar_responsive.attr('data', new_color);
-                }
-                });
-
-                $('.switch-sidebar-mini input').on("switchChange.bootstrapSwitch", function() {
-                var $btn = $(this);
-
-                if (sidebar_mini_active == true) {
-                    $('body').removeClass('sidebar-mini');
-                    sidebar_mini_active = false;
-                    blackDashboard.showSidebarMessage('Sidebar mini deactivated...');
-                } else {
-                    $('body').addClass('sidebar-mini');
-                    sidebar_mini_active = true;
-                    blackDashboard.showSidebarMessage('Sidebar mini activated...');
-                }
-
-                // we simulate the window Resize so the charts will get updated in realtime.
-                var simulateWindowResize = setInterval(function() {
-                    window.dispatchEvent(new Event('resize'));
-                }, 180);
-
-                // we stop the simulation of Window Resize after the animations are completed
-                setTimeout(function() {
-                    clearInterval(simulateWindowResize);
-                }, 1000);
-                });
-
-                $('.switch-change-color input').on("switchChange.bootstrapSwitch", function() {
-                var $btn = $(this);
-
-                if (white_color == true) {
-
-                    $('body').addClass('change-background');
-                    setTimeout(function() {
-                    $('body').removeClass('change-background');
-                    $('body').removeClass('white-content');
-                    }, 900);
-                    white_color = false;
-                } else {
-
-                    $('body').addClass('change-background');
-                    setTimeout(function() {
-                    $('body').removeClass('change-background');
-                    $('body').addClass('white-content');
-                    }, 900);
-
-                    white_color = true;
-                }
+    //link(rel='stylesheet' href='/assets/amib/main.css')
+    link(rel='stylesheet' href='/assets/amib/js-persian-cal.css')
+    //link(rel='stylesheet' href='/assets/css/w3.css')
 
 
-                });
 
-                $('.light-badge').click(function() {
-                $('body').addClass('white-content');
-                });
+    // Plugin file
+    link(rel='stylesheet' href='/assets/css/addons/datatables.min.css')
+    link(rel='stylesheet' href='/assets/css/style.css')
+    //- /////
+    //- link(rel='stylesheet' href='https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/css/ol.css')
+    //- link(rel='stylesheet' href='//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css')
+    //- link(rel='stylesheet' href='/assets/css/pagination.css')
+    //- CSS Just for demo purpose, don't include it in your project
+    //- link(rel='stylesheet' href='/assets/demo/demo.css')
+    //- <!--   Core JS Files   -->
 
-                $('.dark-badge').click(function() {
-                $('body').removeClass('white-content');
-                });
-            });
-            });
-        script.
-            $(document).ready(function() {
-            //-  Javascript method's body can be found in assets/js/demos.js
-            demo.initDashboardPageCharts();
-            });
-        script(src='https://cdn.trackjs.com/agent/v3/latest/t.js')
-        script.
-            window.TrackJS &&
-            TrackJS.install({
-                token: "ee6fab19c5a04ac1a32a645abde4613a",
-                application: "black-dashboard-free"
-            });
-        script(src='assets/js/latin2Arabic.jquery.js')
-        script(src='assets/js/persianNum.jquery-2.js')
-        //- script(src='assets/js/persianumber.js')
-        script(src='assets/js/my_jquery_functions.js')
-        
-        
-        
-        
-        
-        
-       
+    //script(src='/assets/js/core/jquery.min.js')
+    //script(src='/assets/js/jquery.redirect.js')
+    //script(src='/assets/js/core/popper.min.js')
+    //script(src='/assets/js/core/bootstrap.min.js')
+    //script(src='/assets/js/plugins/perfect-scrollbar.jquery.min.js')
+    //script(src='/assets/fontawesome/js/all.min.js')
+    //script(src='/assets/amib/js-persian-cal.min.js')
+    //script(src='/assets/js/timepicker.js')
 
-            
-        
-        
+
+
+  body.rtl.menu-on-right
+    script(src='/assets/js/core/jquery.min.js')
+    script(src='/assets/js/core/popper.min.js')
+    script(src='/assets/js/core/bootstrap.min.js')
+    script(src='/assets/js/plugins/perfect-scrollbar.jquery.min.js')
+    script(src='/assets/js/plugins/bootstrap-selectpicker.js')
+    //- script(src='https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/i18n/defaults-fa_IR.min.js')
+    script(src='/assets/js/defaults-fa_IR.min.js')
+    //- script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+    script(src='/assets/js/mdb.js')
+    script(src='/assets/amib/js-persian-cal.min.js')
+    script(src='/assets/js/leaflet.js')
+    //- script(src='https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js')
+    script(src='/assets/js/mapbox-gl.js')
+
+    //- script(src ='https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js')
+    div.wrapper
+      //- include _sidebar
+      block sidebar
+      div.main-panel
+        //- Navbar
+        //- include _navbar
+        block navbar
+        //- include _content
+        block content
+          h1 this is a plase holder heading
+
+
+
+    script(src='/assets/js/jquery.redirect.js')
+
+
+    script(src='/assets/fontawesome/js/all.min.js')
+
+
+    //- <!-- Chart JS -->
+    //- script(src='/assets/js/plugins/chartjs.min.js')
+    script(src='/assets/js/plugins/chartjs.js')
+    //- <!--  Notifications Plugin    -->
+    script(src='/assets/js/plugins/bootstrap-notify.js')
+    //- <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
+    script(src='/assets/js/black-dashboard.js')
+    //- <!-- Black Dashboard DEMO methods, don't include it in your project! -->
+    script(src='/assets/demo/demo.js')
+    //-/////
+
+    script(src='/assets/js/latin2Arabic.jquery.js')
+    script(src='/assets/js/persianNum.jquery-2.js')
+    script(src ='/assets/js/siema.min.js')
+    script(type='text/javascript' page_type=pageType src='/assets/js/my_jquery_functions.js')
+    script(type='text/javascript' src='/assets/js/prep.js')
+    //-script(src='https://cdn.trackjs.com/agent/v3/latest/t.js')
+    //-script(src='/assets/js/t.js')
+    //-script.
+    //-    window.TrackJS &&
+    //-    TrackJS.install({
+    //-        token: "ee6fab19c5a04ac1a32a645abde4613a",
+    //-        application: "black-dashboard-free"
+    //-    });
+
+
+
+
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+

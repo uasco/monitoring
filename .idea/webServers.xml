@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="17cd275f-2760-4e6f-8fa1-7991c8843f25" name="server2" url="http://185.165.40.106">
+        <fileTransfer host="185.165.40.106" port="22" rootFolder="/home/uas/uas-monitoring-bl" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

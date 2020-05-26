@@ -1,12 +1,14 @@
-div.sidebar
-    //- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
-    div.sidebar-wrapper
-        div.logo
-            //- a.simple-text.logo-mini(href='javascript:void(0)') سمنان   
-            a.simple-text.logo-normal(href='javascript:void(0)')  ایستگاه های بارانسنجی
-        ul.nav
-            each stn in stations
-                li
-                    a(href='javascript:void(0)')
-                        i.tim-icons.icon-atom
-                        p #{stn.name}   
+mixin sidebar()
+    div.sidebar
+        //- Tip 1: You can change the color of the sidebar using: data-color="blue | green | orange | red"
+        div.sidebar-wrapper
+            //div.logo
+            //    //- a.simple-text.logo-mini(href='javascript:void(0)') سمنان
+            //    //- a.simple-text.logo-normal(href='javascript:void(0)')  ایستگاه های بارانسنجی
+            //    a.simple-text.logo-normal(href='javascript:void(0)')
+            if block
+                block
+            include _fixed-plugin
+            //if(pageType === 'overview')
+            if(pageType.substr(0,2) === 'ov')
+                include _nextprev

@@ -22,8 +22,8 @@ var fixedTop = false;
 
 var navbar_initialized = false;
 var backgroundOrange = false;
-var sidebar_mini_active = false;
-var toggle_initialized = false;
+var sidebar_mini_active = true;
+var toggle_initialized = true;
 
 var $html = $('html');
 var $body = $('body');

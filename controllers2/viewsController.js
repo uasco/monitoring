@@ -191,7 +191,7 @@ exports.getOverView = catchAsync(async (req, res, next) => {
     // console.log(`pageType********************= ${pageType}`);
     const sensores = [['TMP', 'دما'], ['HUM', 'رطوبت'], ['PRS', 'فشار'], ['WSP', 'سرعت باد'],
         ['WDR', 'جهت باد'], ['EVP', 'تبخیر'], ['RAD', 'تشعشع'], ['RAINC', 'بارانسنج']];
-    console.log(`global.si ======================>>>>>>>>>>>>>>>>>> ${global.si}`);
+    //console.log(`global.si ======================>>>>>>>>>>>>>>>>>> ${global.si}`);
     let slideIndex;
     if(global.si == undefined)
         slideIndex = 0;
@@ -208,9 +208,9 @@ exports.getOverView = catchAsync(async (req, res, next) => {
     });
 });
 exports.getDetail = catchAsync(async (req, res, next) => {
-    console.log(`url = ${req.originalUrl}`);
+    //console.log(`url = ${req.originalUrl}`);
     let stnID = req.params.stnid;
-    console.log(`StnID=========== ${stnID}`);
+    //console.log(`StnID=========== ${stnID}`);
     let sensor = req.params.sensor;
     let slideIndex = req.params.slideindex;
     global.si=slideIndex;

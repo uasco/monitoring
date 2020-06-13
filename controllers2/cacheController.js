@@ -1,6 +1,7 @@
 const path = require('path');
 var mcache = require('memory-cache');
 var flatCache = require('flat-cache');
+const my_date = require('../utils/my_date');
 ///// configure cache middleware
 let memCache = new mcache.Cache();
 exports.cacheMiddleWare = (duration) => {
@@ -78,6 +79,8 @@ exports.rainValuesFlatCacheMiddleWare = (req, res, next) => {
 };
 exports.clearRainValuesCache = () => {
     rainValuesCache = '';
+    console.log("%%%%%%%%%%%%%%%%%%%rainValues cached cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 /////load new cache :
 // console.log("////////loading the rainTotalsMonths cache/////////////");
@@ -91,11 +94,11 @@ exports.rainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(cacheContent);
     if (cacheContent) {
-        // console.log("*******************rainTotalsMonths cached happened**********************");
+        console.log("*******************rainTotalsMonths cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%rainTotalsMonths cached DID NOT happend %%%%%%%%%%%%%%%");
+        console.log("%%%%%%%%%%%%%%%%%%%rainTotalsMonths cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             rainTotalsMonthsCache.setKey(key, body);
@@ -108,6 +111,8 @@ exports.rainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
 
 exports.clearRainTotalsMonthsCache = () => {
     rainTotalsMonthsCache = '';
+    console.log("%%%%%%%%%%%%%%%%%%%rainTotalsMonths cached cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 
 /////load new cache :
@@ -122,11 +127,11 @@ exports.levelValueFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(levelValueCache);
     if (cacheContent) {
-        // console.log("*******************levelValue cached happened**********************");
+        console.log("*******************levelValue cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%levelValue cached DID NOT happend %%%%%%%%%%%%%%%");
+        console.log("%%%%%%%%%%%%%%%%%%%levelValue cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             levelValueCache.setKey(key, body);
@@ -138,6 +143,8 @@ exports.levelValueFlatCacheMiddleWare = (req, res, next) => {
 };
 exports.clearLevelValueCache = () => {
     levelValueCache = '';
+    console.log("%%%%%%%%%%%%%%%%%%%levelValue cached cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 /////load new cache :
 // console.log("////////loading the levelLastHours cache/////////////");
@@ -167,6 +174,8 @@ exports.levelLastHoursFlatCacheMiddleWare = (req, res, next) => {
 };
 exports.clearlevelLastHoursCache=()=>{
     levelLastHoursCache ='';
+    console.log("%%%%%%%%%%%%%%%%%%%levelLastHours cached cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 /////load new cache :
 // console.log("////////loading the climaValues cache/////////////");
@@ -180,11 +189,11 @@ exports.climaValuesFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(cacheContent);
     if (cacheContent) {
-        // console.log("*******************climaValues cached happened**********************");
+        console.log("*******************climaValues cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%climaValues cached DID NOT happend %%%%%%%%%%%%%%%");
+        console.log("%%%%%%%%%%%%%%%%%%%climaValues cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             climaValuesCache.setKey(key, body);
@@ -196,6 +205,8 @@ exports.climaValuesFlatCacheMiddleWare = (req, res, next) => {
 };
 exports.clearClimaValuesCache = () => {
     climaValuesCache = '';
+    console.log("%%%%%%%%%%%%%%%%%%%climaValues cached cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 /////load new cache :
 // console.log("////////loading the climaLastHours cache/////////////");
@@ -209,11 +220,11 @@ exports.climaLastHoursFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(cacheContent);
     if (cacheContent) {
-        // console.log("*******************climaLastHours cached happened**********************");
+        console.log("*******************climaLastHours cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%climaLastHours cached DID NOT happend %%%%%%%%%%%%%%%");
+        console.log("%%%%%%%%%%%%%%%%%%%climaLastHours cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             climaLastHoursCache.setKey(key, body);
@@ -225,6 +236,8 @@ exports.climaLastHoursFlatCacheMiddleWare = (req, res, next) => {
 };
 exports.clearClimaLastHoursCache=()=>{
     climaLastHoursCache ='';
+    console.log("%%%%%%%%%%%%%%%%%%%climaLastHours cached cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 
 /////load new cache :
@@ -239,11 +252,11 @@ exports.climaRainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(cacheContent);
     if (cacheContent) {
-        // console.log("*******************climaRainTotalsMonthsCache cached happened**********************");
+        console.log("*******************climaRainTotalsMonthsCache cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%climaRainTotalsMonthsCache cached DID NOT happend %%%%%%%%%%%%%%%");
+        console.log("%%%%%%%%%%%%%%%%%%%climaRainTotalsMonthsCache cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             climaRainTotalsMonthsCache.setKey(key, body);
@@ -255,6 +268,8 @@ exports.climaRainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
 };
 exports.clearClimaRainTotalsMonthsCache=()=>{
     climaRainTotalsMonthsCache ='';
+    console.log("%%%%%%%%%%%%%%%%%%%climaRainTotalsMonthsCache cleared %%%%%%%%%%%%%%%");
+    console.log(`at = ${my_date.jNow()}`);
 }
 /////load new cache :
 // console.log("////////loading the ConfigForm cache/////////////");

@@ -4,14 +4,14 @@ var moment = require('moment-jalaali');
 var numsLable = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 let CronJob = require('cron').CronJob;
 let CronTime = require('cron').CronTime;
-function convertNumsLabelToNamesLabel(numsLabel) {
-    var collection = { 1: 'فروردین', 2: 'اردیبهشت', 3: 'خرداد', 4: 'تیر', 5: 'مرداد', 6: 'شهریور', 7: 'مهر', 8: 'آبان', 9: 'آذر', 10: 'دی', 11: 'بهمن', 12: 'اسفند' };
-    var namesLabel = []
-    numsLabel.map(el => {
-        namesLabel.push(collection[el]);
-    })
-    return namesLabel;
-}
+// function convertNumsLabelToNamesLabel(numsLabel) {
+//     var collection = { 1: 'فروردین', 2: 'اردیبهشت', 3: 'خرداد', 4: 'تیر', 5: 'مرداد', 6: 'شهریور', 7: 'مهر', 8: 'آبان', 9: 'آذر', 10: 'دی', 11: 'بهمن', 12: 'اسفند' };
+//     var namesLabel = []
+//     numsLabel.map(el => {
+//         namesLabel.push(collection[el]);
+//     })
+//     return namesLabel;
+// }
 //var namesLabel = convertNumsLabelToNamesLabel(numsLable);
 //console.log(namesLabel);
 
@@ -74,24 +74,27 @@ function convertNumsLabelToNamesLabel(numsLabel) {
 // let jmb = jm;
 // console.log(`now=${now} , end_of_this_months= ${end_of_this_months}, jy= ${jy} , jm=${jm}, my=${my_date.get_end_of_this_month_in_georgian()} \n, my2=${my_date.get_start_of_next_month_in_georgian()} \n my3 = ${new Date(my_date.get_start_of_next_month_in_georgian())}`);
 
-let date = new Date();
-date.setSeconds(date.getSeconds()+4);
-//console.log( `${date.getMinutes()}  ${date.getHours()}  ${date.getDate()}    ${date.getMonth()+1}    ${date.getFullYear()}  `);
-const job1 = new CronJob(
-    date,
-    function() {
-        console.log(`job1 executed at  ${date}`);
-        date.setSeconds(date.getSeconds()+4);
-        this.setTime(new CronTime(date));
-    },
-    function(){
-        console.log(`job1 was reset at  ${date}`);
-        //let nextDate = date.getMinutes().toString()+' '+ date.getHours().toString() +' '+  date.getDate().toString() + ' ' + (date.getMonth()+1).toString() + ' ' + '*' ;
-        this.start();
-    },
-    false,
-    'Asia/Tehran'
-);
-job1.start();
-date.setSeconds(date.getSeconds()+4);
-job1.setTime(new CronTime(date));
+// let date = new Date();
+// date.setSeconds(date.getSeconds()+4);
+// //console.log( `${date.getMinutes()}  ${date.getHours()}  ${date.getDate()}    ${date.getMonth()+1}    ${date.getFullYear()}  `);
+// const job1 = new CronJob(
+//     date,
+//     function() {
+//         console.log(`job1 executed at  ${date}`);
+//         date.setSeconds(date.getSeconds()+4);
+//         this.setTime(new CronTime(date));
+//     },
+//     function(){
+//         console.log(`job1 was reset at  ${date}`);
+//         //let nextDate = date.getMinutes().toString()+' '+ date.getHours().toString() +' '+  date.getDate().toString() + ' ' + (date.getMonth()+1).toString() + ' ' + '*' ;
+//         this.start();
+//     },
+//     false,
+//     'Asia/Tehran'
+// );
+// job1.start();
+// date.setSeconds(date.getSeconds()+4);
+// job1.setTime(new CronTime(date));
+console.log(`new Date = ${new Date()}`);
+console.log(`moment() = ${moment()}`);
+console.log(`jNow() = ${my_date.jNow()}`);

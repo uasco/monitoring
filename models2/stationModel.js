@@ -25,9 +25,9 @@ module.exports = {
             pool.query(queries[type], function (error, rows, fields) {
                 if (error) {
                     returnValue = "";
-                    console.log("ERRRROR");
+                    //console.log("ERRRROR");
                 } else {
-                    console.log(`rows===${JSON.stringify(rows)}`);
+                    //console.log(`rows===${JSON.stringify(rows)}`);
                     returnValue = rows;
                 }
                 resolve(returnValue)
@@ -39,14 +39,14 @@ module.exports = {
             var returnValue = "";
             pool.query(sql_query_station_install_date, [client_id], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
-                    console.log("rows befor reverse===");
-                    console.log(rows);
+                    //console.log("rows befor reverse===");
+                    //console.log(rows);
                     //rows.reverse();
-                    console.log("rows after reverse=");
-                    console.log(rows);
+                    //console.log("rows after reverse=");
+                    //console.log(rows);
                     returnValue = rows;
                 }
 

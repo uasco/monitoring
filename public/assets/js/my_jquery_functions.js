@@ -63,7 +63,7 @@ function playPause(x) {
 }
 function setSlideIndex(){
     window.currentSlideIndex=this.currentSlide;
-    console.log(`SideIndex ======> ${window.currentSlideIndex}`);
+    //console.log(`SideIndex ======> ${window.currentSlideIndex}`);
 }
 function mysiema(si) {
     if(si == undefined)
@@ -169,9 +169,9 @@ function displayOverview() {
                 cstations.push(ch.id);
         }
     })
-    console.log(`rstations === ${rstations}`);
-    console.log(`lstations === ${lstations}`);
-    console.log(`cstations === ${cstations}`);
+    //console.log(`rstations === ${rstations}`);
+    //console.log(`lstations === ${lstations}`);
+    //console.log(`cstations === ${cstations}`);
     const url = '/overview/';
     let data ={
         rstations,
@@ -196,7 +196,7 @@ function checkRainStart(stnID,clima){
         type: 'GET',
         dataType: 'json',
         success: (response) => {
-            console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
+            //console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
             status = response.data;
             if(clima === 'false') {
                 if (status === 1) {
@@ -244,8 +244,8 @@ function checkRainAlarm(stnID,clima){
         type: 'GET',
         dataType: 'json',
         success: (response) => {
-            console.log("RESPONSE");
-            console.log(response);
+            //console.log("RESPONSE");
+            //console.log(response);
             status = response.data;
             if(clima === 'false') {
                 if (status === 1) {
@@ -441,11 +441,11 @@ function drawBigCharts_c(station_ID, labels, valus, sensor) {
     }
 }
 function fillTable(stationID, labels, values){
-    console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
-    console.log(values.length.toString());
-    console.log(labels.length.toString());
-    console.log(values[values.length -1]);
-    console.log(labels[labels.length -1]);
+    //console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
+    //console.log(values.length.toString());
+    //console.log(labels.length.toString());
+    //console.log(values[values.length -1]);
+    //console.log(labels[labels.length -1]);
     //let table = $('#table' + stationID)[0];
     let table = document.getElementById('table' + stationID).getElementsByTagName('tbody')[0];
     let n = values.length;
@@ -457,12 +457,12 @@ function fillTable(stationID, labels, values){
         cell0.innerHTML = lntpn((i+1).toString());
         cell1.innerHTML = lntpn(values[i].toString());
         cell2.innerHTML = lntpn(labels[i].toString());
-        console.log(`HEY => ${i} ${labels[i]}`);
+        //console.log(`HEY => ${i} ${labels[i]}`);
     }
 }
 function displayRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period){
-    console.log(stationID,totalRainBool.toString() + '-' + absoluteRainBool.toString() + '-' + rateRainBool.toString() + '-' + barDisplayBool.toString() + '-' + lineDisplayBool.toString())
-    console.log(startDate.toString()+ '###' +endDate.toString()+ '###' +startTime.toString()+ '###' +endTime.toString()+ '###' + period.toString());
+    //console.log(stationID,totalRainBool.toString() + '-' + absoluteRainBool.toString() + '-' + rateRainBool.toString() + '-' + barDisplayBool.toString() + '-' + lineDisplayBool.toString())
+    //console.log(startDate.toString()+ '###' +endDate.toString()+ '###' +startTime.toString()+ '###' +endTime.toString()+ '###' + period.toString());
     let rainType = '';
     let chartType = '';
     if(totalRainBool)
@@ -603,9 +603,9 @@ function getRainValuesForDetailCard(id) {
         success: (response) => {
             if (response.data.length > 0) {
                 let date = response.data[0].date;
-                console.log(`date = ${date}`);
+                //console.log(`date = ${date}`);
                 date = lntpn(date);
-                console.log(`date = ${date}`);
+                //console.log(`date = ${date}`);
                 $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
                 $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
             }
@@ -1023,7 +1023,7 @@ $(document).ready(() => {
         rv = pageType.substr(2, 1);
         lv = pageType.substr(3, 1);
         cv = pageType.substr(4, 1);
-        console.log(`window.savedsi = ${window.savedsi}`);
+        //console.log(`window.savedsi = ${window.savedsi}`);
         mysiema(window.savedsi);
         if(rv=='1'){
             getRainStationsNamesAndIDs();
@@ -1051,8 +1051,12 @@ $(document).ready(() => {
             case '7':;
         }
     }
-
+    setInterval(function(){
+        getRainStationsNamesAndIDs(); // this will run after every 50 minutes
+        getLevelStationsNamesAndIDs();
+        getClimaStationsNamesAndIDs();
+        console.log('***');
+        console.log('after 50 minutes executed')
+        console.log('***');
+    }, 3000000);
 });
-// setInterval(function(){
-//     getRainStationsNamesAndIDs(); // this will run after every 5 seconds
-// }, 5000);

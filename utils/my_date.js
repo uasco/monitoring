@@ -217,3 +217,7 @@ exports.subtract_times = function (endDate,startDate,endHour,startHour) {
     diff /= 60;
     return Math.abs(Math.round(diff));
 }
+exports.jNow = function (){
+    let now = moment();
+    return moment(now).format('jYYYY-jM-jD HH:mm:ss');
+}

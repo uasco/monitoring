@@ -9,7 +9,7 @@ module.exports = {
             var returnValue = "";
             pool.query(sql_query_rain_start_status, [client_id, channel_index_rain_total], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
                     //console.log(rows[1][0]['@result']);
@@ -34,15 +34,15 @@ module.exports = {
         });
     },
     getRainAlarmStatus: function (client_id, channel_index_rain_total,n,h) {
-        console.log(`alarm db === ${client_id} ${channel_index_rain_total} ${n} ${h}`);
+        //console.log(`alarm db === ${client_id} ${channel_index_rain_total} ${n} ${h}`);
         return new Promise(function (resolve, reject) {
             var returnValue = "";
             pool.query(sql_query_rain_alarm_status, [client_id, channel_index_rain_total,n,h], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR getRainAlarmStatus");
                     returnValue = "";
                 } else {
-                    console.log(rows[1][0]['@result']);
+                    //console.log(rows[1][0]['@result']);
                     //rows is like this :
                     // [
                     //   OkPacket {

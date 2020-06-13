@@ -18,8 +18,8 @@ exports.getStationsNamesAndIDs = catchAsync(async (req, res, next) => {
 
     //send JSON to Express
     res.json(apiResult); //{"data":[{"id":5,"name":"shahrdari_15"},{"id":6,"name":"16 channel"},{"id":7,"name":"Level_Test"},{"id":8,"name":"r"}]}
-    console.log("from rainStationController : ");
-    console.log(apiResult.data[0].id);
+    //console.log("from rainStationController : ");
+    //console.log(apiResult.data[0].id);
 });
 exports.getStationInstallDate = catchAsync(async (req, res, next) => {
     const client_id = req.params.id * 1;
@@ -30,8 +30,8 @@ exports.getStationInstallDate = catchAsync(async (req, res, next) => {
     var resultJson = JSON.stringify(installDate);
     resultJson = JSON.parse(resultJson);
     ////////////////////////
-    console.log('resultJson["data"] ====');
-    console.log(resultJson);
+    //console.log('resultJson["data"] ====');
+    //console.log(resultJson);
     if(resultJson.length>0){
         resultJson.map(el => {
             // d = el.sample_time;
@@ -41,7 +41,7 @@ exports.getStationInstallDate = catchAsync(async (req, res, next) => {
             d = el.product_date_time;
             //'1396-12-07T00:09:24.000Z'
             date = moment(d, 'YYYY-M-D HH:mm:ss').format( 'D / MM / YYYY');
-            console.log(`date = ${date}`);
+            //console.log(`date = ${date}`);
             el.date = date;
         })
     }

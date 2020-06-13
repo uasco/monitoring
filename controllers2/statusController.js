@@ -72,7 +72,7 @@ async function enoughEspentTime(stnID,statusType) {
     let cd = new Date();
     let diff = Math.abs(res.rain_start_time - cd);
     let diffh = Math.ceil(diff / (1000 * 60 ));
-    console.log(`diffh = ${diffh}` );
+    //console.log(`diffh = ${diffh}` );
     if(diffh >= 4 ){
         return true ;
     }else{
@@ -197,8 +197,8 @@ exports.getClimaAlarmStatus = catchAsync(async (req, res, next) => {
     const client_id = req.params.id * 1;
     const sensor = req.url.split('/')[2];
     let values = undefined;
-    console.log("sensor============");
-    console.log(sensor);
+    //console.log("sensor============");
+    //console.log(sensor);
     if (sensor === 'rainc') {
         values = await Values.getRainValues(client_id, channel_indexes[sensor]['12'], channel_indexes[sensor]['24'], channel_indexes[sensor]['t']);
     } else {

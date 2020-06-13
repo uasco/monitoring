@@ -138,13 +138,13 @@ exports.getRainAmariReport = catchAsync(async (req, res, next) => {
     const endHour = req.params.eh;
     const period = req.params.p;
 
-    console.log(client_id + '###' + startDate+startHour + '###' + endDate + '###' + endHour + '###' + period);
+    //console.log(client_id + '###' + startDate+startHour + '###' + endDate + '###' + endHour + '###' + period);
 
     let startTime = startDate+ ' ' + startHour;
     let endTime = endDate+ ' ' + endHour;
 
     let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
-    console.log(`minutes ========== ${minutes}`);
+    //console.log(`minutes ========== ${minutes}`);
 
     const rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
     var resultJson = JSON.stringify(rainAmariReport);
@@ -210,11 +210,11 @@ exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
     const endHour = req.params.eh;
     const period = req.params.p;
     const rainType = req.params.rt;
-    console.log(client_id + '###' + startDate+startHour + '###' + endDate + '###' + endHour + '###' + period);
+    //console.log(client_id + '###' + startDate+startHour + '###' + endDate + '###' + endHour + '###' + period);
     let startTime = startDate+ ' ' + startHour;
     let endTime = endDate+ ' ' + endHour;
     let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
-    console.log(`minutes ========== ${minutes}`);
+    //console.log(`minutes ========== ${minutes}`);
     const rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
     var resultJson = JSON.stringify(rainAmariReport);
     //console.log("new pars:::::::::::::::");
@@ -542,8 +542,8 @@ exports.getClimaStationValues = catchAsync(async (req, res, next) => {
     const client_id = req.params.id * 1;
     const sensor = req.url.split('/')[2];
     var values = undefined;
-    console.log("sensor============");
-    console.log(sensor);
+    //console.log("sensor============");
+    //console.log(sensor);
     var resultJson = undefined;
     if (sensor === 'rainc') {
         values = await Values.getRainValues(client_id, channel_indexes[sensor]['12'], channel_indexes[sensor]['24'], channel_indexes[sensor]['t']);

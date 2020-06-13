@@ -35,12 +35,12 @@ var sql_queries_clima_values = {
 let sql_query_rain_amari_report_values = "call amari_report(?,?,?,?,?);";
 
 async function getRainTotalOfmonth(client_id, channel_index_rain_total, date, returnValue, x) {
-    console.log("DATE===============");
-        console.log(date);
+    //console.log("DATE===============");
+        //console.log(date);
     return new Promise(function (resolve, reject) {
         pool.query(sql_query_rain_total_of_end_of_month, [client_id, channel_index_rain_total, date[1], date[1]], function (error, rows, fields) {
             if (error) {
-                console.log("EEERRRORRRRR");
+                //console.log("EEERRRORRRRR");
                 return "";
             }
             if(rows.length) {
@@ -54,9 +54,9 @@ async function getRainTotalOfmonth(client_id, channel_index_rain_total, date, re
                 //console.log("NM===");
                 //console.log(x);
                 //console.log(returnValue);
-                console.log("DATE======DATE=========");
-                console.log(arr_item[0]);
-                console.log(arr_item[1]);
+                //console.log("DATE======DATE=========");
+                //console.log(arr_item[0]);
+                //console.log(arr_item[1]);
 
             }
             resolve(returnValue);
@@ -69,14 +69,14 @@ module.exports = {
             var returnValue = "";
             pool.query(sql_query_rain_station_rain_values, [client_id, channel_index_rain_12, channel_index_rain_24, channel_index_rain_total], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
-                    console.log("rows befor reverse===");
-                    console.log(rows);
+                    //console.log("rows befor reverse===");
+                    //console.log(rows);
                     //rows.reverse();
-                    console.log("rows after reverse=");
-                    console.log(rows);
+                    //console.log("rows after reverse=");
+                    //console.log(rows);
                     returnValue = rows;
                 }
 
@@ -144,13 +144,13 @@ module.exports = {
             let returnValue = "";
             let gStartTime = moment(startTime, 'jYYYY-jM-jD jHH:jmm').format('YYYY-MM-DD HH:mm');
             let gEndTime = moment(endTime, 'jYYYY-jM-jD jHH:jmm').format('YYYY-MM-DD HH:mm');
-            console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
-            console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
-            console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
-            console.log(`$$$$$$$$$$$$$$$$ channel_index_rain_total: ${channel_index_rain_total}`);
+            //console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
+            //console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
+            //console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
+            //console.log(`$$$$$$$$$$$$$$$$ channel_index_rain_total: ${channel_index_rain_total}`);
             pool.query(sql_query_rain_amari_report_values, [client_id, channel_index_rain_total,gStartTime,gEndTime,period], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
                     // console.log("rows befor reverse===");
@@ -169,7 +169,7 @@ module.exports = {
             var returnValue = "";
             pool.query(sql_query_level_station_level_value, [client_id, channel_index_level], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
                     //console.log(rows);
@@ -189,10 +189,10 @@ module.exports = {
             pool.query(sql_query_level_station_last_hours, [client_id, channel_index_level, n], function (error, rows, fields) {
                 // pool.query(sql_query_level_station_last_hours, [client_id, channel_index_level, dates[0], dates[1]], function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                 } else {
                     rows.reverse();
-                    console.log(rows);
+                    //console.log(rows);
                     returnValue = rows;
                 }
                 resolve(returnValue)
@@ -206,7 +206,7 @@ module.exports = {
             pool.query(sql_query_clima_station_last_hours, [client_id, channel_index, n], function (error, rows, fields) {
 
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                 } else {
                     rows.reverse();
                     //console.log(rows);
@@ -217,24 +217,24 @@ module.exports = {
         });
     },
     getClimaValues: function (client_id, sensor, ci) {
-        console.log("from model , sensor ===");
-        console.log(sensor);
+        //console.log("from model , sensor ===");
+        //console.log(sensor);
         return new Promise(function (resolve, reject) {
             var returnValue = "";
             var query_params = [client_id, ci['l'], ci['a'], ci['x'], ci['n']];
-            console.log("query_params:");
-            console.log(query_params);
-            console.log(sql_queries_clima_values[sensor]);
+            //console.log("query_params:");
+            //console.log(query_params);
+            //console.log(sql_queries_clima_values[sensor]);
             pool.query(sql_queries_clima_values[sensor], query_params, function (error, rows, fields) {
                 if (error) {
-                    console.log("EEERRRORRRRR");
+                    //console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
-                    console.log("rows befor reverse===");
-                    console.log(rows);
+                    //console.log("rows befor reverse===");
+                    //console.log(rows);
                     //rows.reverse();
-                    console.log("rows after reverse=");
-                    console.log(rows);
+                    //console.log("rows after reverse=");
+                    //console.log(rows);
                     returnValue = rows;
                 }
 

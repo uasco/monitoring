@@ -39,6 +39,13 @@ router
         authController.restrictTo('admin', 'lead-guide')
     );
 router
+    .route('/excelrainamarireport/:id/:sd/:ed/:sh/:eh/:p/:rt')
+    .get(valuesController.getExcelRainAmariReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
   .route('/level/:id')
   .get(cacheController.levelValueFlatCacheMiddleWare, valuesController.getLevelStationValue)
   .post(

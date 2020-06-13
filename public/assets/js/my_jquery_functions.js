@@ -221,6 +221,7 @@ function checkRainStart(stnID,clima){
                     $('#' + stnID +'RAINC'+ ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID +'RAINC'+ ' i' + '#rain_alarm1').text("").append('');
                     $('#' + stnID +'RAINC'+ ' i' + '#rain_alarm8').text("").append('');
+
                 }
             }
         }
@@ -327,6 +328,39 @@ function calcEachMonth(values) {
     values.splice(0,1);
     return values;
 }
+function calcAmariAbsoluteValues(values) {
+    let n = values.length;
+    for (let i = n-1; i > 0; i--) {
+
+            let x = values[i] - values[i - 1];
+            if (x < 0) {
+                x = 0;
+            }
+
+
+        x = round(x, 2);
+        values[i] = x;
+
+    }
+    return values;
+}
+function calcAmariRateValues(values,period) {
+    let n = values.length;
+    for (let i = n-1; i > 0; i--) {
+
+        let x = values[i] - values[i - 1];
+        if (x < 0) {
+            x = 0;
+        }else
+            x = x / period;
+
+
+        x = round(x, 2);
+        values[i] = x;
+
+    }
+    return values;
+}
 function drawCharts_rl(station_ID, labels, valus, label, stnType) {
     if (stnType === 'rain') {
         var chart_id = 'CountryChart' + station_ID;
@@ -337,7 +371,7 @@ function drawCharts_rl(station_ID, labels, valus, label, stnType) {
         });
     }
     if (stnType === 'level') {
-        var chart_id = 'chartLinePurple' + station_ID;
+        let chart_id = 'chartLinePurple' + station_ID;
         $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
             $.getScript('/assets/js/mychart.js', function () {
                 drawLineChart(chart_id, labels, valus, label , 'ارتفاع آب');
@@ -345,17 +379,24 @@ function drawCharts_rl(station_ID, labels, valus, label, stnType) {
         });
     }
 }
-function drawBigCharts_rl(station_ID, labels, valus, label, stnType) {
+function drawBigCharts_rl(station_ID, labels, valus, label, stnType, chartType) {
+    let chart_id = 'CountryChart' + station_ID;
     if (stnType === 'rain') {
-        var chart_id = 'CountryChart' + station_ID;
-        $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
-            $.getScript('/assets/js/mychart.js', function () {
-                drawBigBarChart(chart_id, labels, valus, label);
+        if(chartType == 'bar'){
+            $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
+                $.getScript('/assets/js/mychart.js', function () {
+                    drawBigBarChart(chart_id, labels, valus, label);
+                });
             });
-        });
-    }
-    if (stnType === 'level') {
-        var chart_id = 'chartLinePurple' + station_ID;
+        }else if(chartType == 'line'){
+            $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
+                $.getScript('/assets/js/mychart.js', function () {
+                    drawBigLineChart(chart_id, labels, valus, label );
+                });
+            });
+        }
+    }else if (stnType === 'level') {
+        let chart_id = 'chartLinePurple' + station_ID;
         $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
             $.getScript('/assets/js/mychart.js', function () {
                 drawBigLineChart(chart_id, labels, valus, label , 'ارتفاع آب');
@@ -399,21 +440,48 @@ function drawBigCharts_c(station_ID, labels, valus, sensor) {
         });
     }
 }
-function displayAmariReport(stationID,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,Period){
-    console.log(stationID,totalRainBool.toString() + '-' + absoluteRainBool.toString() + '-' + rateRainBool.toString() + '-' + barDisplayBool.toString() + '-' + lineDisplayBool.toString())
-    console.log(startDate.toString()+ '###' +endDate.toString()+ '###' +startTime.toString()+ '###' +endTime.toString()+ '###' + Period.toString());
-    getRainAmariReortValues(stationID,startDate,endDate,startTime,endTime,Period)
+function fillTable(stationID, labels, values){
+    console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
+    console.log(values.length.toString());
+    console.log(labels.length.toString());
+    console.log(values[values.length -1]);
+    console.log(labels[labels.length -1]);
+    //let table = $('#table' + stationID)[0];
+    let table = document.getElementById('table' + stationID).getElementsByTagName('tbody')[0];
+    let n = values.length;
+    for (let i = 0; i < n; i++) {
+        let row = table.insertRow();
+        let cell0 = row.insertCell(0);
+        let cell1 = row.insertCell(1);
+        let cell2 = row.insertCell(2);
+        cell0.innerHTML = lntpn((i+1).toString());
+        cell1.innerHTML = lntpn(values[i].toString());
+        cell2.innerHTML = lntpn(labels[i].toString());
+        console.log(`HEY => ${i} ${labels[i]}`);
+    }
 }
-function getRainAmariReortValues(stationID,startDate,endDate,startTime,endTime,Period) {
-    let RainAmariReortValues;
+function displayRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period){
+    console.log(stationID,totalRainBool.toString() + '-' + absoluteRainBool.toString() + '-' + rateRainBool.toString() + '-' + barDisplayBool.toString() + '-' + lineDisplayBool.toString())
+    console.log(startDate.toString()+ '###' +endDate.toString()+ '###' +startTime.toString()+ '###' +endTime.toString()+ '###' + period.toString());
+    let rainType = '';
+    let chartType = '';
+    if(totalRainBool)
+        rainType = 'total';
+    else if(absoluteRainBool)
+        rainType = 'absolute';
+    else if(rateRainBool)
+        rainType = 'rate';
+    if(barDisplayBool)
+        chartType = 'bar';
+    if(lineDisplayBool)
+        chartType = 'line';
+
     $.ajax({
-        url: '/api/values/rainamarireport/' + stationID + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + Period ,
+        url: '/api/values/rainamarireport/' + stationID + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period ,
         type: 'GET',
         dataType: 'json',
         success: (response) => {
             if (response.data) {
-                // console.log("HHHHHHHHHHHHHHHH");
-                // console.log(response.data);
                 let RainAmariReort = response.data;
                 /*
                 [
@@ -422,45 +490,76 @@ function getRainAmariReortValues(stationID,startDate,endDate,startTime,endTime,P
                  {"value":701.3,"sample_time":"2020-04-28 00:38:34"}
                 ]
                  */
-
                 RainAmariReort = JSON.parse(RainAmariReort);
+                if(RainAmariReort.length == 0){
+                    alert('در بازه زمانی درخواستی داده ای وجود ندارد');
+                    return;
+                }
+                $('#report-chart').show();
+                $('#report-table').show();
 
-                console.log(`HHHHHHHHHHHHHHHH ${RainAmariReort} EEEEEEEEEEEEEEE`);
-                //console.log(RainAmariReort[0]['sample_time']);
-                //console.log(RainAmariReort[0]['value']);
-                 let labels = [];
-                 let values = [];
+                let labels = [];
+                let values = [];
                 for(let i=0;i<RainAmariReort.length;i++){
 
                     labels.push(RainAmariReort[i]['sample_time']);
-                    //values.push(lntpn(JSON.stringify(RainAmariReort[i]['value'])));
                     values.push(RainAmariReort[i]['value']);
                 }
-                // RainAmariReort.map(el => {
-                //     if(el) {
-                //         labels.push(el['sample_time']);
-                //     }
-                //
-                // })
-                // RainAmariReort.map(el => {
-                //     if(el) {
-                //         values.push(el['value']);
-                //     }
-                // })
-
-
-                //labels = convertNumsLabelToNamesLabel(labels);
-                //values = calcEachMonth(values);
-                // console.log("values after calc");
-                console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                console.log(labels[0]);
-                console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-                console.log(values[0]);
-
-                drawBigCharts_rl(stationID, labels, values, 'باران تجمیعی', 'rain');
+                switch(rainType){
+                    case 'total':
+                        values.splice(0,1);
+                        labels.splice(0,1);
+                        drawBigCharts_rl(stationID, labels, values, 'باران تجمیعی', 'rain',chartType);
+                        break;
+                    case 'absolute':
+                        values = calcAmariAbsoluteValues(values);
+                        values.splice(0, 1);
+                        labels.splice(0, 1);
+                            drawBigCharts_rl(stationID, labels, values, 'میزان بارش', 'rain', chartType);
+                        break;
+                    case 'rate':
+                        values = calcAmariRateValues(values,period);
+                        values.splice(0,1);
+                        labels.splice(0,1);
+                        drawBigCharts_rl(stationID, labels, values, 'شدت بارش', 'rain',chartType);
+                        break;
+                }
+                fillTable(stationID, labels, values);
+                $('#download-button').removeClass("disabled");
             }
         }
     })
+}
+function getExcelRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period) {
+    let rainType = '';
+    if(totalRainBool)
+        rainType = 'total';
+    else if(absoluteRainBool)
+        rainType = 'absolute';
+    else if(rateRainBool)
+        rainType = 'rate';
+
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", '/api/values/excelrainamarireport/' + stationID + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period + '/' + rainType , true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(oEvent) {
+        var arrayBuffer = oReq.response;
+
+        // if you want to access the bytes:
+        var byteArray = new Uint8Array(arrayBuffer);
+        // ...
+
+        // If you want to use the image in your DOM:
+        var blob = new Blob([arrayBuffer], {type: 'data:application/vnd.ms-excel'});
+        saveAs(blob, 'amari-report.xlsx');
+        var saving = document.createElement('a');
+        document.body.appendChild(saving);
+        saving.click();
+        document.body.removeChild(saving);
+    };
+    oReq.send();
+
 }
 function getRainValuesForDetailCard(id) {
     $.ajax({

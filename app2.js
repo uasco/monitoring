@@ -7,7 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
-const cron = require('node-cron');
+const scheduler = require('./scheduler');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
@@ -124,14 +124,17 @@ app.use(globalErrorHandler);
 
 
 
-const util = require('util');
+//const util = require('util');
 const Station = require('./models2/stationModel');
 
 const Stn = require('./models/stnModel');
 async function stns() {
-    const stations = await Station.getStationsNamesAndIDs('all');
-    var resultJson = JSON.stringify(stations);
-    resultJson = JSON.parse(resultJson);
+    // const stations = await Station.getStationsNamesAndIDs('all');
+    // var resultJson = JSON.stringify(stations);
+    // resultJson = JSON.parse(resultJson);
+
+
+
     // Stn.deleteMany({}, function(err) {})
     // if(resultJson.length>0){
     //     resultJson.map(async el  => {
@@ -142,11 +145,15 @@ async function stns() {
     //     })
     // }
 }
-s=util.promisify(stns);
-s();
+//s=util.promisify(stns);
+//s();
 
-cron.schedule("* * * * *", function() {
-    console.log("running a task every minute");
-});
+scheduler.clearRainValuesCache();
+scheduler.clearLevelValueCache();
+scheduler.clearClimaValuesCache();
+scheduler.clearRainTotalsMonthsCache();
+scheduler.clearLevelLastHoursCache();
+
+
 
 module.exports = app;

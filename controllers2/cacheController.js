@@ -54,6 +54,7 @@ exports.stationsFlatCacheMiddleWare = (req, res, next) => {
 // console.log("////////loading the rainValues cache/////////////");
 let rainValuesCache = flatCache.load("rainValuesCache", path.resolve("../cache"));
 exports.rainValuesFlatCacheMiddleWare = (req, res, next) => {
+    rainValuesCache = flatCache.load("rainValuesCache", path.resolve("../cache"));
     let key = "__express__" + req.originalUrl || req.url;
     let cacheContent = rainValuesCache.getKey(key);
     //console.log("key :::::::::::: ");
@@ -61,11 +62,11 @@ exports.rainValuesFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(cacheContent);
     if (cacheContent) {
-        // console.log("*******************rainValues cached happened**********************");
+         console.log("*******************rainValues cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%rainValues cached DID NOT happend %%%%%%%%%%%%%%%");
+         console.log("%%%%%%%%%%%%%%%%%%%rainValues cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             rainValuesCache.setKey(key, body);
@@ -75,12 +76,14 @@ exports.rainValuesFlatCacheMiddleWare = (req, res, next) => {
         next();
     }
 };
-
-
+exports.clearRainValuesCache = () => {
+    rainValuesCache = '';
+}
 /////load new cache :
 // console.log("////////loading the rainTotalsMonths cache/////////////");
 let rainTotalsMonthsCache = flatCache.load("rainTotalsMonthsCache", path.resolve("../cache"));
 exports.rainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
+    rainTotalsMonthsCache = flatCache.load("rainTotalsMonthsCache", path.resolve("../cache"));
     let key = "__express__" + req.originalUrl || req.url;
     let cacheContent = rainTotalsMonthsCache.getKey(key);
     //console.log("key :::::::::::: ");
@@ -103,12 +106,15 @@ exports.rainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
     }
 };
 
-
+exports.clearRainTotalsMonthsCache = () => {
+    rainTotalsMonthsCache = '';
+}
 
 /////load new cache :
 // console.log("////////loading the levelValue cache/////////////");
 let levelValueCache = flatCache.load("levelValueCache", path.resolve("../cache"));
 exports.levelValueFlatCacheMiddleWare = (req, res, next) => {
+    levelValueCache = flatCache.load("levelValueCache", path.resolve("../cache"));
     let key = "__express__" + req.originalUrl || req.url;
     let cacheContent = levelValueCache.getKey(key);
     //console.log("key :::::::::::: ");
@@ -130,11 +136,14 @@ exports.levelValueFlatCacheMiddleWare = (req, res, next) => {
         next();
     }
 };
-
+exports.clearLevelValueCache = () => {
+    levelValueCache = '';
+}
 /////load new cache :
 // console.log("////////loading the levelLastHours cache/////////////");
 let levelLastHoursCache = flatCache.load("levelLastHoursCache", path.resolve("../cache"));
 exports.levelLastHoursFlatCacheMiddleWare = (req, res, next) => {
+    levelLastHoursCache = flatCache.load("levelLastHoursCache", path.resolve("../cache"));
     let key = "__express__" + req.originalUrl || req.url;
     let cacheContent = levelLastHoursCache.getKey(key);
     //console.log("key :::::::::::: ");
@@ -142,11 +151,11 @@ exports.levelLastHoursFlatCacheMiddleWare = (req, res, next) => {
     //console.log("casheeeed:::::");
     //console.log(cacheContent);
     if (cacheContent) {
-        // console.log("*******************levelLastHours cached happened**********************");
+         console.log("*******************levelLastHours cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%levelLastHours cached DID NOT happend %%%%%%%%%%%%%%%");
+         console.log("%%%%%%%%%%%%%%%%%%%levelLastHours cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             levelLastHoursCache.setKey(key, body);
@@ -156,35 +165,14 @@ exports.levelLastHoursFlatCacheMiddleWare = (req, res, next) => {
         next();
     }
 };
-/////load new cache :
-// console.log("////////loading the climaLastHours cache/////////////");
-let climaLastHoursCache = flatCache.load("climaLastHoursCache", path.resolve("../cache"));
-exports.climaLastHoursFlatCacheMiddleWare = (req, res, next) => {
-    let key = "__express__" + req.originalUrl || req.url;
-    let cacheContent = climaLastHoursCache.getKey(key);
-    //console.log("key :::::::::::: ");
-    //console.log(key);
-    //console.log("casheeeed:::::");
-    //console.log(cacheContent);
-    if (cacheContent) {
-        // console.log("*******************climaLastHours cached happened**********************");
-        res.send(cacheContent);
-        return;
-    } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%climaLastHours cached DID NOT happend %%%%%%%%%%%%%%%");
-        res.sendResponse = res.send;
-        res.send = body => {
-            climaLastHoursCache.setKey(key, body);
-            climaLastHoursCache.save(true);
-            res.sendResponse(body);
-        };
-        next();
-    }
-};
+exports.clearlevelLastHoursCache=()=>{
+    levelLastHoursCache ='';
+}
 /////load new cache :
 // console.log("////////loading the climaValues cache/////////////");
-let climaValuesCache = flatCache.load("ClimaValuesCache", path.resolve("../cache"));
+let climaValuesCache = flatCache.load("climaValuesCache", path.resolve("../cache"));
 exports.climaValuesFlatCacheMiddleWare = (req, res, next) => {
+    climaValuesCache = flatCache.load("climaValuesCache", path.resolve("../cache"));
     let key = "__express__" + req.originalUrl || req.url;
     let cacheContent = climaValuesCache.getKey(key);
     //console.log("key :::::::::::: ");
@@ -206,6 +194,65 @@ exports.climaValuesFlatCacheMiddleWare = (req, res, next) => {
         next();
     }
 };
+exports.clearClimaValuesCache = () => {
+    climaValuesCache = '';
+}
+/////load new cache :
+// console.log("////////loading the climaLastHours cache/////////////");
+let climaLastHoursCache = flatCache.load("climaLastHoursCache", path.resolve("../cache"));
+exports.climaLastHoursFlatCacheMiddleWare = (req, res, next) => {
+    climaLastHoursCache = flatCache.load("climaLastHoursCache", path.resolve("../cache"));
+    let key = "__express__" + req.originalUrl || req.url;
+    let cacheContent = climaLastHoursCache.getKey(key);
+    //console.log("key :::::::::::: ");
+    //console.log(key);
+    //console.log("casheeeed:::::");
+    //console.log(cacheContent);
+    if (cacheContent) {
+        // console.log("*******************climaLastHours cached happened**********************");
+        res.send(cacheContent);
+        return;
+    } else {
+        // console.log("%%%%%%%%%%%%%%%%%%%climaLastHours cached DID NOT happend %%%%%%%%%%%%%%%");
+        res.sendResponse = res.send;
+        res.send = body => {
+            climaLastHoursCache.setKey(key, body);
+            climaLastHoursCache.save(true);
+            res.sendResponse(body);
+        };
+        next();
+    }
+};
+exports.clearclimaLastHoursCache=()=>{
+    climaLastHoursCache ='';
+}
+/////load new cache :
+// console.log("////////loading the ConfigForm cache/////////////");
+let configFormCache = flatCache.load("configFormCache", path.resolve("../cache"));
+exports.configFormFlatCacheMiddleWare = (req, res, next) => {
+    let key = "__express__" + req.originalUrl || req.url;
+    let cacheContent = configFormCache.getKey(key);
+    //console.log("key :::::::::::: ");
+    //console.log(key);
+    //console.log("casheeeed:::::");
+    //console.log(cacheContent);
+    if (cacheContent) {
+        //console.log("*******************ConfigForm cached happened**********************");
+        res.send(cacheContent);
+        return;
+    } else {
+        //console.log("%%%%%%%%%%%%%%%%%%%ConfigForm cached DID NOT happend %%%%%%%%%%%%%%%");
+        res.sendResponse = res.send;
+        res.send = body => {
+            configFormCache.setKey(key, body);
+            configFormCache.save(true);
+            res.sendResponse(body);
+        };
+        next();
+    }
+};
+
+
 
 /////how to use:
 /////     app.get('/products', flatCacheMiddleware, function(req, res){

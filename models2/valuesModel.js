@@ -153,8 +153,8 @@ module.exports = {
                     console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
-                    console.log("rows befor reverse===");
-                    console.log(rows);
+                    // console.log("rows befor reverse===");
+                    // console.log(rows);
 
                     returnValue = rows;
                 }
@@ -192,7 +192,7 @@ module.exports = {
                     console.log("EEERRRORRRRR");
                 } else {
                     rows.reverse();
-                    //console.log(rows);
+                    console.log(rows);
                     returnValue = rows;
                 }
                 resolve(returnValue)

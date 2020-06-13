@@ -1,3 +1,35 @@
+zeroCompensation = {
+  renderZeroCompensation: function (chartInstance, d) {
+    // get postion info from _view
+    const view = d._view
+    const context = chartInstance.chart.ctx
+
+    // the view.x is the centeral point of the bar, so we need minus half width of the bar.
+    const startX = view.x - view.width / 2
+    // common canvas API, Check it out on MDN
+    context.beginPath();
+    // set line color, you can do more custom settings here.
+    context.strokeStyle = '#1f8ef1';
+    context.moveTo(startX, view.y);
+    // draw the line!
+    context.lineTo(startX + view.width, view.y);
+    // bam！ you will see the lines.
+    context.stroke();
+  },
+
+  afterDatasetsDraw: function (chart, easing) {
+    // get data meta, we need the location info in _view property.
+    const meta = chart.getDatasetMeta(0)
+    // also you need get datasets to find which item is 0.
+    const dataSet = chart.config.data.datasets[0].data
+    meta.data.forEach((d, index) => {
+      // for the item which value is 0, reander a line.
+      if(dataSet[index] === 0) {
+        this.renderZeroCompensation(chart, d)
+      }
+    })
+  }
+};
 gradientBarChartConfiguration = {
   maintainAspectRatio: false,
   legend: {
@@ -129,6 +161,7 @@ function drawBarChart(chart_id, months, values, label) {
   mySugestedMax ++ ;
 
   var myChart = new Chart(ctx, {
+    plugins: [zeroCompensation],
     type: 'bar',
     responsive: true,
     legend: {
@@ -259,6 +292,7 @@ function drawBigBarChart(chart_id, months, values, label) {
   mySugestedMax ++ ;
 
   var myChart = new Chart(ctx, {
+    plugins: [zeroCompensation],
     type: 'bar',
     responsive: true,
     legend: {
@@ -321,7 +355,7 @@ function drawBigBarChart(chart_id, months, values, label) {
             xAxes: [{
 
               gridLines: {
-                drawBorder: false,
+                drawBorder: true,
                 color: 'rgba(29,140,248,0.1)',
                 zeroLineColor: "transparent",
               },
@@ -335,7 +369,7 @@ function drawBigBarChart(chart_id, months, values, label) {
         }
   });
 }
-function drawBigLineChart(chart_id, months, values , sensor, ) {
+function drawBigLineChart(chart_id, months, values , sensor) {
 
   var ctx = document.getElementById(chart_id).getContext("2d");
 
@@ -345,11 +379,18 @@ function drawBigLineChart(chart_id, months, values , sensor, ) {
   gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
   gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
 
+  var mySugestedMax = 0;
+  values.map(el=>{
+    if(el > mySugestedMax)
+      mySugestedMax = el;
+  })
+  mySugestedMax ++ ;
+
   var myChart = new Chart(ctx, {
     type: 'line',
     responsive: true,
     legend: {
-      display: false
+      display: true
     },
     data: {
       // labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد' , 'شهریور'],
@@ -368,6 +409,66 @@ function drawBigLineChart(chart_id, months, values , sensor, ) {
         data: values,
       }]
     },
-    options: gradientLineChartConfiguration
+    //options: gradientLineChartConfiguration
+    options:
+        {
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          },
+
+          tooltips: {
+            backgroundColor: '#f5f5f5',
+            titleFontColor: '#333',
+            bodyFontColor: '#666',
+            bodySpacing: 8,
+            xPadding: 20,
+            mode: "nearest",
+            intersect: 0,
+            position: "nearest",
+          },
+          responsive: true,
+          scales: {
+            yAxes: [{
+
+              gridLines: {
+                drawBorder: false,
+                color: 'rgba(29,140,248,0.1)',
+                zeroLineColor: "transparent",
+              },
+              ticks: {
+                suggestedMin: 0,
+                // suggestedMax: 80,
+                suggestedMax: mySugestedMax,
+                padding: 10,
+                fontColor: "#9e9e9e",
+                fontSize: 14
+              }
+            }],
+
+            xAxes: [{
+
+              gridLines: {
+                drawBorder: false,
+                color: 'rgba(29,140,248,0.1)',
+                zeroLineColor: "transparent",
+              },
+              ticks: {
+                padding: 20,
+                fontColor: "#9e9e9e",
+                fontSize: 16
+              }
+            }]
+          }
+        }
   });
+}
+function clearChart(chart_id) {
+  let ctx = document.getElementById(chart_id).getContext("2d");
+  let gradientStroke = ctx.createLinearGradient(0, 0, 0, 0);
+  let myChart = new Chart(ctx, {
+
+  });
+
+
 }

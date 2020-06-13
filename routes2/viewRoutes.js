@@ -2,10 +2,16 @@ const express = require('express');
 const viewsController = require('../controllers2/viewsController');
 const authController = require('../controllers/authController');
 
+const cacheController = require('../controllers2/cacheController');
+
 const router = express.Router();
 
 /////router.use(viewsController.alerts);
+
 router.get('/', authController.isLoggedIn, viewsController.getConfigForm);
+//router.get('/', authController.isLoggedIn, cacheController.configFormFlatCacheMiddleWare,viewsController.getConfigForm);
+
+
 // router.get('/rain', authController.isLoggedIn, viewsController.getOverView);
 // router.get('/level', authController.isLoggedIn, viewsController.getOverView);
 // router.get('/clima', authController.isLoggedIn, viewsController.getOverView);
@@ -13,7 +19,7 @@ router.get('/', authController.isLoggedIn, viewsController.getConfigForm);
 //router.get('/overview/:codeview', authController.isLoggedIn, viewsController.getOverView);
 router.post('/overview/', authController.isLoggedIn, viewsController.getOverView);
 
-router.get('/detail/:stnid-:sensor-:position-:slideindex', authController.isLoggedIn, viewsController.getDetail);
+router.get('/detail/:stnid-:sensor-:position-:slideindex', authController.isLoggedIn,  viewsController.getDetail);
 
 /////router.get('/tour/:slug', authController.isLoggedIn, viewsController.getStation);
 

@@ -1,4 +1,5 @@
 var moment = require('moment-jalaali');
+let moment2 = require('moment');
 //moment.loadPersian({usePersianDigits: true});
 //moment.loadPersian({dialect: 'persian-modern'});
 
@@ -140,18 +141,48 @@ exports.get_end_of_months_in_georgian = function () {
     // end_of_months['تیر'] = moment(jy + "/04/31", 'jYYYY/jM/jD').format('YYYY/M/D');
     // end_of_months['مرداد'] = moment(jy + "/05/31", 'jYYYY/jM/jD').format('YYYY/M/D');
     // end_of_months['شهریور'] = moment(jy + "/06/31", 'jYYYY/jM/jD').format('YYYY/M/D');
-    console.log("salam2");
+    //console.log("salam2");
     // for (var i in end_of_months) {
 
     //              console.log(i +' =  '+end_of_months[i]);
     //         }
-    end_of_months.map(date => {
-        console.log(date);
-    });
+    // end_of_months.map(date => {
+    //     console.log(date);
+    // });
 
     return end_of_months;
 
 }
+
+exports.get_end_of_this_month_in_georgian = function () {
+    let now = moment();
+    let end_of_this_month = undefined;
+    let jy = now.jYear();
+    let jm = now.jMonth();//  0 <= now.jMonth() =< 11
+    end_of_this_month = now.format('YYYY-M-D');
+    if (jm >= 0 && jm <= 5)
+        end_of_this_month = moment(jy + "/" + `${jm + 1}` + "/31", 'jYYYY/jM/jD').format('YYYY-M-D');
+    else if (jm >= 6 && jm <= 10)
+        end_of_this_month = moment(jy + "/" + `${jm + 1}` + "/30", 'jYYYY/jM/jD').format('YYYY-M-D');
+    else if (jm == 11)
+        end_of_this_month = moment(jy + "/12/29", 'jYYYY/jM/jD').format('YYYY-M-D');
+    return end_of_this_month;
+}
+exports.get_start_of_next_month_in_georgian = function () {
+    let now = moment();
+    let end_of_this_month = undefined;
+    let jy = now.jYear();
+    let jm = now.jMonth();//  0 <= now.jMonth() =< 11
+    end_of_this_month = now.format('YYYY-M-D');
+    if (jm >= 0 && jm <= 4)
+        end_of_this_month = moment(jy + "/" + `${jm + 2}` + "/1", 'jYYYY/jM/jD').format('YYYY-M-D 00:30:00');
+    else if (jm >= 5 && jm <= 10)
+        end_of_this_month = moment(jy + "/" + `${jm + 2}` + "/1", 'jYYYY/jM/jD').format('YYYY-M-D 00:30:00');
+    else if (jm == 11)
+        end_of_this_month = moment(jy+1 + "/1/1", 'jYYYY/jM/jD').format('YYYY-M-D 00:30:00');
+    return end_of_this_month;
+}
+
 exports.get_last_hours = function (n) {
     let now = moment();
     var hours = [];
@@ -175,27 +206,14 @@ exports.convert_gdate_to_jdate = function(gTime){
     let jTime = moment(gTime,'YYYY/MM/DD HH:mm:ss').format('HH:mm        jYYYY/jM/jD');
     return jTime;
 }
-
-//m = moment('1359/11/06', 'jYYYY/jM/jD');
-
-//console.log(m.format('jYYYY/jM/jD [is] YYYY/M/D'));
-
-//console.log(m.format('jYYYY/jM/jD [is] YYYY/M/D'));
-
-//console.log(get_name_of_month_of_given_date('1359/11/06'));
-
-//console.log(get_name_of_month_of_given_date('1359/11/06'));//بهمن
-//console.log(get_end_of_mehr_in_georgian());
-// end_of_months = get_end_of_months_in_georgian();
-// for (var i in end_of_months) {
-//     console.log(i +' =  '+end_of_months[i]);
-// }
-
-//console.log(get_number_of_month_of_given_date('1359/11/06'));
-
-// var now = moment();
-// var m=moment(now);
-// console.log(now.format('YYYY-M-D'));
-// console.log(m.format('YYYY-M-D'));
-
-// console.log(now.jMonth());
+exports.subtract_times = function (endDate,startDate,endHour,startHour) {
+    endDate = moment(endDate, 'jYYYY/jM/jD').format('MM/DD/YYYY');
+    startDate = moment(startDate, 'jYYYY/jM/jD').format('MM/DD/YYYY');
+    let startTime = startDate.toString()  + ' ' + startHour.toString() + ':00';
+    let endTime = endDate.toString()  + ' ' + endHour.toString() + ':00';
+    startTime = new Date(startTime);
+    endTime = new Date(endTime);
+    let diff =(endTime.getTime() - startTime.getTime()) / 1000;
+    diff /= 60;
+    return Math.abs(Math.round(diff));
+}

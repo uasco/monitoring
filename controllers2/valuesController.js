@@ -9,6 +9,11 @@ const myDate = require('../utils/my_date');
 var my_date = require('../utils/my_date');
 /////
 var moment = require('moment-jalaali');
+//var xl = require('excel4node');
+const Excel = require('exceljs');
+//const tempFile = require('tempfile');
+//var XLSX = require('xlsx');
+
 moment.loadPersian({ usePersianDigits: true });
 moment.loadPersian({ dialect: 'persian-modern' });
 const channel_index_rain_12 = process.env.CHANNEL_INDEX_RAIN_12;
@@ -137,6 +142,10 @@ exports.getRainAmariReport = catchAsync(async (req, res, next) => {
 
     let startTime = startDate+ ' ' + startHour;
     let endTime = endDate+ ' ' + endHour;
+
+    let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
+    console.log(`minutes ========== ${minutes}`);
+
     const rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
     var resultJson = JSON.stringify(rainAmariReport);
     //console.log("new pars:::::::::::::::");
@@ -174,20 +183,291 @@ exports.getRainAmariReport = catchAsync(async (req, res, next) => {
     ]
      */
     for(let i=0;i<resultJson.length;i++){
-        console.log(`>>>>>>>>>>>>2  ${resultJson[i]['sample_time']}`);
+
         resultJson[i]['sample_time']=myDate.convert_gdate_to_jdate(resultJson[i]['sample_time']);
     }
 
     var resultJson = JSON.stringify(resultJson);
 
-    console.log(resultJson);
+
     var apiResult = {};
 
     //add our JSON results to the data table
+    //console.log(resultJson);
     apiResult.data = resultJson;
 
     //send JSON to Express
     res.json(apiResult); //{"data":[{"value":0,"created_at":"07:47:12, 24 دی 1398"},{"value":0,"created_at":"07:47:12, 24 دی 1398"},{"value":207.9,"created_at":"07:47:12, 24 دی 1398"}]}
+
+
+});
+
+exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
+    const client_id = req.params.id * 1;
+    const startDate = req.params.sd;
+    const endDate = req.params.ed;
+    const startHour = req.params.sh;
+    const endHour = req.params.eh;
+    const period = req.params.p;
+    const rainType = req.params.rt;
+    console.log(client_id + '###' + startDate+startHour + '###' + endDate + '###' + endHour + '###' + period);
+    let startTime = startDate+ ' ' + startHour;
+    let endTime = endDate+ ' ' + endHour;
+    let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
+    console.log(`minutes ========== ${minutes}`);
+    const rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
+    var resultJson = JSON.stringify(rainAmariReport);
+    //console.log("new pars:::::::::::::::");
+    //console.log(resultJson);
+    resultJson = JSON.parse(resultJson);
+    /*
+    [
+  [
+    { value: 673.5, sample_time: '2020-04-26 00:45:29' },
+    { value: 689.3, sample_time: '2020-04-27 00:47:50' },
+    { value: 701.3, sample_time: '2020-04-28 00:38:34' },
+    { value: 704.4, sample_time: '2020-04-29 00:45:01' },
+    { value: 704.4, sample_time: '2020-04-30 00:43:21' },
+  ],
+  {
+    fieldCount: 0,
+    affectedRows: 0,
+    insertId: 0,
+    serverStatus: 34,
+    warningCount: 0,
+    message: '',
+    protocol41: true,
+    changedRows: 0
+  }
+]
+    */
+    resultJson = resultJson[0];
+    /*
+        [
+        { value: 673.5, sample_time: '2020-04-26 00:45:29' },
+        { value: 689.3, sample_time: '2020-04-27 00:47:50' },
+        { value: 701.3, sample_time: '2020-04-28 00:38:34' },
+        { value: 704.4, sample_time: '2020-04-29 00:45:01' },
+        { value: 704.4, sample_time: '2020-04-30 00:43:21' },
+    ]
+     */
+    for(let i=0;i<resultJson.length;i++){
+        resultJson[i]['sample_time']=myDate.convert_gdate_to_jdate(resultJson[i]['sample_time']);
+    }
+    // var resultJson = JSON.stringify(resultJson);
+    // var apiResult = {};
+    // //add our JSON results to the data table
+    // //console.log(resultJson);
+    // apiResult.data = resultJson;
+
+//----------------------------------------------------------------------------------------------
+
+//     // Create a new instance of a Workbook class
+//     let workbook = new xl.Workbook();
+// // Add Worksheets to the workbook
+//     let worksheet = workbook.addWorksheet('Sheet 1');
+// // Create a reusable style
+//     let style = workbook.createStyle({
+//         font: {
+//             color: '#FF0800',
+//             size: 12
+//         },
+//         numberFormat: '$#,##0.00; ($#,##0.00); -'
+//     });
+// // Set value of cell A1 to 100 as a number type styled with paramaters of style
+//     worksheet.cell(1,1).number(100).style(style);
+// // Set value of cell B1 to 300 as a number type styled with paramaters of style
+//     worksheet.cell(1,2).number(200).style(style);
+// // Set value of cell C1 to a formula styled with paramaters of style
+//     worksheet.cell(1,3).formula('A1 + B1').style(style);
+// // Set value of cell A2 to 'string' styled with paramaters of style
+//     worksheet.cell(2,1).string('string').style(style);
+// // Set value of cell A3 to true as a boolean type styled with paramaters of style but with an adjustment to the font size.
+//     worksheet.cell(3,1).bool(true).style(style).style({font: {size: 14}});
+//     console.log('THIS IS EXCEL :');
+//     console.log(workbook);
+//     //workbook.write('Excel.xlsx');
+//     let fileName = 'Excel.xlsx';
+//     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+//     res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+//     workbook.write('Excel1.xlsx', res);
+//     console.log('//////////////////////////////////////////////////////////////////////');
+//     console.log(res);
+//-----------------------------------------------------------------------------------------------
+    //console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    //console.log(resultJson);
+
+
+
+    function calcAmariAbsoluteValues(values) {
+        let n = values.length;
+        for (let i = n-1; i > 0; i--) {
+            let x = values[i] - values[i - 1];
+            if (x < 0) {
+                x = 0;
+            }
+            values[i] = x;
+        }
+        return values;
+    }
+    function calcAmariRateValues(values,period) {
+        let n = values.length;
+        for (let i = n-1; i > 0; i--) {
+            let x = values[i] - values[i - 1];
+            if (x < 0) {
+                x = 0;
+            }else
+                x = x / period;
+            values[i] = x;
+        }
+        return values;
+    }
+    let labels = [];
+    let values = [];
+    for(let i=0;i<resultJson.length;i++){
+        labels.push(resultJson[i]['sample_time']);
+        values.push(resultJson[i]['value']);
+    }
+    switch(rainType){
+        case 'total':
+            values.splice(0,1);
+            labels.splice(0,1);
+            break;
+        case 'absolute':
+            values = calcAmariAbsoluteValues(values);
+            values.splice(0,1);
+            labels.splice(0,1);
+            break;
+        case 'rate':
+            values = calcAmariRateValues(values,period);
+            values.splice(0,1);
+            labels.splice(0,1);
+            break;
+    }
+    resultJson.splice(0,1);
+    resultJson.map((el,i)=>{
+        el['value']=values[i];
+    })
+    const workbook = new Excel.Workbook();
+    workbook.creator = 'Justin Williamson';
+        workbook.lastModifiedBy = 'Justin Williamson';
+        workbook.created = new Date();
+        workbook.modified = new Date();
+        workbook.date1904 = true;
+    // (optional) - Freeze the header
+    workbook.views = [
+       {
+           state: 'frozen',
+           ySplit: 1,
+       },
+    ];
+    const worksheet = workbook.addWorksheet(req.body.sheetName || 'Sheet 1');
+
+    worksheet.columns = [
+       { header: 'sample_time', key: 'sample_time', width: 18, outlineLevel: 1 },
+       { header: 'value', key: 'value', width: 10 }
+    ];
+    switch(rainType){
+        case 'total':
+            worksheet.columns = [
+                { header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 },
+                { header: 'باران تجمیعی', key: 'value', width: 10 }
+            ];
+            break;
+        case 'absolute':
+            worksheet.columns = [
+                { header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 },
+                { header: 'مقدار بارش', key: 'value', width: 10 }
+            ];
+            break;
+        case 'rate':
+            worksheet.columns = [
+                { header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 },
+                { header: 'شدت بارش', key: 'value', width: 10 }
+            ];
+            break;
+    }
+
+         // Add the row data
+    let rows = [];
+    resultJson.map(row => {
+        rows.push(row);
+    })
+    worksheet.addRows(rows);
+
+    // Format the header text
+    worksheet.getRow(1).font = {
+        name: 'Arial Black',
+        size: 10,
+    };
+
+    // Set headers for download
+    const fileName = 'amari-report.xlsx';
+    // res.type('application/octet-stream');
+    // res.set('Content-Disposition', `attachment;filename="${fileName}"`);
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+    // await workbook.xlsx.writeBuffer(res);
+    // res.end();
+
+    const fileBuffer = await workbook.xlsx.writeBuffer()
+    res.send(fileBuffer);
+    // return workbook.xlsx.writeBuffer()
+    //      .then(buffer => res.send(buffer))
+    //      .catch(next);
+
+
+
+
+
+
+//     // Create workbook & add worksheet
+//     const workbook = new Excel.Workbook();
+//     const worksheet = workbook.addWorksheet('ExampleSheet');
+//
+// // add column headers
+//     worksheet.columns = [
+//         { header: 'Package', key: 'package_name' },
+//         { header: 'Author', key: 'author_name' }
+//     ];
+//
+// // Add row using key mapping to columns
+//     worksheet.addRow(
+//         { package_name: "ABC", author_name: "Author 1" },
+//         { package_name: "XYZ", author_name: "Author 2" }
+//     );
+//
+// // Add rows as Array values
+//     worksheet
+//         .addRow(["BCD", "Author Name 3"]);
+//
+// // Add rows using both the above of rows
+//     const rows = [
+//         ["FGH", "Author Name 4"],
+//         { package_name: "PQR", author_name: "Author 5" }
+//     ];
+//
+//
+//     worksheet
+//         .addRows(rows);
+//
+// // save workbook to disk
+// //     workbook.xlsx.writeFile('myex.xlsx')
+// //         .then(() => {
+// //             console.log("saved");
+// //         })
+// //         .catch((err) => {
+// //             console.log("err", err);
+// //         });
+//     const options = {
+//         base64: true,
+//     };
+//     return workbook.xlsx.writeBuffer(options)
+//              .then(buffer => res.send(buffer))
+//              .catch(next);
+
 
 
 });

@@ -53,7 +53,7 @@ div.content
                         zoomDegreeOnLoad = 4.5;
                         centerOnZoomMap = [54.6240234, 35.79067];
                         zoomDegreeOnZoomMap = 6.7;
-                        textSize = 2;
+                        textSize = 1.5;
                     }else{
                         centerOnLoadMap = [53.8330078, 35.1942087];
                         zoomDegreeOnLoad = 3.8;
@@ -98,6 +98,9 @@ div.content
                                 'type': 'Feature',
                                 'geometry': {
                                     'type': 'Polygon',
+                                    'properties': {
+                                        'title': 'استان سمنان'
+                                    },
                                     'coordinates': [
                                         [
                                             [54.1556386, 36.4787238],
@@ -1005,7 +1008,7 @@ div.content
                                 if (error) throw error;
                                 mymap.addImage('marker1', image);
                             });
-                        mymap.addSource('places', {
+                        mymap.addSource('stations', {
                             'type': 'geojson',
                             'data': {
                                 'type': 'FeatureCollection',
@@ -1014,7 +1017,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>بن کوه</strong><p>ایستگاه بارانسنجی بن کوه</p>',
+                                                '<strong>ایستگاه بارانسنجی بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷-</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
                                             'icon': 'marker1',
                                             'id':'101',
                                             'sensor': 'rain',
@@ -1029,7 +1032,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>ابراهیم آباد</strong><p>ایستگاه بارانسنجی ابراهیم آباد</p>',
+                                                '<strong>ایستگاه بارانسنجی ابراهیم آباد</strong><p>کد ایستگاه : ۹۰۷-۴۷-</p><p>محدوده : میامی</p><p>رودخانه خيج</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۳۸۵۶۷۸</p><p>utmy : ۴۰۳۰۸۶۲</p>',
                                             'icon': 'marker1',
                                             'id':'141',
                                             'sensor': 'rain',
@@ -1044,11 +1047,11 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>گرمسار</strong><p>ایستگاه هواشناسی گرمسار</p>',
+                                                '<strong>ایستگاه هواشناسی تصفیه خانه</strong><p>کد ایستگاه : ۰۲۴-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۸۴</p><p>utmx : ۶۲۵۲۷۸</p><p>utmy : ۳۹۰۲۷۶۰</p>',
                                             'icon': 'marker1',
                                             'id':'84',
                                             'sensor': 'clima',
-                                            'position': 'گرمسار'
+                                            'position': 'تصفیه خانه'
                                         },
                                         'geometry': {
                                             'type': 'Point',
@@ -1059,7 +1062,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>لبرود</strong><p>ایستگاه سطح سنج لبرود</p>',
+                                                '<strong>ایستگاه سطح سنج لبرود</strong><p>کد ایستگاه : ۰۲۹-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علی</p><p>سال تاسیس : ۱۳۶۰</p><p>utmx : ۲۴۹۷۷۸</p><p>utmy : ۴۰۱۳۳۳۲</p>',
                                             'icon': 'marker1',
                                             'id':'99',
                                             'sensor': 'level',
@@ -1074,7 +1077,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                "<strong>آستانه</strong><p>ایستگاه بارانسنج آستانه</p>",
+                                                '<strong>ایستگاه بارانسنج آستانه</strong><p>کد ایستگاه : ۰۲۵-۴۷</p><p>محدوده : دامغان</p><p>رودخانه سلطان ميدان</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۳۹۳۹۷</p><p>utmy : ۴۰۱۷۶۸۰</p>',
                                             'icon': 'marker1',
                                             'id':'128',
                                             'sensor': 'rain',
@@ -1089,11 +1092,11 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>مجن</strong><p>ایستگاه بارانسنج مجن شاهرود</p>',
+                                                '<strong>ایستگاه بارانسنج مجن دوراهي</strong><p>کد ایستگاه : ۰۳۳-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۸۹۴۹۸</p><p>utmy : ۴۰۳۹۳۱۲</p>',
                                             'icon': 'marker1',
                                             'id':'103',
                                             'sensor': 'rain',
-                                            'position': 'مجن'
+                                            'position': 'مجن دوراهي'
                                         },
                                         'geometry': {
                                             'type': 'Point',
@@ -1104,7 +1107,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>بسطام</strong><p>ایستگاه بارانسنج بسطام</p>',
+                                                '<strong>ایستگاه بارانسنج بسطام</strong><p>کد ایستگاه ۰۴۴-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۳۱۹۲۴۰</p><p>utmy : ۴۰۳۷۹۱۰</p>',
                                             'icon': 'marker1',
                                             'id':'139',
                                             'sensor': 'rain',
@@ -1119,7 +1122,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                "<strong>بیارجمند</strong><p>ایستگاه بارانسنج بیارجمند<em></em> </p>",
+                                                '<strong>ایستگاه بارانسنج بیارجمند</strong><p>کد ایستگاه : ۹۲۶-۴۷</p><p>محدوده : بيارجمند</p><p>رودخانه كالشور</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۳۹۱۸۹۱</p><p>utmy : ۳۹۹۳۸۸۳</p>',
                                             'icon': 'marker1',
                                             'id':'134',
                                             'sensor': 'rain',
@@ -1134,7 +1137,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>خیرآباد</strong><p>ایستگاه بارانسنج خیرآباد</p>',
+                                                '<strong>ایستگاه بارانسنج خيراباد سمنان</strong><p>کد ایستگاه : ۰۱۵-۴۷</p><p>محدوده : سمنان</p><p>رودخانه گلرودبار</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۷۱۹۳۸۱</p><p>utmy : ۳۹۳۵۶۰۴</p>',
                                             'icon': 'marker1',
                                             'id':'102',
                                             'sensor': 'rain',
@@ -1149,11 +1152,11 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>صوفیان</strong><p>ایستگاه بارانسنج صوفیان</p>',
+                                                '<strong>ایستگاه بارانسنج ده صوفيان</strong><p>کد ایستگاه : ۸۶۷-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۷۲</p><p>utmx : ۷۱۶۴۱۹</p><p>utmy : ۳۹۶۶۳۱۴</p>',
                                             'icon': 'marker1',
                                             'id':'150',
                                             'sensor': 'rain',
-                                            'position': 'صوفیان'
+                                            'position': 'ده صوفیان'
                                         },
                                         'geometry': {
                                             'type': 'Point',
@@ -1164,11 +1167,11 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>مجن</strong><p>ایستگاه سطح سنج مجن شاهرود</p>',
+                                                '<strong>ایستگاه سطح سنج بند انحرافي</strong><p>کد ایستگاه : ۰۱۵-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۲۸۹۴۳۸</p><p>utmy : ۴۰۳۹۳۲۶</p>',
                                             'icon': 'marker1',
                                             'id':'136',
                                             'sensor': 'level',
-                                            'position': 'مجن'
+                                            'position': 'بند انحرافي'
                                         },
                                         'geometry': {
                                             'type': 'Point',
@@ -1179,7 +1182,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>شهمیرزاد</strong><p>ایستگاه سطح سنج شهمیرزاد</p>',
+                                                '<strong>ایستگاه سطح سنج شهمیرزاد</strong><p>کد ایستگاه : ۹۹۲-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۸۷</p><p>utmx : ۷۰۹۳۸۵</p><p>utmy : ۳۹۶۱۳۴۰</p>',
                                             'icon': 'marker1',
                                             'id':'149',
                                             'sensor': 'level',
@@ -1194,7 +1197,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>بنکوه</strong><p>ایستگاه سطح سنج بن کوه</p>',
+                                                '<strong>ایستگاه سطح سنج بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
                                             'icon': 'marker1',
                                             'id':'98',
                                             'sensor': 'level',
@@ -1209,7 +1212,7 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>طرود</strong><p>ایستگاه بارانسنج طرود</p>',
+                                                '<strong>ایستگاه بارانسنج طرود</strong><p>کد ایستگاه : ۱۱۰-۴۷</p><p>محدوده : طرود</p><p>رودخانه لب شورآب</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۳۱۸۶۱۹</p><p>utmy : ۳۹۲۲۱۴۶</p>',
                                             'icon': 'marker1',
                                             'id': '143',
                                             'sensor': 'rain',
@@ -1224,11 +1227,11 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>دامغان</strong><p>ایستگاه هواشناسی دامغان</p>',
+                                                '<strong>ایستگاه هواشناسی دانشگاه آزاد دامغان</strong><p>کد ایستگاه : ۳۰۱-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علي</p><p>سال تاسیس : ۱۳۷۰</p><p>utmx : ۲۵۸۱۶۵</p><p>utmy : ۴۰۰۵۹۸۰</p>',
                                             'icon': 'marker1',
                                             'id': '93',
                                             'sensor': 'clima',
-                                            'position': 'دامغان'
+                                            'position': 'دانشگاه آزاد دامغان'
                                         },
                                         'geometry': {
                                             'type': 'Point',
@@ -1239,11 +1242,11 @@ div.content
                                         'type': 'Feature',
                                         'properties': {
                                             'description':
-                                                '<strong>دیباج</strong><p>ایستگاه بارانسنج دیباج</p>',
+                                                '<strong>ایستگاه بارانسنج چهارده دامغان</strong><p>کد ایستگاه : ۲۱۶-۴۷</p><p>محدوده : دامغان</p><p>رودخانه دامغانرود</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۵۰۷۲۷</p><p>utmy : ۴۰۳۳۶۷۵</p>',
                                             'icon': 'marker1',
                                             'id': '131',
                                             'sensor': 'rain',
-                                            'position':'دیباج'
+                                            'position':'چهارده دامغان'
                                         },
                                         'geometry': {
                                             'type': 'Point',
@@ -1253,7 +1256,7 @@ div.content
                                 ]
                             }
                         });
-                        mymap.addSource('points', {
+                        mymap.addSource('shahrestan-labels', {
                             'type': 'geojson',
                             'data': {
                                 'type': 'FeatureCollection',
@@ -1263,7 +1266,7 @@ div.content
                                         'type': 'Feature',
                                         'geometry': {
                                             'type': 'Point',
-                                            'coordinates': [52.1740723, 34.8138033]
+                                            'coordinates': [52.1740723, 34.8638033]
                                         },
                                         'properties': {
                                             'title': 'گرمسار',
@@ -1275,7 +1278,7 @@ div.content
                                         'type': 'Feature',
                                         'geometry': {
                                             'type': 'Point',
-                                            'coordinates': [52.5640869, 34.8138033]
+                                            'coordinates': [52.5640869, 34.7338033]
                                         },
                                         'properties': {
                                             'title': 'آرادان',
@@ -1323,7 +1326,7 @@ div.content
                                         'type': 'Feature',
                                         'geometry': {
                                             'type': 'Point',
-                                            'coordinates': [55.8929443, 35.0659731]
+                                            'coordinates': [55.8929443, 35.2659731]
                                         },
                                         'properties': {
                                             'title': 'شاهرود',
@@ -1357,6 +1360,92 @@ div.content
                                 ]
                             }
                         });
+                        mymap.addSource('ostan-label', {
+                            'type': 'geojson',
+                            'data': {
+                                'type': 'FeatureCollection',
+                                'features': [
+                                    {
+                                        'type': 'Feature',
+                                        'geometry': {
+                                            'type': 'Point',
+                                            'coordinates': [55.102016442078, 35.526233495744]
+                                        },
+                                        'properties': {
+                                            'title': 'استان سمنان',
+                                            'icon': ''
+                                        }
+                                    }
+                                ]
+                            }
+                        });
+                        // Add a layer showing the places.
+                        mymap.addLayer({
+                            'id': 'stations',
+                            'type': 'symbol',
+                            'source': 'stations',
+                            'minzoom': zoomDegreeOnZoomMap -1 ,
+                            'layout': {
+                                'icon-image': '{icon}',
+                                'icon-allow-overlap': true,
+                                'text-allow-overlap':true,
+                                'text-field': ['get', 'position'],
+                                //'text-font': ['Yekan'],
+                                'text-offset': [0, 0.5],
+                                'text-anchor': 'top'
+                            }
+                        });
+                        mymap.addLayer({
+                            'id': 'shahrestan-labels',
+                            'type': 'symbol',
+                            'source': 'shahrestan-labels',
+                            'minzoom': zoomDegreeOnZoomMap - 1,
+                            'layout': {
+                                // get the icon name from the source's "icon" property
+                                // concatenate the name to get an icon from the style's sprite sheet
+                                //'icon-image': ['concat', ['get', 'icon'], '-15'],
+                                // get the title name from the source's "title" property
+                                'icon-allow-overlap': true,
+                                'text-allow-overlap':true,
+                                'text-field': [
+                                    'format',
+                                     ['get', 'title'],
+                                    {'font-scale': textSize}
+                                ],
+                                //- 'text-font': ['Yekan'],
+                                'text-offset': [0, 0],
+                                'text-anchor': 'top'
+                            },
+                            paint: {
+                                'text-color' : '#2732ff'
+                            }
+                        });
+                        mymap.addLayer({
+                            'id': 'ostan-label',
+                            'type': 'symbol',
+                            'source': 'ostan-label',
+                            'minzoom': zoomDegreeOnLoad -0.5,
+                            'maxzoom': zoomDegreeOnLoad +1.3,
+                            'layout': {
+                                // get the icon name from the source's "icon" property
+                                // concatenate the name to get an icon from the style's sprite sheet
+                                //'icon-image': ['concat', ['get', 'icon'], '-15'],
+                                // get the title name from the source's "title" property
+                                'icon-allow-overlap': true,
+                                'text-allow-overlap': true,
+                                'text-field': [
+                                    'format',
+                                     ['get', 'title'],
+                                    {'font-scale': textSize}
+                                ],
+                                //- 'text-font': ['Yekan'],
+                                'text-offset': [0, 0],
+                                'text-anchor': 'center',
+                            },
+                            paint: {
+                                'text-color' : '#ff1d25',
+                            }
+                        });
                     });//end of on Load
 
                     // Create a popup, but don't add it to the map yet.
@@ -1364,7 +1453,7 @@ div.content
                         closeButton: false,
                         closeOnClick: false
                     });
-                    mymap.on('mouseenter', 'places', function (e) {
+                    mymap.on('mouseenter', 'stations', function (e) {
                         // Change the cursor style as a UI indicator.
                         mymap.getCanvas().style.cursor = 'pointer';
 
@@ -1385,11 +1474,11 @@ div.content
                             .addTo(mymap);
                     });
 
-                    mymap.on('mouseleave', 'places', function () {
+                    mymap.on('mouseleave', 'stations', function () {
                         mymap.getCanvas().style.cursor = '';
                         popup.remove();
                     });
-                    mymap.on('click', 'places', function (e) {
+                    mymap.on('click', 'stations', function (e) {
                         let id = e.features[0].properties.id;
                         let sensor = e.features[0].properties.sensor;
                         let position = e.features[0].properties.position;
@@ -1412,35 +1501,6 @@ div.content
                             lineWidth + 2
                         );
 
-                        // Add a layer showing the places.
-                        mymap.addLayer({
-                            'id': 'places',
-                            'type': 'symbol',
-                            'source': 'places',
-                            'layout': {
-                                'icon-image': '{icon}',
-                                'icon-allow-overlap': true
-                            }
-                        });
-                        mymap.addLayer({
-                            'id': 'points',
-                            'type': 'symbol',
-                            'source': 'points',
-                            'layout': {
-                                // get the icon name from the source's "icon" property
-                                // concatenate the name to get an icon from the style's sprite sheet
-                                //'icon-image': ['concat', ['get', 'icon'], '-15'],
-                                // get the title name from the source's "title" property
-                                'text-field': [
-                                    'format',
-                                    ['upcase', ['get', 'title']],
-                                    {'font-scale': textSize}
-                                ],
-                                //- 'text-font': ['Yekan'],
-                                'text-offset': [0, 0],
-                                'text-anchor': 'top'
-                            }
-                        });
 
                     });
                     // Change the cursor to a pointer when the it enters a feature in the 'symbols' layer.

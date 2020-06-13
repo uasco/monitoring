@@ -12,7 +12,7 @@ module.exports = {
                     console.log("EEERRRORRRRR");
                     returnValue = "";
                 } else {
-                    console.log(rows[1][0]['@result']);
+                    //console.log(rows[1][0]['@result']);
                     //rows is like this :
                     // [
                     //   OkPacket {

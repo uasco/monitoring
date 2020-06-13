@@ -60,13 +60,6 @@ router
     authController.restrictTo('admin', 'lead-guide')
   );
 router
-  .route('/climalasthours/*/:id')
-  .get(cacheController.climaLastHoursFlatCacheMiddleWare, valuesController.getClimaStationLastHours)
-  .post(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide')
-  );
-router
   .route('/clima/*/:id')
   //.get(valuesController.getStationValues)//without cache
   .get(cacheController.climaValuesFlatCacheMiddleWare, valuesController.getClimaStationValues)
@@ -74,7 +67,20 @@ router
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
   );
-
+router
+    .route('/climalasthours/*/:id')
+    .get(cacheController.climaLastHoursFlatCacheMiddleWare, valuesController.getClimaStationLastHours)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/climaraintotalsmonths/*/:id')
+    .get(cacheController.climaRainTotalsMonthsFlatCacheMiddleWare, valuesController.getClimaRainTotalsOfPastMonths)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
 //////////////////////////////////////////////////////////////////E
 
 module.exports = router;

@@ -124,7 +124,7 @@ app.use(globalErrorHandler);
 
 
 
-//const util = require('util');
+const util = require('util');
 const Station = require('./models2/stationModel');
 
 const Stn = require('./models/stnModel');
@@ -153,7 +153,8 @@ scheduler.clearLevelValueCache();
 scheduler.clearClimaValuesCache();
 scheduler.clearRainTotalsMonthsCache();
 scheduler.clearLevelLastHoursCache();
-
+scheduler.clearClimaLastHoursCache();
+scheduler.clearClimaRainTotalsMonthsCache();
 
 
 module.exports = app;

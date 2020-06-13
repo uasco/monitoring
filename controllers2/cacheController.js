@@ -223,8 +223,38 @@ exports.climaLastHoursFlatCacheMiddleWare = (req, res, next) => {
         next();
     }
 };
-exports.clearclimaLastHoursCache=()=>{
+exports.clearClimaLastHoursCache=()=>{
     climaLastHoursCache ='';
+}
+
+/////load new cache :
+// console.log("////////loading the climaRainLastHours cache/////////////");
+let climaRainTotalsMonthsCache = flatCache.load("climaRainTotalsMonthsCache", path.resolve("../cache"));
+exports.climaRainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
+    climaRainTotalsMonthsCache = flatCache.load("climaRainTotalsMonthsCache", path.resolve("../cache"));
+    let key = "__express__" + req.originalUrl || req.url;
+    let cacheContent = climaRainTotalsMonthsCache.getKey(key);
+    //console.log("key :::::::::::: ");
+    //console.log(key);
+    //console.log("casheeeed:::::");
+    //console.log(cacheContent);
+    if (cacheContent) {
+        // console.log("*******************climaRainTotalsMonthsCache cached happened**********************");
+        res.send(cacheContent);
+        return;
+    } else {
+        // console.log("%%%%%%%%%%%%%%%%%%%climaRainTotalsMonthsCache cached DID NOT happend %%%%%%%%%%%%%%%");
+        res.sendResponse = res.send;
+        res.send = body => {
+            climaRainTotalsMonthsCache.setKey(key, body);
+            climaRainTotalsMonthsCache.save(true);
+            res.sendResponse(body);
+        };
+        next();
+    }
+};
+exports.clearClimaRainTotalsMonthsCache=()=>{
+    climaRainTotalsMonthsCache ='';
 }
 /////load new cache :
 // console.log("////////loading the ConfigForm cache/////////////");

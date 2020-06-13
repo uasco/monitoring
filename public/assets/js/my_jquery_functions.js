@@ -858,6 +858,75 @@ function getClimaLastHoursForDrawingCharts(clima_stations_names_and_ids, sensore
         sensores.map(sensor => {
             var clima_last_hours;
             var station_ID = el.id;
+            if (sensor[0] === 'RAINC') {
+                $.ajax({
+                    url: '/api/values/climaraintotalsmonths/' + sensor[0].toLowerCase() + '/' + station_ID,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: (response) => {
+                        if (response.data) {
+
+                                rain_total_of_past_months = response.data;
+                                var labels = [];
+                                var values = [];
+                                rain_total_of_past_months.slice(1).map(elm => {//slice(1) for ignoring first item in array(the past year same cuurent month)
+                                    if(elm) {
+                                        labels.push(elm[0]);
+                                    }
+                                })
+                                rain_total_of_past_months.map(elm => {
+                                    if(elm){
+                                        values.push(elm[1]);
+                                    }else{
+                                        values.push(-1);
+                                    }
+                                })
+                                labels = convertNumsLabelToNamesLabel(labels);
+                                values = calcEachMonth(values);
+                                for( var i = 0; i < values.length; i++){
+                                    if ( values[i] === -1) {
+                                        values.splice(i, 1);
+                                        i--;
+                                    }
+                                }
+                                drawCharts_c(station_ID, labels, values, sensor[0]);
+                        }
+                    }
+                })
+            }else{
+                $.ajax({
+                    url: '/api/values/climalasthours/' + sensor[0].toLowerCase() + '/' + station_ID,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: (response) => {
+                        if (response.data) {
+                                clima_last_hours = response.data;
+                                var labels = [];
+                                var values = [];
+                                clima_last_hours.map(elm => {
+                                    labels.push(elm['sample_time']);
+                                })
+                                clima_last_hours.map(elm => {
+                                    values.push(elm['value']);
+                                })
+                                //labels = prepareLabels(labels);
+                                //values = calcEachMonth(values);
+                                // console.log(labels);
+                                // console.log(values);
+                                drawCharts_c(station_ID, labels, values, sensor[0]);
+                        }
+                    }
+                })
+            }
+
+        })
+    })
+}
+function getClimaLastHoursForDrawingCharts_old(clima_stations_names_and_ids, sensores) {
+    clima_stations_names_and_ids.map(el => {
+        sensores.map(sensor => {
+            var clima_last_hours;
+            var station_ID = el.id;
             $.ajax({
                 url: '/api/values/climalasthours/' + sensor[0].toLowerCase() + '/' + station_ID,
                 type: 'GET',

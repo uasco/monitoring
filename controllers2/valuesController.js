@@ -537,41 +537,7 @@ var channel_indexes = {
     'evp': { 'l': channel_index_evp_l, 'a': channel_index_evp_a, 'x': channel_index_evp_x, 'n': channel_index_evp_n },
     'rad': { 'l': channel_index_rad_l, 'a': channel_index_rad_a, 'x': channel_index_rad_x, 'n': channel_index_rad_n }
 }
-exports.getClimaStationLastHours = catchAsync(async (req, res, next) => {
-    const client_id = req.params.id * 1;
-    const sensor = req.url.split('/')[2];
 
-    //const rainsensorides = await Sensor.getIDesOfRain();
-    //const rainstationrainvalues = await RainStation.getRainStationRainValues(client_id,rainsensorides.rain_total);
-    var climaLastHours = undefined;
-    var resultJson = undefined;
-    if (sensor === 'rainc') {
-        climaLastHours = await Values.getRainTotalsOfPastMonths(client_id, channel_indexes[sensor]['t']);
-        resultJson = JSON.stringify(climaLastHours);
-        resultJson = JSON.parse(resultJson);
-    } else {
-        climaLastHours = await Values.getClimaLastHours(client_id, channel_indexes[sensor]['l']);
-        resultJson = JSON.stringify(climaLastHours);
-        resultJson = JSON.parse(resultJson);
-        ////////////////////////
-        //console.log('resultJson["data"] ====');
-        //console.log(resultJson);
-        resultJson.map(el => {
-            d = el.sample_time;
-            //"2020-01-14T07:47:12.000Z"
-            d = moment(d, 'YYYY-M-D HH:mm:ss').format('HH:mm');
-            el.sample_time = d;
-        })
-        ///////////////////////
-    }
-    var apiResult = {};
-
-    //add our JSON results to the data table
-    apiResult.data = resultJson;
-
-    //send JSON to Express
-    res.json(apiResult);//{"data":[{"value":23.9,"sample_time":"07:54:39, 6 اسفند 1398"},{"value":23.9,"sample_time":"05:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"03:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"01:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"23:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"21:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"19:54:41, 5 اسفند 1398"},{"value":23.9,"sample_time":"17:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"15:54:41, 5 اسفند 1398"}]}
-});
 exports.getClimaStationValues = catchAsync(async (req, res, next) => {
     const client_id = req.params.id * 1;
     const sensor = req.url.split('/')[2];
@@ -608,4 +574,52 @@ exports.getClimaStationValues = catchAsync(async (req, res, next) => {
 
     //send JSON to Express
     res.json(apiResult); //{"data":[{"value":0},{"value":0},{"value":12.2}]}
+});
+exports.getClimaStationLastHours = catchAsync(async (req, res, next) => {
+    const client_id = req.params.id * 1;
+    const sensor = req.url.split('/')[2];
+
+    //const rainsensorides = await Sensor.getIDesOfRain();
+    //const rainstationrainvalues = await RainStation.getRainStationRainValues(client_id,rainsensorides.rain_total);
+    var climaLastHours = undefined;
+    var resultJson = undefined;
+    climaLastHours = await Values.getClimaLastHours(client_id, channel_indexes[sensor]['l']);
+    resultJson = JSON.stringify(climaLastHours);
+    resultJson = JSON.parse(resultJson);
+    ////////////////////////
+    //console.log('resultJson["data"] ====');
+    //console.log(resultJson);
+    resultJson.map(el => {
+        d = el.sample_time;
+        //"2020-01-14T07:47:12.000Z"
+        d = moment(d, 'YYYY-M-D HH:mm:ss').format('HH:mm');
+        el.sample_time = d;
+    })
+        ///////////////////////
+    var apiResult = {};
+    //add our JSON results to the data table
+    apiResult.data = resultJson;
+    //send JSON to Express
+    res.json(apiResult);//{"data":[{"value":23.9,"sample_time":"07:54:39, 6 اسفند 1398"},{"value":23.9,"sample_time":"05:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"03:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"01:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"23:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"21:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"19:54:41, 5 اسفند 1398"},{"value":23.9,"sample_time":"17:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"15:54:41, 5 اسفند 1398"}]}
+});
+
+exports.getClimaRainTotalsOfPastMonths = catchAsync(async (req, res, next) => {
+    const client_id = req.params.id * 1;
+    const sensor = req.url.split('/')[2];
+
+    //const rainsensorides = await Sensor.getIDesOfRain();
+    //const rainstationrainvalues = await RainStation.getRainStationRainValues(client_id,rainsensorides.rain_total);
+    var climaRainTotalsOfPastMonths = undefined;
+    var resultJson = undefined;
+    climaRainTotalsOfPastMonths = await Values.getRainTotalsOfPastMonths(client_id, channel_indexes[sensor]['t']);
+    resultJson = JSON.stringify(climaRainTotalsOfPastMonths);
+    resultJson = JSON.parse(resultJson);
+
+    var apiResult = {};
+
+    //add our JSON results to the data table
+    apiResult.data = resultJson;
+
+    //send JSON to Express
+    res.json(apiResult);//{"data":[{"value":23.9,"sample_time":"07:54:39, 6 اسفند 1398"},{"value":23.9,"sample_time":"05:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"03:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"01:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"23:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"21:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"19:54:41, 5 اسفند 1398"},{"value":23.9,"sample_time":"17:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"15:54:41, 5 اسفند 1398"}]}
 });

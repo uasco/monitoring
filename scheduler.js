@@ -40,21 +40,41 @@ const job3 = new CronJob('00 00 00 * * *', function() {
 //let start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
 //RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 exports.clearRainValuesCache = () => {
-    const clearRainValuesCacheJob = new CronJob('0 */50 * * * *', function() {
-        flatCache.clearCacheById('rainValuesCache','../cache/');
-        cacheController.clearRainValuesCache();
-    });
+    let after50MinutesFromNow = new Date();
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+    const clearRainValuesCacheJob = new CronJob(
+        after50MinutesFromNow,
+        function ()  {
+            flatCache.clearCacheById('rainValuesCache','../cache/');
+            cacheController.clearRainValuesCache();
+            after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+            this.setTime(new CronTime(after50MinutesFromNow));
+            this.start();
+        },
+        function(){
+        },
+        true,
+        'Asia/Tehran'
+    );
     clearRainValuesCacheJob.start();
+    // const clearRainValuesCacheJob = new CronJob('0 */50 * * * *', async () => {
+    //         await flatCache.clearCacheById('rainValuesCache','../cache/');
+    //         await cacheController.clearRainValuesCache();
+    //     },
+    //     null,
+    //     true,
+    //     'Asia/Tehran'
+    // );
+    // clearRainValuesCacheJob.start();
 }
-
 
 exports.clearRainTotalsMonthsCache = () => {
     let start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
     const clearRainTotalsMonthsCacheJob = new CronJob(
         start_of_next_month,
-        function() {
-            flatCache.clearCacheById('rainTotalsMonthsCache','../cache/');
-            cacheController.clearRainTotalsMonthsCache();
+        async () => {
+            await flatCache.clearCacheById('rainTotalsMonthsCache','../cache/');
+            await cacheController.clearRainTotalsMonthsCache();
             this.setTime(new CronTime(new Date(my_date.get_start_of_next_month_in_georgian())));
             this.start();
         },
@@ -71,7 +91,7 @@ exports.clearLevelValueCache = () => {
     after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
     const clearLevelValueCacheJob = new CronJob(
         after5HoursFromNow,
-        function() {
+        function ()  {
             flatCache.clearCacheById('levelValueCache','../cache/');
             cacheController.clearLevelValueCache();
             after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
@@ -96,7 +116,7 @@ exports.clearLevelLastHoursCache = () => {
     after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
     const clearlevelLastHoursCacheJob = new CronJob(
         after5HoursFromNow,
-        function() {
+        function () {
             flatCache.clearCacheById('levelLastHoursCache','../cache/');
             cacheController.clearlevelLastHoursCache();
             after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
@@ -118,25 +138,69 @@ exports.clearLevelLastHoursCache = () => {
 }
 //CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 exports.clearClimaValuesCache = () => {
-    const clearClimaValuesCacheJob = new CronJob('0 */50 * * * *', function() {
-        flatCache.clearCacheById('climaValuesCache','../cache/');
-        cacheController.clearClimaValuesCache();
-    });
+    let after50MinutesFromNow = new Date();
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+    const clearClimaValuesCacheJob = new CronJob(
+        after50MinutesFromNow,
+        function ()  {
+            flatCache.clearCacheById('climaValuesCache','../cache/');
+            cacheController.clearClimaValuesCache();
+            after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+            this.setTime(new CronTime(after50MinutesFromNow));
+            this.start();
+        },
+        function(){
+        },
+        true,
+        'Asia/Tehran'
+    );
     clearClimaValuesCacheJob.start();
+
+    // const clearClimaValuesCacheJob = new CronJob('0 */50 * * * *', async () => {
+    //         await flatCache.clearCacheById('climaValuesCache','../cache/');
+    //         await cacheController.clearClimaValuesCache();
+    //     },
+    //     null,
+    //     true,
+    //     'Asia/Tehran'
+    // );
+    // clearClimaValuesCacheJob.start();
 }
 exports.clearClimaLastHoursCache = () => {
-    const clearClimaLastHoursCacheJob = new CronJob('0 */50 * * * *', function() {
-        flatCache.clearCacheById('climaLastHoursCache','../cache/');
-        cacheController.clearClimaLastHoursCache();
-    });
+    let after50MinutesFromNow = new Date();
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+    const clearClimaLastHoursCacheJob = new CronJob(
+        after50MinutesFromNow,
+        function ()  {
+            flatCache.clearCacheById('climaLastHoursCache','../cache/');
+            cacheController.clearClimaLastHoursCache();
+            after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+            this.setTime(new CronTime(after50MinutesFromNow));
+            this.start();
+        },
+        function(){
+        },
+        true,
+        'Asia/Tehran'
+    );
     clearClimaLastHoursCacheJob.start();
+
+    // const clearClimaLastHoursCacheJob = new CronJob('0 */50 * * * *', async () => {
+    //         await flatCache.clearCacheById('climaLastHoursCache','../cache/');
+    //         await cacheController.clearClimaLastHoursCache();
+    //     },
+    //     null,
+    //     true,
+    //     'Asia/Tehran'
+    // );
+    // clearClimaLastHoursCacheJob.start();
 }
 
 exports.clearClimaRainTotalsMonthsCache = () => {
     let start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
     const clearClimaRainTotalsMonthsCacheJob = new CronJob(
         start_of_next_month,
-        function() {
+        function ()  {
             flatCache.clearCacheById('climaRainTotalsMonthsCache','../cache/');
             cacheController.clearClimaRainTotalsMonthsCache();
             this.setTime(new CronTime(new Date(my_date.get_start_of_next_month_in_georgian())));

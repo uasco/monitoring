@@ -127,8 +127,8 @@ app.use(globalErrorHandler);
 const util = require('util');
 const Station = require('./models2/stationModel');
 
-const Stn = require('./models/stnModel');
-async function stns() {
+// const Stn = require('./models/stnModel');
+//async function stns() {
     // const stations = await Station.getStationsNamesAndIDs('all');
     // var resultJson = JSON.stringify(stations);
     // resultJson = JSON.parse(resultJson);
@@ -144,7 +144,7 @@ async function stns() {
     //         });
     //     })
     // }
-}
+//}
 //s=util.promisify(stns);
 //s();
 

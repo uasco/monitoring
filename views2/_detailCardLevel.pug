@@ -266,7 +266,7 @@ mixin detailCardRain(stnID,sensor,position)
 
         // $('#report-chart').hide();
         // $('#report-table').hide();
-        /////$('#download-button').addClass("disabled");
+        $('#download-button').addClass("disabled");
 
         $('#amari-report-input').on("change", function () {
             amariReport = true;
@@ -390,9 +390,9 @@ mixin detailCardRain(stnID,sensor,position)
         let periodLabel = "";
         let periodLabels = {1:'۱ دقیقه',5:'۵ دقیقه',10:'۱۰ دقیقه',30:'۳۰ دقیقه',60:'۱ ساعته',360:'۶ ساعته',720:'۱۲ ساعته',1440:'۱ روزه',43200:'۱ ماهه'};
         //$("#select-period")
-            // .selectmenu()
-            //- .selectmenu("menuWidget")
-            //- .addClass("overflow");
+        // .selectmenu()
+        //- .selectmenu("menuWidget")
+        //- .addClass("overflow");
 
         // $('.mdb-select').materialSelect();
         // $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
@@ -408,34 +408,34 @@ mixin detailCardRain(stnID,sensor,position)
         // });
 
         function  submit() {
-            // if((startDate=='') ||($('#pcal1').val()=="")) {
-            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((endDate=='') || ($('#pcal2').val()=="")){
-            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((!startTimeIsCorrect) || ($('#start-time-input').val()=='') ){
-            //     alert('لطفا زمان شروع را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((!endTimeIsCorrect) || ($('#end-time-input').val()=='')){
-            //     alert('لطفا زمان پایان را انتخاب کنید!');
-            //     return;
-            // }
-            // if(selectedPeriod==''){
-            //     alert('لطفا بازه زمانی را انتخاب کنید!');
-            //     return;
-            // }
+            if((startDate=='') ||($('#pcal1').val()=="")) {
+                alert('لطفا تاریخ شروع را انتخاب کنید!');
+                return;
+            }
+            if ((endDate=='') || ($('#pcal2').val()=="")){
+                alert('لطفا تاریخ پایان را انتخاب کنید!');
+                return;
+            }
+            if ((!startTimeIsCorrect) || ($('#start-time-input').val()=='') ){
+                alert('لطفا زمان شروع را انتخاب کنید!');
+                return;
+            }
+            if ((!endTimeIsCorrect) || ($('#end-time-input').val()=='')){
+                alert('لطفا زمان پایان را انتخاب کنید!');
+                return;
+            }
+            if(selectedPeriod==''){
+                alert('لطفا بازه زمانی را انتخاب کنید!');
+                return;
+            }
             resetCanvas();
             resetTable();
-            displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            //displayAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+        //displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
+            displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
             periodLabel = periodLabels[selectedPeriod];
-            switch(selectedPeriod){
-                case (30): periodLabel
-            }
+            // switch(selectedPeriod){
+            //     case (30): periodLabel
+            // }
             if(totalRainBool)
                 chartLabel='باران تجمیعی';
             if (absoluteRainBool)
@@ -447,6 +447,6 @@ mixin detailCardRain(stnID,sensor,position)
             $('#report-chart'+' h3').text("").append(chartLabel);
         }
         function  download() {
-            getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            //getExcelAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+        //getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
+            getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
         }

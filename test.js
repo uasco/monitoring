@@ -74,27 +74,47 @@ let CronTime = require('cron').CronTime;
 // let jmb = jm;
 // console.log(`now=${now} , end_of_this_months= ${end_of_this_months}, jy= ${jy} , jm=${jm}, my=${my_date.get_end_of_this_month_in_georgian()} \n, my2=${my_date.get_start_of_next_month_in_georgian()} \n my3 = ${new Date(my_date.get_start_of_next_month_in_georgian())}`);
 
-// let date = new Date();
-// date.setSeconds(date.getSeconds()+4);
-// //console.log( `${date.getMinutes()}  ${date.getHours()}  ${date.getDate()}    ${date.getMonth()+1}    ${date.getFullYear()}  `);
-// const job1 = new CronJob(
-//     date,
-//     function() {
-//         console.log(`job1 executed at  ${date}`);
-//         date.setSeconds(date.getSeconds()+4);
-//         this.setTime(new CronTime(date));
+exports.clearRainValuesCache = () => {
+    let after45MinutesFromNow = new Date();
+    after45MinutesFromNow.setSeconds(after45MinutesFromNow.getSeconds()+4);
+    const clearLevelValueCacheJob = new CronJob(
+        after45MinutesFromNow,
+        async () => {
+            try{
+                console.log(`this job happend at: ${my_date.jNow()}`)
+                after45MinutesFromNow.setSeconds(after45MinutesFromNow.getSeconds()+4);
+                this.setTime(new CronTime(after45MinutesFromNow));
+                this.start();
+            }catch(err){
+                console.log('ERROR');
+                console.log(err);
+            }
+
+        },
+        function(){
+        },
+        true,
+        'Asia/Tehran'
+    );
+    clearLevelValueCacheJob.start();
+
+}
+
+
+// console.log(`new Date = ${new Date()}`);
+// console.log(`moment() = ${moment()}`);
+// console.log(`jNow() = ${my_date.jNow()}`);
+
+
+// console.log(`Program Started at : ${my_date.jNow()}`)
+// exports.clearRainValuesCache = () => {
+//     const job1 = new CronJob('*/7 * * * * *', async () => { await
+//         console.log(`this job happend at: ${my_date.jNow()}`)
 //     },
-//     function(){
-//         console.log(`job1 was reset at  ${date}`);
-//         //let nextDate = date.getMinutes().toString()+' '+ date.getHours().toString() +' '+  date.getDate().toString() + ' ' + (date.getMonth()+1).toString() + ' ' + '*' ;
-//         this.start();
-//     },
-//     false,
+//     null,
+//     true,
 //     'Asia/Tehran'
-// );
-// job1.start();
-// date.setSeconds(date.getSeconds()+4);
-// job1.setTime(new CronTime(date));
-console.log(`new Date = ${new Date()}`);
-console.log(`moment() = ${moment()}`);
-console.log(`jNow() = ${my_date.jNow()}`);
+//     );
+//     job1.start();
+// }
+

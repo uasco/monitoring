@@ -2,6 +2,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 /////
 const Values = require('../models2/valuesModel');
+const Stn = require('../models/stnModel');
 const myDate = require('../utils/my_date');
 //const Sensor = require('../models2/sensorModel');
 
@@ -132,6 +133,7 @@ exports.getRainTotalsOfPastMonths = catchAsync(async (req, res, next) => {
 exports.getRainAmariReport = catchAsync(async (req, res, next) => {
 
     const client_id = req.params.id * 1;
+    const clima = req.params.c;
     const startDate = req.params.sd;
     const endDate = req.params.ed;
     const startHour = req.params.sh;
@@ -145,11 +147,17 @@ exports.getRainAmariReport = catchAsync(async (req, res, next) => {
 
     let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
     //console.log(`minutes ========== ${minutes}`);
-
-    const rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
+    let rainAmariReport=undefined;
+    console.log(`clima bool == ${clima}`);
+    console.log(`channel_index_rainc_total == ${channel_index_rainc_total}`);
+    console.log(`channel_index_rain_total == ${channel_index_rain_total}`);
+    if(clima=='true')
+            rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rainc_total,startTime,endTime,period );
+    else
+            rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
     var resultJson = JSON.stringify(rainAmariReport);
-    //console.log("new pars:::::::::::::::");
-    //console.log(resultJson);
+    console.log("new pars:::::::::::::::");
+    console.log(resultJson);
     resultJson = JSON.parse(resultJson);
     /*
     [
@@ -204,6 +212,7 @@ exports.getRainAmariReport = catchAsync(async (req, res, next) => {
 
 exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
     const client_id = req.params.id * 1;
+    const clima = req.params.c;
     const startDate = req.params.sd;
     const endDate = req.params.ed;
     const startHour = req.params.sh;
@@ -215,8 +224,12 @@ exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
     let endTime = endDate+ ' ' + endHour;
     let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
     //console.log(`minutes ========== ${minutes}`);
-    const rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
-    var resultJson = JSON.stringify(rainAmariReport);
+    let rainAmariReport = undefined;
+    if(clima=='true')
+        rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rainc_total,startTime,endTime,period );
+    else
+        rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
+    let resultJson = JSON.stringify(rainAmariReport);
     //console.log("new pars:::::::::::::::");
     //console.log(resultJson);
     resultJson = JSON.parse(resultJson);
@@ -418,11 +431,6 @@ exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
     //      .then(buffer => res.send(buffer))
     //      .catch(next);
 
-
-
-
-
-
 //     // Create workbook & add worksheet
 //     const workbook = new Excel.Workbook();
 //     const worksheet = workbook.addWorksheet('ExampleSheet');
@@ -471,18 +479,378 @@ exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
 
 
 });
+
+exports.getRainMantagheiReport = catchAsync(async (req, res, next) => {
+
+    const client_id = req.params.id * 1;
+    const clima = req.params.c;
+    const startDate = req.params.sd;
+    const endDate = req.params.ed;
+    //console.log(client_id + '###' + startDate+startHour + '###' + endDate + '###' + endHour + '###' + period);
+    let startTime = startDate;
+    let endTime = endDate;
+    //console.log(`minutes ========== ${minutes}`);
+    let rainMantagheiReport=undefined;
+    // console.log(`clima bool == ${clima}`);
+    // console.log(`channel_index_rainc_total == ${channel_index_rainc_total}`);
+    // console.log(`channel_index_rain_total == ${channel_index_rain_total}`);
+    let resultJson = undefined;
+    let resultJson2 =  [];
+    if(clima=='true')
+        rainMantagheiReport = await Values.getRainMantagheiReport(client_id, channel_index_rainc_total,startTime,endTime);
+    else
+        rainMantagheiReport = await Values.getRainMantagheiReport(client_id, channel_index_rain_total,startTime,endTime);
+
+    /*
+    [[{"val_0":721.7,"time_0":"2020-06-24 00:05:06","val_6_30":721.7,"time_6_30":"2020-06-24 06:25:31","val_18_30":721.7,"time_18_30":"2020-06-24 18:25:04","val_24_00":721.7,"time_24_00":"2020-
+06-24 23:53:44"},{"val_0":0,"time_0":"1111-11-11 00:00:00","val_6_30":0,"time_6_30":"1111-11-11 00:00:00","val_18_30":0,"time_18_30":"1111-11-11 00:00:00","val_24_00":0,"time_24_00":"1111-1
+1-11 00:00:00"}],{"fieldCount":0,"affectedRows":0,"insertId":0,"serverStatus":34,"warningCount":0,"message":"","protocol41":true,"changedRows":0}]
+
+    */
+
+    resultJson = rainMantagheiReport[0];
+
+    /*
+        [{"val_0":721.7,"time_0":"2020-06-24 00:05:06","val_6_30":721.7,"time_6_30":"2020-06-24 06:25:31","val_18_30":721.7,"time_18_30":"2020-06-24 18:25:04","val_24_00":721.7,"time_24_00":"2020-
+06-24 23:53:44"},{"val_0":0,"time_0":"1111-11-11 00:00:00","val_6_30":0,"time_6_30":"1111-11-11 00:00:00","val_18_30":0,"time_18_30":"1111-11-11 00:00:00","val_24_00":0,"time_24_00":"1111-1
+1-11 00:00:00"}]
+     */
+    for(let i=0;i<resultJson.length;i++){
+        if(resultJson[i]['time_0']!='1111-11-11 00:00:00')
+            resultJson[i]['time_0']=myDate.convert_gdate_to_jdate(resultJson[i]['time_0']);
+        if(resultJson[i]['time_6_30']!='1111-11-11 00:00:00')
+            resultJson[i]['time_6_30']=myDate.convert_gdate_to_jdate(resultJson[i]['time_6_30']);
+        if(resultJson[i]['time_18_30']!='1111-11-11 00:00:00')
+            resultJson[i]['time_18_30']=myDate.convert_gdate_to_jdate(resultJson[i]['time_18_30']);
+        if(resultJson[i]['time_24_00']!='1111-11-11 00:00:00')
+            resultJson[i]['time_24_00']=myDate.convert_gdate_to_jdate(resultJson[i]['time_24_00']);
+    }
+
+    for(let i=0;i<resultJson.length;i++){
+        let item = {'month':'','day':'','val_6_30':-1,'val_18_30':-1,'val_24_00':-1};
+        if(resultJson[i]['time_0']!='1111-11-11 00:00:00') {
+            item['month'] = myDate.get_name_of_month_of_given_date(resultJson[i]['time_0']);
+            item['day'] = myDate.get_number_of_day_of_given_date(resultJson[i]['time_0']);
+            if (resultJson[i]['val_6_30'] != -1 && resultJson[i]['val_0'] != -1) {
+                item['val_6_30'] = resultJson[i]['val_6_30'] - resultJson[i]['val_0'];
+            }
+            if (resultJson[i]['val_18_30'] != -1 && resultJson[i]['val_6_30'] != -1) {
+                item['val_18_30'] = resultJson[i]['val_18_30'] - resultJson[i]['val_6_30'];
+            }
+            if (resultJson[i]['val_24_00'] != -1 && resultJson[i]['val_0'] != -1) {
+                item['val_24_00'] = resultJson[i]['val_24_00'] - resultJson[i]['val_0'];
+            }
+            resultJson2.push(item);
+        }
+    }
+    var apiResult = {};
+    // [
+    //     {
+    //      time: '00:05        1399/4/3',
+    //      val_6_30: 0,
+    //      val_18_30: 0,
+    //      val_24_00: 0
+    //     },
+    //     {
+    //     time: '00:05        1399/4/4',
+    //     val_6_30: 0,
+    //     val_18_30: 0,
+    //     val_24_00: 0
+    //     },
+    //     {
+    //     time: '00:03        1399/4/5',
+    //     val_6_30: 0,
+    //     val_18_30: 0,
+    //     val_24_00: 0
+    //     }
+    // ]
+
+    apiResult.data = resultJson2;
+
+    //send JSON to Express
+    res.json(apiResult); //{"data":[{"value":0,"created_at":"07:47:12, 24 دی 1398"},{"value":0,"created_at":"07:47:12, 24 دی 1398"},{"value":207.9,"created_at":"07:47:12, 24 دی 1398"}]}
+
+
+});
+
+exports.getExcelRainMantagheiReport = catchAsync(async (req, res, next) => {
+    const client_id = req.params.id * 1;
+    const clima = req.params.c;
+    const startDate = req.params.sd;
+    const endDate = req.params.ed;
+    let startTime = startDate;
+    let endTime = endDate;
+    let rainMantagheiReport = undefined;
+    let resultJson = undefined;
+    let resultJson2 =  [];
+    let stnName = undefined;
+    let stnCode = undefined;
+    let zoneName = undefined;
+    let riverName = undefined;
+    let longitude = undefined;
+    let latitude = undefined;
+    let utmX = undefined;
+    let utmY = undefined;
+    let height = undefined;
+    let establishYear = undefined;
+    const stateName= process.env.STATE_NAME;
+    const organizationCode= process.env.ORGANIZATION_CODE;
+    await Stn.find({"client_id": client_id}).
+    then(stn => {
+        console.log(`stn['station_name'] ==>> ${stn[0].longitude}`);
+        stnName =  stn[0].station_name;
+        stnCode=  stn[0].station_code;
+        zoneName=  stn[0].zone_name;
+        riverName=  stn[0].river_name;
+        longitude=  stn[0].longitude ;
+        latitude = stn[0].latitude ;
+        utmX=  stn[0].utm_x;
+        utmY=  stn[0].utm_y;
+        height=  stn[0].height;
+        establishYear=  stn[0].establish_year;
+    }).
+    catch(err => {
+        console.log('Caught:', err.message)
+    });
+    if(clima=='true')
+        rainMantagheiReport = await Values.getRainMantagheiReport(client_id, channel_index_rainc_total,startTime,endTime);
+    else
+        rainMantagheiReport = await Values.getRainMantagheiReport(client_id, channel_index_rain_total,startTime,endTime);
+
+    resultJson = rainMantagheiReport[0];
+
+    for(let i=0;i<resultJson.length;i++){
+        if(resultJson[i]['time_0']!='1111-11-11 00:00:00')
+            resultJson[i]['time_0']=myDate.convert_gdate_to_jdate(resultJson[i]['time_0']);
+        if(resultJson[i]['time_6_30']!='1111-11-11 00:00:00')
+            resultJson[i]['time_6_30']=myDate.convert_gdate_to_jdate(resultJson[i]['time_6_30']);
+        if(resultJson[i]['time_18_30']!='1111-11-11 00:00:00')
+            resultJson[i]['time_18_30']=myDate.convert_gdate_to_jdate(resultJson[i]['time_18_30']);
+        if(resultJson[i]['time_24_00']!='1111-11-11 00:00:00')
+            resultJson[i]['time_24_00']=myDate.convert_gdate_to_jdate(resultJson[i]['time_24_00']);
+    }
+
+    for(let i=0;i<resultJson.length;i++){
+        let item = {'month':'','day':'','val_6_30':-1,'val_18_30':-1,'val_24_00':-1};
+        if(resultJson[i]['time_0']!='1111-11-11 00:00:00') {
+            item['month'] = myDate.get_name_of_month_of_given_date(resultJson[i]['time_0']);
+            item['day'] = myDate.get_number_of_day_of_given_date(resultJson[i]['time_0']);
+            if (resultJson[i]['val_6_30'] != -1 && resultJson[i]['val_0'] != -1) {
+                item['val_6_30'] = resultJson[i]['val_6_30'] - resultJson[i]['val_0'];
+            }
+            if (resultJson[i]['val_18_30'] != -1 && resultJson[i]['val_6_30'] != -1) {
+                item['val_18_30'] = resultJson[i]['val_18_30'] - resultJson[i]['val_6_30'];
+            }
+            if (resultJson[i]['val_24_00'] != -1 && resultJson[i]['val_0'] != -1) {
+                item['val_24_00'] = resultJson[i]['val_24_00'] - resultJson[i]['val_0'];
+            }
+            resultJson2.push(item);
+        }
+    }
+    resultJson2 = JSON.stringify(resultJson2);
+    resultJson2 = JSON.parse(resultJson2);
+
+    let workbook = new Excel.Workbook();
+    let worksheet = workbook.addWorksheet('Export');
+
+    worksheet.mergeCells('A1:L1');
+    worksheet.getCell('A1').value = 'وزارت نیرو';
+    worksheet.getCell('A1').alignment = { horizontal:'center'} ;
+
+    worksheet.mergeCells('A2:B2');
+    worksheet.getCell('A2').value = stateName;
+    worksheet.getCell('A2').alignment = { horizontal:'center'} ;
+
+    worksheet.mergeCells('C2:E2');
+    worksheet.getCell('C2').value = 'شرکت سهامی آب منطقه اي: ';
+
+    worksheet.mergeCells('F2:G2');
+    worksheet.getCell('F2').value = 'فرم اندازه گيري بارش   ';
+    worksheet.mergeCells('H2:L2');
+    worksheet.getCell('H2').value = 'سازمان مديريت منابع آب ايران   ';
+    worksheet.mergeCells('A3:B3');
+    worksheet.getCell('A3').value = stateName;
+    worksheet.mergeCells('C3:E3');
+    worksheet.getCell('C3').value = 'استان:';
+    worksheet.mergeCells('F3:G3');
+    worksheet.getCell('F3').value = '(باران سنج معمولي)';
+    worksheet.mergeCells('H3:L3');
+    worksheet.getCell('H3').value = 'معاونت پژوهش و مطالعات پايه ';
+    worksheet.mergeCells('A4:B4');
+    worksheet.getCell('A4').value = organizationCode;
+    worksheet.mergeCells('C4:E4');
+    worksheet.getCell('C4').value = 'كد سازمان:';
+    worksheet.mergeCells('F4:G4');
+    worksheet.getCell('F4').value = 'كد: 210-410';
+    worksheet.mergeCells('H4:L4');
+    worksheet.getCell('H4').value = 'دفتر مطالعات پايه منابع آب ';
+    worksheet.mergeCells('A5:L5');
+    worksheet.getCell('A6').value = latitude;
+    worksheet.mergeCells('B6:C6');
+    worksheet.getCell('B6').value = 'عرض جغرافيائي:';
+    worksheet.getCell('D6').value = longitude;
+    worksheet.mergeCells('E6:F6');
+    worksheet.getCell('E6').value = 'طول جغرافيائي:';
+    worksheet.getCell('G6').value = stnName;
+    worksheet.getCell('H6').value = 'نام ايستگاه:';
+    worksheet.getCell('I6').value = zoneName;
+    worksheet.mergeCells('J6:L6');
+    worksheet.getCell('J6').value = 'نام حوزه آبريز:';
+    worksheet.mergeCells('A7:L7');
+    worksheet.getCell('A8').value = '  .نقطه ای U.T.M    X:';
+    worksheet.mergeCells('B8:C8');
+    worksheet.getCell('B8').value = utmX;
+    worksheet.getCell('D8').value = height;
+    worksheet.getCell('E8').value = 'ارتفاع:';
+    worksheet.getCell('G8').value = stnCode;
+    worksheet.getCell('H8').value = 'كد ايستگاه:';
+    worksheet.getCell('I8').value = riverName;
+    worksheet.mergeCells('J8:L8');
+    worksheet.getCell('J8').value = 'نام رودخانه: ';
+    worksheet.getCell('A9').value = 'Y:';
+    worksheet.mergeCells('B9:C9');
+    worksheet.getCell('B9').value = utmY;
+    worksheet.mergeCells('C10:D10');
+    worksheet.getCell('C10').value = resultJson2[0]['month'];
+    worksheet.getCell('E10').value = 'ماه:';
+    worksheet.mergeCells('H10:I10');
+    worksheet.getCell('H10').value = '96-97';
+    worksheet.mergeCells('J10:L10');
+    worksheet.getCell('J10').value = 'سال آبي :';
+    worksheet.mergeCells('A11:A12');
+    worksheet.getCell('A11').value = 'ملاحظات';
+    worksheet.mergeCells('B11:B12');
+    worksheet.getCell('B11').value = 'مجموع بارش در روز' ;
+    worksheet.mergeCells('C11:D11');
+    worksheet.getCell('C11').value = 'ساعت بارندگي ';
+    worksheet.mergeCells('E11:F11');
+    worksheet.getCell('E11').value = 'ارتفاع برف تازه به سانتيمتر';
+    worksheet.mergeCells('G11:H11');
+    worksheet.getCell('G11').value = 'ارتفاع بارش به ميليمتر  ساعت 18:30';
+    worksheet.mergeCells('I11:J11');
+    worksheet.getCell('I11').value = 'ارتفاع بارش به ميليمتر  ساعت 6:30';
+    worksheet.mergeCells('K11:K12');
+    worksheet.getCell('K11').value = 'روز';
+    worksheet.mergeCells('L11:L12');
+    worksheet.getCell('L11').value = 'ماه';
+    worksheet.getCell('C12').value = 'خاتمه ';
+    worksheet.getCell('D12').value = 'شروع ';
+    worksheet.getCell('E12').value = 'ساعت 18:30';
+    worksheet.getCell('F12').value = 'ساعت 6:30';
+    worksheet.getCell('G12').value = 'آب معادل برف ';
+    worksheet.getCell('H12').value = 'باران ';
+    worksheet.getCell('I12').value = 'آب معادل برف ';
+    worksheet.getCell('J12').value = 'باران ';
+
+    let sumOfTotalRain = 0;
+
+    let cellIndex_trid = '';//trid : total rain in day
+    let cellIndex1_r_18_30 = '';
+    let cellIndex_r_6_30 = '';
+    let cellIndex_day = '';
+    let cellIndex_month = '';
+    let i=0;
+    let n = 0;
+    cellIndex_trid = 'B' + n.toString();
+
+    for(i=0;i<resultJson2.length;i++) {
+        n=i+13;
+        cellIndex_trid = 'B' + n.toString();
+        sumOfTotalRain = sumOfTotalRain + resultJson2[i]['val_24_00'];
+        worksheet.getCell(cellIndex_trid).value = resultJson2[i]['val_24_00'];
+        cellIndex1_r_18_30 = 'H' + n.toString();
+        worksheet.getCell(cellIndex1_r_18_30).value = resultJson2[i]['val_18_30'];
+        cellIndex_r_6_30 = 'J' + n.toString();
+        worksheet.getCell(cellIndex_r_6_30).value = resultJson2[i]['val_6_30'];
+        cellIndex_day = 'K' + n.toString();
+        worksheet.getCell(cellIndex_day).value = resultJson2[i]['day'];
+        cellIndex_month = 'L' + n.toString();
+        worksheet.getCell(cellIndex_month).value = resultJson2[i]['month'];
+    }
+
+    i = resultJson2.length;
+    let cellIndex = undefined;
+    n=i+13;
+    cellIndex = 'B' + n.toString();
+    worksheet.getCell(cellIndex).value = sumOfTotalRain;
+
+    cellIndex = 'C' + n.toString() + ':' + 'L' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'C' + n.toString();
+    worksheet.getCell(cellIndex).value = 'مجموع كل بارش در يك ماه';
+
+    i = i+1;
+    n=i+13;
+    cellIndex = 'C' + n.toString();
+    worksheet.getCell(cellIndex).value = 'تاريخ كنترل:';
+
+    cellIndex = 'E' + n.toString() + ':' + 'F' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'E' + n.toString();
+    worksheet.getCell(cellIndex).value = '';
+
+    cellIndex = 'G' + n.toString();
+    worksheet.getCell(cellIndex).value = 'نام كنترل كننده:';
+
+    cellIndex = 'I' + n.toString() + ':' + 'J' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'I' + n.toString();
+    worksheet.getCell(cellIndex).value = '';
+
+    cellIndex = 'K' + n.toString() + ':' + 'L' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'K' + n.toString();
+    worksheet.getCell(cellIndex).value = 'نام متصدي:';
+
+    i = i+1;
+    n=i+13;
+    cellIndex = 'E' + n.toString() + ':' + 'F' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'E' + n.toString();
+    worksheet.getCell(cellIndex).value = '';
+
+    cellIndex = 'G' + n.toString();
+    worksheet.getCell(cellIndex).value = 'امضاء';
+
+    cellIndex = 'I' + n.toString() + ':' + 'J' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'I' + n.toString();
+    worksheet.getCell(cellIndex).value = '';
+
+    cellIndex = 'K' + n.toString() + ':' + 'L' + n.toString();
+    worksheet.mergeCells(cellIndex);
+    cellIndex = 'K' + n.toString();
+    worksheet.getCell(cellIndex).value = 'امضاء';
+
+    worksheet.eachRow(function (Row, rowNum) {
+        Row.eachCell(function (Cell, cellNum) {
+            Cell.alignment = {horizontal: 'center'};
+            Cell.font = { size: 8, bold: true};
+        })
+    })
+    // Format the header text
+    // worksheet.getRow(1).font = {
+    //     name: 'Arial Black',
+    //     size: 10,
+    // };
+
+    // Set headers for download
+    const fileName = 'mantaghei-report.xlsx';
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+    const fileBuffer = await workbook.xlsx.writeBuffer()
+    res.send(fileBuffer);
+});
+
 exports.getLevelStationValue = catchAsync(async (req, res, next) => {
     const client_id = req.params.id * 1;
-    //const rainsensorides = await Sensor.getIDesOfRain();
-    //const rainstationrainvalues = await RainStation.getRainStationRainValues(client_id,rainsensorides.rain_total);
+
     const levelvalue = await Values.getLevelValue(client_id, channel_index_level);
 
     var resultJson = JSON.stringify(levelvalue);
     resultJson = JSON.parse(resultJson);
-    ////////////////////////
-    // console.log('resultJson["data"] ====');
-    // console.log(resultJson);
-
 
     resultJson.map(el => {
         let d = el.sample_time;
@@ -564,8 +932,6 @@ exports.getClimaStationValues = catchAsync(async (req, res, next) => {
         el.hour = hour;
     })
     ///////////////////////
-
-
 
     var apiResult = {};
 

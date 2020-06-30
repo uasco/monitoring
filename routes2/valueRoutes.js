@@ -31,7 +31,7 @@ router
     authController.restrictTo('admin', 'lead-guide')
   );
 router
-    .route('/rainamarireport/:id/:sd/:ed/:sh/:eh/:p')
+    .route('/rainamarireport/:id/:c/:sd/:ed/:sh/:eh/:p')
     //.get(valuesController.getRainTotalsOfPastMonths)//without cache
     .get(valuesController.getRainAmariReport)
     .post(
@@ -39,8 +39,23 @@ router
         authController.restrictTo('admin', 'lead-guide')
     );
 router
-    .route('/excelrainamarireport/:id/:sd/:ed/:sh/:eh/:p/:rt')
+    .route('/excelrainamarireport/:id/:c/:sd/:ed/:sh/:eh/:p/:rt')
     .get(valuesController.getExcelRainAmariReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/rainmantagheireport/:id/:c/:sd/:ed')
+    //.get(valuesController.getRainTotalsOfPastMonths)//without cache
+    .get(valuesController.getRainMantagheiReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/excelrainmantagheireport/:id/:c/:sd/:ed')
+    .get(valuesController.getExcelRainMantagheiReport)
     .post(
         authController.protect,
         authController.restrictTo('admin', 'lead-guide')

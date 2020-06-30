@@ -16,7 +16,7 @@ exports.createStns = catchAsync( async (req, res, next) =>{
     if(resultJson.length>0){
         resultJson.map(async el  => {
             await Stn.create({
-                name: el.position,
+                station_name: el.position,
                 client_id: el.id
             });
         })
@@ -228,6 +228,9 @@ exports.getDetail = catchAsync(async (req, res, next) => {
         case 'clima6': pageType = pageType + '6';
         case 'clima7': pageType = pageType + '7';
     }
+    console.log(`stnID === ${stnID}`);
+    console.log(`sensor === ${sensor}`);
+    console.log(`position === ${position}`);
     res.status(200).render('detail', {
         pretty: true,
         pageType: pageType,//'detail',
@@ -283,5 +286,12 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
     res.status(200).render('account', {
         title: 'Your account',
         user: updatedUser
+    });
+});
+exports.getSettings = catchAsync(async (req, res, next) => {
+
+    res.status(200).render('settings', {
+        pretty: true,
+        pageType: 'settings',//'detail',
     });
 });

@@ -4,8 +4,20 @@ const cacheController = require('./controllers2/cacheController');
 const my_date = require('./utils/my_date');
 const CronJob = require('cron').CronJob;
 const CronTime = require('cron').CronTime;
-
-
+const winston = require('winston');
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        //
+        // - Write all logs with level `error` and below to `error.log`
+        // - Write all logs with level `info` and below to `combined.log`
+        //
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' }),
+    ],
+});
 
 const job2 = new CronJob('0 */30 9-17 * * *', function() {
     const d = new Date();
@@ -41,12 +53,14 @@ const job3 = new CronJob('00 00 00 * * *', function() {
 //RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 exports.clearRainValuesCache = () => {
     let after50MinutesFromNow = new Date();
-    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+1);
+    //after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
     const clearRainValuesCacheJob = new CronJob(
         after50MinutesFromNow,
         function ()  {
             flatCache.clearCacheById('rainValuesCache','../cache/');
             cacheController.clearRainValuesCache();
+            logger.info('clearRainValuesCache', { message: `time : ${new Date()}` });
             after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
             this.setTime(new CronTime(after50MinutesFromNow));
             this.start();
@@ -75,6 +89,7 @@ exports.clearRainTotalsMonthsCache = () => {
         async () => {
             await flatCache.clearCacheById('rainTotalsMonthsCache','../cache/');
             await cacheController.clearRainTotalsMonthsCache();
+            logger.info('clearRainTotalsMonthsCache', { message: `time : ${new Date()}` });
             this.setTime(new CronTime(new Date(my_date.get_start_of_next_month_in_georgian())));
             this.start();
         },
@@ -88,12 +103,14 @@ exports.clearRainTotalsMonthsCache = () => {
 //LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 exports.clearLevelValueCache = () => {
     let after5HoursFromNow = new Date();
-    after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
+    after5HoursFromNow.setMinutes(after5HoursFromNow.getMinutes()+1);
+    //after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
     const clearLevelValueCacheJob = new CronJob(
         after5HoursFromNow,
         function ()  {
             flatCache.clearCacheById('levelValueCache','../cache/');
             cacheController.clearLevelValueCache();
+            logger.info('clearLevelValueCache', { message: `time : ${new Date()}` });
             after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
             this.setTime(new CronTime(after5HoursFromNow));
             this.start();
@@ -113,12 +130,14 @@ exports.clearLevelValueCache = () => {
 }
 exports.clearLevelLastHoursCache = () => {
     let after5HoursFromNow = new Date();
-    after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
+    after5HoursFromNow.setMinutes(after5HoursFromNow.getMinutes()+1);
+    //after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
     const clearlevelLastHoursCacheJob = new CronJob(
         after5HoursFromNow,
         function () {
             flatCache.clearCacheById('levelLastHoursCache','../cache/');
             cacheController.clearlevelLastHoursCache();
+            logger.info('clearLevelLastHoursCache', { message: `time : ${new Date()}` });
             after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
             this.setTime(new CronTime(after5HoursFromNow));
             this.start();
@@ -139,12 +158,14 @@ exports.clearLevelLastHoursCache = () => {
 //CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 exports.clearClimaValuesCache = () => {
     let after50MinutesFromNow = new Date();
-    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+1);
+    //after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
     const clearClimaValuesCacheJob = new CronJob(
         after50MinutesFromNow,
         function ()  {
             flatCache.clearCacheById('climaValuesCache','../cache/');
             cacheController.clearClimaValuesCache();
+            logger.info('clearClimaValuesCache', { message: `time : ${new Date()}` });
             after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
             this.setTime(new CronTime(after50MinutesFromNow));
             this.start();
@@ -168,12 +189,14 @@ exports.clearClimaValuesCache = () => {
 }
 exports.clearClimaLastHoursCache = () => {
     let after50MinutesFromNow = new Date();
-    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+1);
+    //after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
     const clearClimaLastHoursCacheJob = new CronJob(
         after50MinutesFromNow,
         function ()  {
             flatCache.clearCacheById('climaLastHoursCache','../cache/');
             cacheController.clearClimaLastHoursCache();
+            logger.info('clearClimaLastHoursCache', { message: `time : ${new Date()}` });
             after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
             this.setTime(new CronTime(after50MinutesFromNow));
             this.start();
@@ -203,6 +226,7 @@ exports.clearClimaRainTotalsMonthsCache = () => {
         function ()  {
             flatCache.clearCacheById('climaRainTotalsMonthsCache','../cache/');
             cacheController.clearClimaRainTotalsMonthsCache();
+            logger.info('clearClimaRainTotalsMonthsCache', { message: `time : ${new Date()}` });
             this.setTime(new CronTime(new Date(my_date.get_start_of_next_month_in_georgian())));
             this.start();
         },

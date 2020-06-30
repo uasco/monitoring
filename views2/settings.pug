@@ -1,0 +1,58 @@
+extends base
+include _navbar
+include _sidebar
+include _title
+include _settingsCard
+block navbar
+    +navbar
+block sidebar
+
+        +sidebar()
+            .logo
+                a.simple-text.logo-normal(href="javascript:void(0)")
+                    | تنظیمات :
+
+            .row
+                .col-lg-12
+                    .btn-group-lg.btn-group-vertical.btn-group-toggle(data-toggle="buttons")
+                        label#0.btn.btn-lg.btn-secondary.btn-simple.active
+                            input(type="radio" id="create-new-station-input" name="options" checked="")
+                            span(style='font-size:1.4rem')  ایجاد ایستگاه جدید
+                            span
+                        label#1.btn.btn-lg.btn-secondary.btn-simple
+                            input.d-none.d-sm-none(type="radio" id="edit-stations-input" name="options")
+                            span(style='font-size:1.4rem')  ویرایش ایستگاه ها
+                            span
+                                //i.tim-icons.icon-gift-2
+                        label#2.btn.btn-lg.btn-secondary.btn-simple
+                            input(type="radio" id="create-new-user-input" name="options" )
+                            span(style='font-size:1.4rem')  ایجاد کاربر جدید
+                            span
+                        label#3.btn.btn-lg.btn-secondary.btn-simple
+                            input(type="radio" id="edit-users-input" name="options" )
+                            span(style='font-size:1.4rem')  ویرایش کاربران
+                            span
+                        label#4.btn.btn-lg.btn-secondary.btn-simple
+                            input.d-none(type="radio" id="general-settings-input" name="options")
+                            span(style='font-size:1.4rem') تنظیمات کلی
+                            span
+            li
+                div.row
+                    div.col-sm-12.text-right
+                        h3.card-category(style='display:flex;justify-content: center')
+                            //a(href='/overview')
+                            button.btn(onclick='showReport()')
+                                i.enter.fas.ti-face-smile(style='font-size : 30px ')
+            li
+                div.row
+                    div.col-sm-12.text-right
+                        h3.card-category(style='display:flex;justify-content: center')
+                            //a(href='/overview')
+                            button.btn(onclick='goBack()')
+                                i.return.fas.fa-undo(style='font-size : 30px ')
+
+block content
+    //- +detailCardRain(stnID,sensor,position)
+    +settingsCard()
+
+

@@ -3,7 +3,7 @@ let moment2 = require('moment');
 //moment.loadPersian({usePersianDigits: true});
 //moment.loadPersian({dialect: 'persian-modern'});
 
-function get_name_of_month_of_given_date(d) {
+exports.get_name_of_month_of_given_date = function (d) {
     m = moment(d, 'jYYYY/jM/jD');
     switch (m.jMonth()) {
         case 0:
@@ -73,8 +73,12 @@ exports.convert_number_to_month = function (n) {
     }
 }
 exports.get_number_of_month_of_given_date = function (d) {
-    m = moment(d, 'jYYYY/jM/jD');
+    let m = moment(d, 'jYYYY/jM/jD');
     return m.jMonth();
+}
+exports.get_number_of_day_of_given_date = function (d) {
+    let day = moment(d, 'jYYYY/jM/jD').format('jD');
+    return day;
 }
 exports.get_number_of_month_of_given_date_georgian = function (d) {
     m = moment(d, 'YYYY/M/D');

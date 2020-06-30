@@ -10,9 +10,8 @@ const cookieParser = require('cookie-parser');
 const scheduler = require('./scheduler');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
-const tourRouter = require('./routes/tourRoutes');
-const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewRoutes');
+//const tourRouter = require('./routes/tourRoutes');
+//const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 /////
 const stationRouter = require('./routes2/stationRoutes');
@@ -21,6 +20,9 @@ const valueRouter = require('./routes2/valueRoutes');
 const viewRouter2 = require('./routes2/viewRoutes');
 
 const statusRouter = require('./routes2/statusRoutes');
+const stnRouter = require('./routes2/stnRoutes');
+const userRouter = require('./routes2/userRoutes');
+
 
 var helpers = require('./utils/helpers.js');
 
@@ -94,9 +96,8 @@ app.locals.range = helpers.range;
 /////app.use('/', viewRouter);
 /////
 app.use('/', viewRouter2);
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewRouter);
+//app.use('/api/v1/tours', tourRouter);
+//app.use('/api/v1/reviews', reviewRouter);
 
 
 
@@ -110,6 +111,10 @@ app.use('/api/values', valueRouter);
 
 
 app.use('/api/status', statusRouter);
+
+app.use('/api/stns', stnRouter);
+
+app.use('/api/users', userRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
@@ -127,26 +132,28 @@ app.use(globalErrorHandler);
 const util = require('util');
 const Station = require('./models2/stationModel');
 
+
+
 // const Stn = require('./models/stnModel');
-//async function stns() {
-    // const stations = await Station.getStationsNamesAndIDs('all');
-    // var resultJson = JSON.stringify(stations);
-    // resultJson = JSON.parse(resultJson);
+// async function stns() {
+//     const stations = await Station.getStationsNamesAndIDs('all');
+//     var resultJson = JSON.stringify(stations);
+//     resultJson = JSON.parse(resultJson);
+//
+//     Stn.deleteMany({}, function(err) {})
+//     if(resultJson.length>0){
+//         resultJson.map(async el  => {
+//             await Stn.create({
+//                 station_name: el.position,
+//                 client_id: el.id
+//             });
+//         })
+//     }
+// }
+// s=util.promisify(stns);
+// s();
 
 
-
-    // Stn.deleteMany({}, function(err) {})
-    // if(resultJson.length>0){
-    //     resultJson.map(async el  => {
-    //         await Stn.create({
-    //             name: el.position,
-    //             client_id: el.id
-    //         });
-    //     })
-    // }
-//}
-//s=util.promisify(stns);
-//s();
 
 scheduler.clearRainValuesCache();
 scheduler.clearLevelValueCache();

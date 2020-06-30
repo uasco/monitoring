@@ -66,6 +66,14 @@ mixin raincard(stn)
 mixin levelcard(stn)
     div.col-lg-3.text-right
         div.card.card-chart(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'level' + '"' + ')' style='cursor: pointer;')
+            script.
+                $(document).ready(function () {
+                    checkFloodStatus(`#{stn.id}`);
+                })
+                var chackAlarm = setInterval(function () {
+                    checkFloodStatus(`#{stn.id}`);
+
+                }, 30000);
             div.card-header.level
                 i.fal.fa-water.fa-fw.fa-pull-left.fa-3x
                 h3.card-category  #{stn.position}
@@ -78,7 +86,7 @@ mixin levelcard(stn)
                     //- i.fal.fa-water-rise.fa-fw
                     i.wi.wi-flood
                     //- i.far.fa-bell
-                    i.card-label(id='level_alarm') &nbsp&nbsp&nbsp بدون سیلاب
+                    i.card-label(id='flood_status') &nbsp&nbsp&nbsp بدون سیلاب
                     br
                     div(style='display:flex;justify-content:space-between;align-items:baseline ')
                         div
@@ -97,8 +105,8 @@ mixin levelcard(stn)
                     canvas(id= chart_id)
 mixin climacard(stn , sensor)
     div.col-md-3.text-right
-        div.card.card-chart(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'clima' + '"' + ')' style='cursor: pointer;')
-            if (sensor[0] === 'RAINC')
+        if (sensor[0] === 'RAINC')
+            div.card.card-chart(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'clima' + '"' + ')' style='cursor: pointer;')
                 script.
                     $(document).ready(function () {
                         checkRainStart(`#{stn.id}`,'true');
@@ -156,7 +164,8 @@ mixin climacard(stn , sensor)
                         //- canvas(id='chartLinePurple')
                         - chart_id = 'CountryChart' + stn.id + sensor[0]
                         canvas(id= chart_id)
-            else
+        else
+            div.card.card-chart
                 div.card-header.clima
                     if(sensor[0] === 'TMP')
                         i.far.fa-temperature-low.fa-fw.fa-pull-left.fa-3x

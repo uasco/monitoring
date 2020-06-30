@@ -46,6 +46,80 @@ block sidebar
                             //a(href='/overview')
                             button.btn(onclick='goBack()')
                                 i.return.fas.fa-undo(style='font-size : 30px ')
+    if(sensor == 'level')
+        +sidebar()
+            .logo
+                a.simple-text.logo-normal(href="javascript:void(0)")
+                    | نوع گزارش :
+
+            .row
+                .col-lg-12
+                    .btn-group-lg.btn-group-vertical.btn-group-toggle(data-toggle="buttons")
+                        label#0.btn.btn-lg.btn-secondary.btn-simple.active
+                            input(type="radio" id="amari-report-input" name="options" checked="")
+                            span(style='font-size:1.4rem')  گزارش آماری
+                            span
+                        label#1.btn.btn-lg.btn-secondary.btn-simple
+                            input.d-none.d-sm-none(type="radio" id="standard-report-input" name="options")
+                            span(style='font-size:1.4rem')  گزارش استاندارد
+                            span
+                                //i.tim-icons.icon-gift-2
+                        label#2.btn.btn-lg.btn-secondary.btn-simple
+                            input.d-none(type="radio" id="mantaghei-report-input" name="options")
+                            span(style='font-size:1.4rem') اکسپورت آب منطقه ای
+                            span
+                                //i.tim-icons.icon-tap-02
+            li
+                div.row
+                    div.col-sm-12.text-right
+                        h3.card-category(style='display:flex;justify-content: center')
+                            //a(href='/overview')
+                            button.btn(onclick='showReport()')
+                                i.enter.fas.fa-enter(style='font-size : 30px ')
+            li
+                div.row
+                    div.col-sm-12.text-right
+                        h3.card-category(style='display:flex;justify-content: center')
+                            //a(href='/overview')
+                            button.btn(onclick='goBack()')
+                                i.return.fas.fa-undo(style='font-size : 30px ')
+    if(sensor == 'clima')
+        +sidebar()
+            .logo
+                a.simple-text.logo-normal(href="javascript:void(0)")
+                    | نوع گزارش :
+
+            .row
+                .col-lg-12
+                    .btn-group-lg.btn-group-vertical.btn-group-toggle(data-toggle="buttons")
+                        label#0.btn.btn-lg.btn-secondary.btn-simple.active
+                            input(type="radio" id="amari-report-input" name="options" checked="")
+                            span(style='font-size:1.4rem')  گزارش آماری
+                            span
+                        label#1.btn.btn-lg.btn-secondary.btn-simple
+                            input.d-none.d-sm-none(type="radio" id="standard-report-input" name="options")
+                            span(style='font-size:1.4rem')  گزارش استاندارد
+                            span
+                                //i.tim-icons.icon-gift-2
+                        label#2.btn.btn-lg.btn-secondary.btn-simple
+                            input.d-none(type="radio" id="mantaghei-report-input" name="options")
+                            span(style='font-size:1.4rem') اکسپورت آب منطقه ای
+                            span
+                                //i.tim-icons.icon-tap-02
+            li
+                div.row
+                    div.col-sm-12.text-right
+                        h3.card-category(style='display:flex;justify-content: center')
+                            //a(href='/overview')
+                            button.btn(onclick='showReport()')
+                                i.enter.fas.fa-enter(style='font-size : 30px ')
+            li
+                div.row
+                    div.col-sm-12.text-right
+                        h3.card-category(style='display:flex;justify-content: center')
+                            //a(href='/overview')
+                            button.btn(onclick='goBack()')
+                                i.return.fas.fa-undo(style='font-size : 30px ')
 block content
     if(sensor == 'rain')
         +detailCardRain(stnID,sensor,position)

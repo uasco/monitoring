@@ -1,11 +1,52 @@
 const mongoose = require('mongoose');
 const stnSchema = new mongoose.Schema(
     {
-        name: {
+        station_name: {
+            type: String,
+            trim: true
+        },
+        station_code: {
             type: String,
             trim: true
         },
 
+        organization_code: {
+            type: String,
+            trim: true
+        },
+        zone_name: {
+            type: String,
+            trim: true
+        },
+        longitude: {
+            type: Number,
+        },
+        latitude: {
+            type: Number,
+        },
+        river_name: {
+            type: String,
+            trim: true
+        },
+        station_code: {
+            type: String,
+            trim: true
+        },
+        height: {
+            type: Number,
+        },
+        utm_x: {
+            type: Number,
+        },
+        utm_y: {
+            type: Number,
+        },
+        establish_year: {
+            type: Number,
+        },
+        station_type: {
+            type: Number,
+        },
         client_id: {
             type: Number,
             // required: [true, 'A Stn must have a client_id'],

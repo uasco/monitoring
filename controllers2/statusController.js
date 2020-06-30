@@ -43,6 +43,9 @@ const rain_alarm1_period= process.env.RAIN_ALARM1_PERIOD;
 const rain_alarm8_period= process.env.RAIN_ALARM8_PERIOD;
 const rain_alarm1_height= process.env.RAIN_ALARM1_HEIGHT;
 const rain_alarm8_height= process.env.RAIN_ALARM8_HEIGHT;
+const level_alarm_height_diff= process.env.LEVEL_ALARM_HEIGHT_DIFF;
+const level_flood_sample_count= process.env.LEVEL_FLOOD_SAMPLE_COUNT;
+
 
 async  function setStationStatus(stnType,stnID,statusType,status) {
     if(stnType==='rain'){
@@ -64,9 +67,16 @@ async  function setStationStatus(stnType,stnID,statusType,status) {
             else
                 await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_stop_time:Date()}});
         }
+    }else if(stnType==='level'){
+        if(statusType==='flood'){
+            if(status)
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_start_time:Date()}});
+            else
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_stop_time:Date()}});
+        }
     }
 }
-async function enoughEspentTime(stnID,statusType) {
+async function enoughSpentTimeAfterRainStop(stnID,statusType) {
     const res = await Stn.findOne({ client_id:stnID });
     //console.log(`res = ${res}`);
     let cd = new Date();
@@ -87,6 +97,22 @@ async function getStatus(stnID,statusType) {
         return  res.rain_alarm1;
     } else if (statusType === 'alarm8') {
         return  res.rain_alarm8;
+    }
+    else if (statusType === 'flood') {
+        return  res.flood;
+    }
+}
+async function isFloodStoped(stnID,statusType) {
+    const res = await Stn.findOne({ client_id:stnID });
+    //console.log(`res = ${res}`);
+    let cd = new Date();
+    let diff = Math.abs(res.rain_start_time - cd);
+    let diffh = Math.ceil(diff / (1000 * 60 ));
+    //console.log(`diffh = ${diffh}` );
+    if(diffh >= 4 ){
+        return true ;
+    }else{
+        return false;
     }
 }
 exports.getRainStartStatus = catchAsync(async (req, res, next) => {
@@ -113,7 +139,7 @@ exports.getRainStartStatus = catchAsync(async (req, res, next) => {
         if( !st) {//rain has not started already
             resultJson = 0;
         }else{//rain has started already
-            let enough=await enoughEspentTime(client_id);
+            let enough=await enoughSpentTimeAfterRainStop(client_id);
             if (enough) {
                 resultJson = 0;//rain stopped and enaugh  spent after stop
                 await setStationStatus('rain', client_id, 'stop', false);
@@ -179,9 +205,57 @@ exports.getRainAlarm8Status = catchAsync(async (req, res) => {
     apiResult.data = resultJson;
     res.json(apiResult);
 });
-exports.getLevelAlarmStatus = catchAsync(async (req, res) => {
+exports.getLevelFloodStatus = catchAsync(async (req, res) => {
     const client_id = req.params.id * 1;
+    let channelIndexLevel = channel_index_level;
+    let resultJson = undefined;
 
+    let st = await getStatus(client_id,'flood');
+        if( !st) {//no flood already
+
+            let result = await Status.getLevelFloodStart(client_id,channelIndexLevel,level_alarm_height_diff);//,level_flood_sample_count);
+            resultJson = JSON.stringify(result);
+            resultJson = JSON.parse(resultJson);
+            if(result===1) {//flood-start
+                await setStationStatus('level',client_id,'flood',true);
+                resultJson =1;
+            }else if(result===0) {//no flood-start
+                resultJson = 0;
+            }
+        }else if(st){//flood already
+            let result = await Status.getLevelFloodStop(client_id,channelIndexLevel,level_alarm_height_diff,level_flood_sample_count);
+            resultJson = JSON.stringify(result);
+            resultJson = JSON.parse(resultJson);
+            if(result===1){//flood stoped
+                resultJson =0;
+                await setStationStatus('level',client_id,'flood',false);
+            }else if(result===0) {//flood has not stoped yet
+                resultJson =1;
+            }
+        }
+
+    let apiResult = {};
+    apiResult.data = resultJson;
+    res.json(apiResult);
+});
+exports.getLevelFloodStop = catchAsync(async (req, res) => {
+    const client_id = req.params.id * 1;
+    let channelIndexLevel = channel_index_level;
+    let result = await Status.getLevelFloodStop(client_id,channelIndexLevel,level_alarm_height_diff,level_flood_sample_count);
+    let resultJson = JSON.stringify(result);
+    resultJson = JSON.parse(resultJson);
+    if(result===1){//shower
+        resultJson =1;
+            await setStationStatus('level',client_id,'flood',false);
+    }
+    // else if(result===0){//No shower
+    //     resultJson = 0;//rain stopped and enaugh  spent after stop
+    //     if(st) //shower already
+    //         await setStationStatus('level', client_id, 'flood', false);
+    // }
+    let apiResult = {};
+    apiResult.data = resultJson;
+    res.json(apiResult);
 });
 const channel_indexes = {
     'rainc': { '12': channel_index_rainc_12, '24': channel_index_rainc_24, 't': channel_index_rainc_total },

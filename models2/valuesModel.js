@@ -33,7 +33,7 @@ var sql_queries_clima_values = {
     'rad': sql_query_clima_station_rad_value
 }
 let sql_query_rain_amari_report_values = "call amari_report(?,?,?,?,?);";
-
+let sql_query_rain_mantaghei_report_values = "call mantaghei_report(?,?,?,?);";
 async function getRainTotalOfmonth(client_id, channel_index_rain_total, date, returnValue, x) {
     //console.log("DATE===============");
         //console.log(date);
@@ -140,15 +140,41 @@ module.exports = {
     },
 
     getRainAmariReport:  function (client_id, channel_index_rain_total,startTime,endTime,period) {
+        console.log(`$$$$$$$$$$$$$$$$ channel_index_rain_total: ${channel_index_rain_total}`);
         return new Promise(function (resolve, reject) {
             let returnValue = "";
             let gStartTime = moment(startTime, 'jYYYY-jM-jD jHH:jmm').format('YYYY-MM-DD HH:mm');
             let gEndTime = moment(endTime, 'jYYYY-jM-jD jHH:jmm').format('YYYY-MM-DD HH:mm');
-            //console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
-            //console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
-            //console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
-            //console.log(`$$$$$$$$$$$$$$$$ channel_index_rain_total: ${channel_index_rain_total}`);
+            // console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
+            // console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
+            // console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
+            // console.log(`$$$$$$$$$$$$$$$$ channel_index_rain_total: ${channel_index_rain_total}`);
             pool.query(sql_query_rain_amari_report_values, [client_id, channel_index_rain_total,gStartTime,gEndTime,period], function (error, rows, fields) {
+                if (error) {
+                    //console.log("EEERRRORRRRR");
+                    returnValue = "";
+                } else {
+                    console.log("rows befor reverse===");
+                    console.log(rows);
+
+                    returnValue = rows;
+                }
+                resolve(returnValue)
+            });
+        });
+
+
+    },
+    getRainMantagheiReport:  function (client_id, channel_index_rain_total,startTime,endTime,period) {
+        return new Promise(function (resolve, reject) {
+            let returnValue = "";
+            let gStartTime = moment(startTime, 'jYYYY-jM-jD').format('YYYY-MM-DD');
+            let gEndTime = moment(endTime, 'jYYYY-jM-jD').format('YYYY-MM-DD');
+            // console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
+            // console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
+            // console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
+            // console.log(`$$$$$$$$$$$$$$$$ channel_index_rain_total: ${channel_index_rain_total}`);
+            pool.query(sql_query_rain_mantaghei_report_values, [client_id, channel_index_rain_total,gStartTime,gEndTime], function (error, rows, fields) {
                 if (error) {
                     //console.log("EEERRRORRRRR");
                     returnValue = "";

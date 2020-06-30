@@ -54,6 +54,7 @@ function playPause(x) {
     if (active == 1) {
         clearInterval(timerId);
         window.active = 0;
+        window.active = 0;
         x.classList.toggle("fa-play-circle");
     } else {
         window.timerId = setInterval(() => mySiema.next(), 10000);
@@ -153,6 +154,25 @@ function checkSubItems(chb){
 //     // location.href = "/overview?codeview=" + codeView;
 //     location.href = '/overview/' + codeView;
 // }
+function settings(){
+    const url = '/settings/';
+    $.redirect(url, "POST");
+}
+function create_new_station(stnName,stnCode,zoneName,riverName,longitude,latitude,utmX,utmY,height,establishYear,stnType){
+    let data = {'sn':stnName    , 'sc':stnCode, 'zn':zoneName, 'rn':riverName, 'ln':longitude, 'lt':latitude, 'ux':utmX, 'uy':utmY, 'h':height, 'ey':establishYear,'st':stnType};
+    let url = '/api/stns/new/';
+    $.ajax({
+        // ' + stnName + '/' + stnCode + '/' + zoneName + '/' + riverName + '/' + longitude + '/' + latitude + '/' + utmX + '/' + utmY + '/' + height + '/' + establishYear + '/' + stnType ,
+        url: url,
+        type: 'POST',
+        dataType: 'json',
+        data: data,
+        success: (response) => {
+            alert('ایستگاه با موفقیت ثبت شد');
+        }
+    })
+
+}
 function displayOverview() {
     let checkBoxes = document.querySelectorAll("[class^='mycheck-']");
     // console.log(checkBoxes);
@@ -178,7 +198,7 @@ function displayOverview() {
         lstations,
         cstations
     }
-    $.redirect(url, data, "POST", );
+    $.redirect(url, data, "POST");
 
 }
 function loadDetailCard(id,position,sensor){
@@ -228,7 +248,7 @@ function checkRainStart(stnID,clima){
     })
 }
 function checkRainAlarm(stnID,clima){
-    var status=undefined;
+    let status=undefined;
     let url1 = undefined;
     let url8 = undefined;
     if(clima === 'true') {
@@ -294,6 +314,30 @@ function checkRainAlarm(stnID,clima){
         }
     })
 }
+function checkFloodStatus(stnID){
+    let status=undefined;
+    let url = undefined;
+    url = '/api/status/level/flood/' + stnID
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            console.log('inside checkFloodStatus:');
+            console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
+            status = response.data;
+
+            if (status === 1) {
+                $('#' + stnID + ' i' + '#flood_status').text("");//.append("&nbsp&nbsp&nbsp;");//append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
+                $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('سیلاب');
+                console.log('HHHAAAAPPPEEEENNNIIIINNNGGGGG');
+            } else if (status === 0) {
+                $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('بدون سیلاب');
+            }
+        }
+    })
+}
+
 function lntpn(ln) {
     return $.latin2Arabic.toArabic(ln); s//ln must be string
 }
@@ -440,14 +484,14 @@ function drawBigCharts_c(station_ID, labels, valus, sensor) {
         });
     }
 }
-function fillTable(stationID, labels, values){
+function fillAmariTable(stationID, labels, values){
     //console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
     //console.log(values.length.toString());
     //console.log(labels.length.toString());
     //console.log(values[values.length -1]);
     //console.log(labels[labels.length -1]);
     //let table = $('#table' + stationID)[0];
-    let table = document.getElementById('table' + stationID).getElementsByTagName('tbody')[0];
+    let table = document.getElementById('amari-table' + stationID).getElementsByTagName('tbody')[0];
     let n = values.length;
     for (let i = 0; i < n; i++) {
         let row = table.insertRow();
@@ -460,7 +504,31 @@ function fillTable(stationID, labels, values){
         //console.log(`HEY => ${i} ${labels[i]}`);
     }
 }
-function displayRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period){
+function fillMantagheiTable(stationID, months, days,  values_6_30,values_18_30,values_24_00){
+    //console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
+    //console.log(values.length.toString());
+    //console.log(labels.length.toString());
+    //console.log(values[values.length -1]);
+    //console.log(labels[labels.length -1]);
+    //let table = $('#table' + stationID)[0];
+    let table = document.getElementById('mantaghei-table' + stationID).getElementsByTagName('tbody')[0];
+    let n = days.length;
+    for (let i = 0; i < n; i++) {
+        let row = table.insertRow();
+        let cell0 = row.insertCell(0);
+        let cell1 = row.insertCell(1);
+        let cell2 = row.insertCell(2);
+        let cell3 = row.insertCell(3);
+        let cell4 = row.insertCell(4);
+        cell0.innerHTML = months[i];
+        cell1.innerHTML = lntpn(days[i].toString());
+        cell2.innerHTML = lntpn(values_6_30[i].toString());
+        cell3.innerHTML = lntpn(values_18_30[i].toString());
+        cell4.innerHTML = lntpn(values_24_00[i].toString());
+        //console.log(`HEY => ${i} ${labels[i]}`);
+    }
+}
+function displayRainAmariReport(stationID,clima,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period){
     //console.log(stationID,totalRainBool.toString() + '-' + absoluteRainBool.toString() + '-' + rateRainBool.toString() + '-' + barDisplayBool.toString() + '-' + lineDisplayBool.toString())
     //console.log(startDate.toString()+ '###' +endDate.toString()+ '###' +startTime.toString()+ '###' +endTime.toString()+ '###' + period.toString());
     let rainType = '';
@@ -477,7 +545,7 @@ function displayRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRai
         chartType = 'line';
 
     $.ajax({
-        url: '/api/values/rainamarireport/' + stationID + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period ,
+        url: '/api/values/rainamarireport/' + stationID +  '/' + clima + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period ,
         type: 'GET',
         dataType: 'json',
         success: (response) => {
@@ -496,7 +564,7 @@ function displayRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRai
                     return;
                 }
                 $('#report-chart').show();
-                $('#report-table').show();
+                $('#amari-table').show();
 
                 let labels = [];
                 let values = [];
@@ -524,13 +592,13 @@ function displayRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRai
                         drawBigCharts_rl(stationID, labels, values, 'شدت بارش', 'rain',chartType);
                         break;
                 }
-                fillTable(stationID, labels, values);
+                fillAmariTable(stationID, labels, values);
                 $('#download-button').removeClass("disabled");
             }
         }
     })
 }
-function getExcelRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period) {
+function getExcelRainAmariReport(stationID,clima,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period) {
     let rainType = '';
     if(totalRainBool)
         rainType = 'total';
@@ -540,7 +608,7 @@ function getExcelRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRa
         rainType = 'rate';
 
     var oReq = new XMLHttpRequest();
-    oReq.open("GET", '/api/values/excelrainamarireport/' + stationID + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period + '/' + rainType , true);
+    oReq.open("GET", '/api/values/excelrainamarireport/' + stationID + '/' + clima + '/' +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period + '/' + rainType , true);
     oReq.responseType = "arraybuffer";
 
     oReq.onload = function(oEvent) {
@@ -560,6 +628,81 @@ function getExcelRainAmariReport(stationID,totalRainBool,absoluteRainBool,rateRa
     };
     oReq.send();
 
+}
+function displayRainMantagheireport(stationID, clima, startDate, endDate){
+    $.ajax({
+        url: '/api/values/rainmantagheireport/' + stationID +  '/' + clima + '/' +  startDate + '/' + endDate  ,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data) {
+                console.log('response');
+                console.log(response);
+                let RainMantagheiReort = response.data;
+                console.log('RainMantagheiReort');
+                console.log(RainMantagheiReort);
+                /*
+
+                 */
+                console.log('RainMantagheiReort[0]');
+                console.log(RainMantagheiReort[0]);
+                console.log(RainMantagheiReort[0]['time']);
+                console.log(RainMantagheiReort[0]['val_24_00']);
+                //RainMantagheiReort = JSON.parse(RainMantagheiReort[0]);
+                if(RainMantagheiReort.length == 0){
+                    alert('در بازه زمانی درخواستی داده ای وجود ندارد');
+                    return;
+                }
+                $('#report-chart').show();
+                $('#mantaghei-table').show();
+
+                let months = [];
+                let days = [];
+                let values_6_30 = [];
+                let values_18_30 = [];
+                let values_24_00 = [];
+                for(let i=0;i<RainMantagheiReort.length;i++){
+
+                    months.push(RainMantagheiReort[i]['month']);
+                    days.push(RainMantagheiReort[i]['day']);
+                    values_6_30.push(RainMantagheiReort[i]['val_6_30']);
+                    values_18_30.push(RainMantagheiReort[i]['val_18_30']);
+                    values_24_00.push(RainMantagheiReort[i]['val_24_00']);
+                }
+                //values.splice(0,1);
+                //labels.splice(0,1);
+                console.log('days');
+                console.log(days);
+                console.log('values_24_00');
+                console.log(values_24_00);
+                drawBigCharts_rl(stationID, days, values_24_00, 'باران تجمیعی', 'rain','bar');
+                fillMantagheiTable(stationID,months, days, values_6_30,values_18_30,values_24_00);
+                $('#download-button').removeClass("disabled");
+            }
+        }
+    })
+}
+function getExcelRainMantagheiReport(stationID, clima, startDate, endDate){
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", '/api/values/excelrainmantagheireport/' + stationID + '/' + clima + '/' +  startDate + '/' + endDate , true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(oEvent) {
+        var arrayBuffer = oReq.response;
+
+        // if you want to access the bytes:
+        var byteArray = new Uint8Array(arrayBuffer);
+        // ...
+
+        // If you want to use the image in your DOM:
+        var blob = new Blob([arrayBuffer], {type: 'data:application/vnd.ms-excel'});
+        saveAs(blob, 'Mantaghei-report.xlsx');
+        var saving = document.createElement('a');
+        document.body.appendChild(saving);
+        saving.click();
+        document.body.removeChild(saving);
+    };
+    oReq.send();
 }
 function getRainValuesForDetailCard(id) {
     $.ajax({
@@ -711,6 +854,44 @@ function getRainStationsNamesAndIDs() {
         }
     })
 }
+function getLevelValueForDetailCard(id) {
+    $.ajax({
+        url: '/api/values/level/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                //$("div.card-title  span").text(response.data[2].value);
+                let lt = JSON.stringify(response.data[0].value);
+                lt = lntpn(lt);
+                let date = response.data[0].date;
+                let hour = response.data[0].hour;
+                date = lntpn(date);
+                hour = lntpn(hour);
+                $('#' + id + ' i' + '#level_total').text("").append("&nbsp&nbsp&nbsp;").append(' ارتفاع').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
+                $('#' + id + ' i' + '#level_total_value').text("").append(lt)
+                $('#' + id + ' i' + '#level_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+            }
+        }
+    })
+    $.ajax({
+        url: '/api/stations/installdate/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                let date = response.data[0].date;
+                //console.log(`date = ${date}`);
+                date = lntpn(date);
+                //console.log(`date = ${date}`);
+                $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+            }
+        }
+    })
+}
 function getLevelValue(id) {
     $.ajax({
         url: '/api/values/level/' + id,
@@ -783,6 +964,96 @@ function getLevelStationsNamesAndIDs() {
                     getLevelValue(el.id);
                 });
                 getLevelOfLastHoursForDrawingCharts(level_stations_names_and_ids)
+            }
+        }
+    })
+}
+function getLevelValueForDetailCard(id) {
+    $.ajax({
+        url: '/api/values/level/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                //$("div.card-title  span").text(response.data[2].value);
+                let lt = JSON.stringify(response.data[0].value);
+                lt = lntpn(lt);
+                let date = response.data[0].date;
+                let hour = response.data[0].hour;
+                date = lntpn(date);
+                hour = lntpn(hour);
+                $('#' + id + ' i' + '#level_total').text("").append("&nbsp&nbsp&nbsp;").append(' ارتفاع').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
+                $('#' + id + ' i' + '#level_total_value').text("").append(lt)
+                $('#' + id + ' i' + '#level_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+            }
+        }
+    })
+    $.ajax({
+        url: '/api/stations/installdate/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                let date = response.data[0].date;
+                //console.log(`date = ${date}`);
+                date = lntpn(date);
+                //console.log(`date = ${date}`);
+                $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+            }
+        }
+    })
+}
+function getClimaValuesForDetailCard(id) {
+    $.ajax({
+        //url: '/api/values/rain/' + id,
+        url: '/api/values/clima/' + 'rainc' + '/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                //$("div.card-title  span").text(response.data[2].value);
+                var rt = JSON.stringify(response.data[2].value);
+                var r24 = JSON.stringify(response.data[1].value);
+                var r12 = JSON.stringify(response.data[0].value);
+                rt = lntpn(rt);
+                r24 = lntpn(r24);
+                r12 = lntpn(r12);
+                let date = response.data[2].date;
+                let hour = response.data[2].hour;
+                date = lntpn(date);
+                hour = lntpn(hour);
+                $('#' + id + ' i' + '#rain_total').text("").append("&nbsp&nbsp&nbsp;").append(' تجمیعی').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
+                $('#' + id + ' i' + '#rain_total_value').text("").append(rt)
+                $('#' + id + ' i' + '#rain_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#rain_24').text("").append("&nbsp&nbsp&nbsp;").append(' ۲۴ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[1].value).append("&nbsp&nbsp&nbsp;mm");// 1->rain_24
+                $('#' + id + ' i' + '#rain_24_value').text("").append(r24)
+                $('#' + id + ' i' + '#rain_24_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
+                $('#' + id + ' i' + '#rain_12_value').text("").append(r12)
+                $('#' + id + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+
+                //console.log(date);
+                //drawCharts(rain_stations_names_and_ids,labels,values);
+            }
+        }
+    })
+    $.ajax({
+        url: '/api/stations/installdate/' + id,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                let date = response.data[0].date;
+                //console.log(`date = ${date}`);
+                date = lntpn(date);
+                //console.log(`date = ${date}`);
+                $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
             }
         }
     })

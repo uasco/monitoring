@@ -48,8 +48,8 @@ router
         authController.restrictTo('admin', 'lead-guide')
     );
 router
-    .route('/level/:id')
-    .get(cacheController.levelValueFlatCacheMiddleWare, statusController.getLevelAlarmStatus)
+    .route('/level/flood/:id')
+    .get(statusController.getLevelFloodStatus)
     .post(
         authController.protect,
         authController.restrictTo('admin', 'lead-guide')

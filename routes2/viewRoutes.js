@@ -21,6 +21,7 @@ router.post('/overview/', authController.isLoggedIn, viewsController.getOverView
 
 router.get('/detail/:stnid-:sensor-:position-:slideindex', authController.isLoggedIn,  viewsController.getDetail);
 
+router.post('/settings/', authController.isLoggedIn, viewsController.getSettings);
 /////router.get('/tour/:slug', authController.isLoggedIn, viewsController.getStation);
 
 router.get('/login', authController.isLoggedIn, viewsController.getLoginForm);

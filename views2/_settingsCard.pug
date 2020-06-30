@@ -1,0 +1,281 @@
+mixin settingsCard()
+    .content
+        //- +title('ایستگاه باران سنجی ' + position)
+        .row
+            .col-lg-10
+                .col-lg-12(id='create-new-station-div' style='text-align:center')
+                    .card
+                        .card-header
+                            div(style='text-align:right')
+                                h3.card-category ایجاد ایستگاه جدید :
+                            .row
+                                .col-lg-6.text-right
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            //- h4.card-title تاریخ شروع :
+                                            div
+                                                label(for='station-name') نام ایستگاه :
+                                            .col-md-4
+                                                .md-form.md-outline(arktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='station-name-input' type='text'  placeholder='نام ایستگاه', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6.text-right
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='station-code') کد ایستگاه :
+                                            .col-md-4
+                                                .md-form.md-outline(arktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='station-code-input' type='text'  placeholder='کد ایستگاه', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                            .row
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='zone-name') نام حوزه آبریز :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='zone-name-input' type='text', placeholder= 'نام حوزه آبریز', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='river-name') نام رودخانه :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='river-name-input' type='text', placeholder= 'نام رودخانه', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                            .row
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='longitude') طول جغرافیایی :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='longitude-input' type='text', placeholder= 'طول جغرافیایی', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='latitude') عرض جغرافیایی :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='latitude-input' type='text', placeholder='عرض جغرافیایی', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                            .row
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='u-t-m-x') U.T.M  X :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='utm-x-input' type='text', placeholder= 'U.T.M  X ', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='u-t-m-y') U.T.M  Y :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='utm-y-input' type='text', placeholder='U.T.M  Y ', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                            .row
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='height') ارتفاع :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='height-input' type='text', placeholder= 'ارتفاع', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='establish-year') سال تاسیس :
+                                            .col-md-4
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    input.form-control-lg(id='establish-year-input' type='text', placeholder='سال تاسیس', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                            .row
+                                .col-lg-6
+                                    .card
+                                        .card-header(style='display:flex;justify-content:space-around;align-items:baseline')
+                                            div
+                                                label(for='end-time') نوع ایستگاه :
+                                            .col-md-4.text-right
+                                                .md-form.md-outline(darktheme='true' style='font-family:Bahij')
+                                                    select.selectpicker(id='select-stn-type' data-style='select-with-transition', title='Single Select', data-size='20', data-dropdownAlignRight=true,style='text-align:right')
+                                                        option(value='', disabled='', selected='') انتخاب
+                                                        option(value='1') بارانسنج
+                                                        option(value='2') هیدرومتری
+                                                        option(value='3') هواشناسی
+
+                                .col-lg-6
+                                    h3.card-category(style='display:flex;justify-content: space-around')
+                                        button.btn(onclick='submit_create_new_station()')
+                                            i(style='font-size : 20px ') ایجاد
+                                        //button.btn(id='download-button' onclick='download_amari()')
+                                        //    i(style='font-size : 20px ') بارگذاری در فایل
+                .col-lg-12(id='edit-stations-div')
+                    .card
+                        .card-header.text-right
+                            h3.card-category ویرایش ایستگاه ها :
+                            .row
+                .col-lg-12(id='create-new-user-div')
+                    .card
+                        .card-header.text-right
+                            h3.card-category ایجاد کاربر جدید :
+                            .row
+                .col-lg-12(id='edit-users-div')
+                    .card
+                        .card-header.text-right
+                            h3.card-category ویرایش کاربران :
+                .col-lg-12(id='general-settings-div')
+                    .card
+                        .card-header.text-right
+                            h3.card-category تنظیمات کلی :
+                .card(id='table')
+                    .card-header.text-right
+                        //- h4.card-title  Simple Table
+                    .card-body.text-right
+                        .table-responsive(id='table-container')
+                            table.table.tablesorter(id='table')
+                                thead.text-primary
+                                    tr
+                                        th
+                                            | ردیف
+                                        th
+                                            | مقدار
+                                        th
+                                            | تاریخ داده
+                                tbody
+
+    script(type='text/javascript').
+        let stnName,stnCode,zoneName,riverName,longitude,latitude,utmX,utmY,height,establishYear='';
+        let selectedStnType = '';
+        function resetTable() {
+            let tableID = 'Table';
+            //$('#' + tableID).remove(); // this is my <table> element
+            $('#table' + ' tbody').remove();
+            //$('.chartjs-size-monitor').remove();
+            $('#table').append('<tbody></tbody>');
+        }
+        let createNewStation = true;
+        let editStation = false;
+        let createNewUser = false;
+        let editUsers = false;
+        let generalSettings= false;
+
+        $('#edit-stations-div').hide();
+        $('#create-new-user-div').hide();
+        $('#edit-users-div').hide();
+        $('#general-settings-div').hide();
+
+        $('#table').hide();
+
+        $('#create-new-station-input').on("change", function () {
+            //resetTable();
+            $('#table').hide();
+            createNewStation = true;
+            editStation = false;
+            createNewUser = false;
+            editUsers = false;
+            generalSettings= false;
+            $('#create-new-station-div').show();
+            $('#edit-stations-div').hide();
+            $('#create-new-user-div').hide();
+            $('#edit-users-div').hide();
+            $('#general-settings-div').hide();
+        });
+        $('#edit-stations-input').on("change", function () {
+            //resetTable();
+            $('#table').hide();
+            createNewStation = false;
+            editStation = true;
+            createNewUser = false;
+            editUsers = false;
+            generalSettings= false;
+            $('#edit-stations-div').show();
+            $('#create-new-station-div').hide();
+            $('#create-new-user-div').hide();
+            $('#edit-users-div').hide();
+            $('#general-settings-div').hide();
+        });
+        $('#create-new-user-input').on("change", function () {
+            //resetTable();
+            $('#table').hide();
+            createNewStation = false;
+            editStation = false;
+            createNewUser = true;
+            editUsers = false;
+            generalSettings= false;
+            $('#create-new-user-div').show();
+            $('#create-new-station-div').hide();
+            $('#edit-stations-div').hide();
+            $('#edit-users-div').hide();
+            $('#general-settings-div').hide();
+
+        });
+        $('#edit-users-input').on("change", function () {
+            //resetTable();
+            $('#table').hide();
+            createNewStation = false;
+            editStation = false;
+            createNewUser = false;
+            editUsers = true;
+            generalSettings= false;
+            $('#edit-users-div').show();
+            $('#edit-stations-div').hide();
+            $('#create-new-user-div').hide();
+            $('#create-new-station-div').hide();
+            $('#general-settings-div').hide();
+        });
+        $('#general-settings-input').on("change", function () {
+            //resetTable();
+            $('#table').hide();
+            createNewStation = false;
+            editStation = false;
+            createNewUser = false;
+            editUsers = false;
+            generalSettings = true;
+            $('#general-settings-div').show();
+            $('#edit-users-div').hide();
+            $('#edit-stations-div').hide();
+            $('#create-new-user-div').hide();
+            $('#create-new-station-div').hide();
+        });
+        $('#station-name').on("change", function () {
+
+
+        });
+        $.fn.selectpicker.Constructor.BootstrapVersion = '4';
+        $.fn.selectpicker.Constructor.DEFAULTS.dropdownAlignRight = true;
+        $('#select-stn-type').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            selectedStnType = $(this).selectpicker('val')
+        });
+
+
+        function  submit_create_new_station() {
+            stnName = $('#station-name-input').val();
+            stnCode = $('#station-code-input').val();
+            zoneName = $('#zone-name-input').val();
+            riverName = $('#river-name-input').val();
+            longitude = $('#longitude-input').val();
+            latitude = $('#latitude-input').val();
+            utmX = $('#utm-x-input').val();
+            utmY = $('#utm-y-input').val();
+            height = $('#height-input').val();
+            establishYear = $('#establish-year-input').val();
+            if ((stnName == '') || ($('#station-name-input').val() == "")) {
+                alert('لطفا نام ایستگاه را وارد کنید!');
+                return;
+            }
+            if ((stnCode == '') || ($('#station-code-input').val() == "")) {
+                alert('لطفا کد ایستگاه را وارد کنید!');
+                return;
+            }
+            if ((selectedStnType == '') || ($('#select-stn-type').val() == "")) {
+                alert('لطفا نوع ایستگاه را انتخاب کنید!');
+                return;
+            }
+
+            create_new_station(stnName,stnCode,zoneName,riverName,longitude,latitude,utmX,utmY,height,establishYear,selectedStnType);
+        }

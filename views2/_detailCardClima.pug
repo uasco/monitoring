@@ -1,11 +1,11 @@
-mixin detailCardLevel(stnID,sensor,position)
+mixin detailCardClima(stnID,sensor,position)
     script(type='text/javascript').
         $(document).ready(function () {
-            getLevelValueForDetailCard(#{stnID});
+            getClimaValuesForDetailCard(#{stnID});
             checkRainStart(#{stnID},'false');
         })
     .content
-        +title('ایستگاه سطح سنجی ' + position)
+        +title('ایستگاه هواشناسی ' + position + ' :  سنسور باران ')
         .row
             .col-lg-10
                 .col-lg-12(id='amari-report-div' style='text-align:center')
@@ -20,15 +20,30 @@ mixin detailCardLevel(stnID,sensor,position)
                                             .btn-group.btn-group-toggle(data-toggle="buttons")
                                                 label#0.btn.btn-xl.btn-primary.btn-simple.active(style='font-size:25')
                                                     input(id="total-rain-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  ارتفاع آب
+                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  باران تجمیعی
                                                     span.d-block.d-sm-none
                                                         i.tim-icons.icon-single-02
+                                                label#1.btn.btn-xl.btn-primary.btn-simple
+                                                    input.d-none.d-sm-none(id="absolute-rain-input" type="radio" name="options")
+                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  میزان بارش
+                                                    span.d-block.d-sm-none
+                                                        i.tim-icons.icon-gift-2
+                                                label#2.btn.btn-xl.btn-primary.btn-simple
+                                                    input.d-none(id="rate-rain-input" type="radio" name="options")
+                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block شدت بارش
+                                                    span.d-block.d-sm-none
+                                                        i.tim-icons.icon-tap-02
 
                                 .col-lg-6.text-right
                                     .card
                                         .card-header
                                             .btn-group.btn-group-toggle(data-toggle="buttons")
-                                                label.btn.btn-xl.btn-primary.btn-simple.active(id='4')
+                                                label#3.btn.btn-xl.btn-primary.btn-simple.active(style='font-size:25')
+                                                    input(id="bar-display-input" type="radio" name="options" checked="")
+                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  نمایش میله ای
+                                                    span.d-block.d-sm-none
+                                                        i.tim-icons.icon-single-02
+                                                label.btn.btn-xl.btn-primary.btn-simple(id='4')
                                                     input.d-none.d-sm-none(id="line-display-input" type="radio" name="options")
                                                     span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  نمایش پیوسته
                                                     span.d-block.d-sm-none
@@ -108,7 +123,7 @@ mixin detailCardLevel(stnID,sensor,position)
                                 canvas(id= chart_id)
                     .card
                         .card-header.text-right
-                            h4.card-title  Simple Table
+                            //- h4.card-title  Simple Table
                         .card-body.text-right
                             .table-responsive(id='table-container')
                                 table.table.tablesorter(id='table' + stnID)
@@ -142,8 +157,14 @@ mixin detailCardLevel(stnID,sensor,position)
                                 tbody.card-title
                                     tr
                                         td.text-right
-                                            i.wi.wi-flood
-                                            i.card-label(id='level_alarm') &nbsp&nbsp&nbsp بدون سیلاب
+                                            //i.tim-icons.icon-bell-55.text-primary
+                                            i.card-label(id='rain_status')
+                                            i.status(id='rain_status_result') بدون بارش
+                                            br
+                                    tr
+                                        td.text-right
+                                            //i.tim-icons.icon-bell-55.text-primary
+                                            i.card-label(id='rain_alarm') بدون هشدار
                                             i.status(id='rain_alarm1')
                                             i.status(id='rain_alarm8')
                                             br
@@ -152,11 +173,27 @@ mixin detailCardLevel(stnID,sensor,position)
 
                                         td.text-right(style='display:flex;justify-content:space-between;align-items:baseline ')
                                             div
-                                                i.fal.fa-arrows-v.fa-fw
-                                                i.card-label(id='level_total')
+                                                i.far.fa-cloud-rain.fa-fw
+                                                i.card-label(id='rain_total')
                                             div(style='text-align:left')
-                                                i.unit(id='level_total_unit')
-                                                i.value(id='level_total_value')
+                                                i.unit(id='rain_total_unit')
+                                                i.value(id='rain_total_value')
+                                    tr
+                                        td.text-right(style='display:flex;justify-content:space-between;align-items:baseline ')
+                                            div
+                                                i.far.fa-cloud-rain.fa-fw
+                                                i.card-label(id='rain_24')
+                                            div(style='text-align:left')
+                                                i.unit(id='rain_24_unit')
+                                                i.value(id='rain_24_value')
+                                    tr
+                                        td.text-right(style='display:flex;justify-content:space-between;align-items:baseline ')
+                                            div
+                                                i.far.fa-cloud-rain.fa-fw
+                                                i.card-label(id='rain_12')
+                                            div(style='text-align:left')
+                                                i.unit(id='rain_12_unit')
+                                                i.value(id='rain_12_value')
                                     tr
                                         td.text-right
                                             div
@@ -393,8 +430,8 @@ mixin detailCardLevel(stnID,sensor,position)
             }
             resetCanvas();
             resetTable();
-        //displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+        //displayRainAmariReport(#{stnID},true,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
+            displayRainAmariReport(#{stnID},true,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
             periodLabel = periodLabels[selectedPeriod];
             // switch(selectedPeriod){
             //     case (30): periodLabel
@@ -410,6 +447,6 @@ mixin detailCardLevel(stnID,sensor,position)
             $('#report-chart'+' h3').text("").append(chartLabel);
         }
         function  download() {
-        //getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+        //getExcelRainAmariReport(#{stnID},true,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
+            getExcelRainAmariReport(#{stnID},true,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
         }

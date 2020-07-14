@@ -1,7 +1,7 @@
 div.content
     style.
         .marker {
-            background-image: url('/assets/img/mapbox-icon.png');
+            background-image: url('/assets/img/mapbox-icon-1.png');
             background-size: cover;
             width: 50px;
             height: 50px;
@@ -18,12 +18,67 @@ div.content
         .mapboxgl-popup p {
             color: rgba(0, 0, 0, 0.8);
         }
+
+        .legend {
+            background-color: #fff;
+            border-radius: 4px;
+            bottom: 26px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font: 18px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px;
+            position: absolute;
+            right: 10px;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .legend h4 {
+            margin: 0 0 10px;
+            color: #212529;
+            text-align:right;
+            font-size : 1.5rem;
+        }
+
+        .legend div img {
+            display: inline-block;
+            height: 38px;
+            margin-right: 0px;
+            margin-top: 8px;
+            width: 38px;
+        }
     div.row(id='map-wrap')
         //div.col-md-12
         //    div.classcard.card-plain
         //        div.card-body
         div(id='map-wrapt')
             div(id='mapid')
+                #state-legend.legend
+                    h4 نماد ایستگاه ها :
+                    div(style='text-align:right')
+                        img(src='/assets/img/mapbox-icon-1.png')
+                        span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        | ایستگاه بارانسنجی
+                    div(style='text-align:right')
+                        img(src='/assets/img/mapbox-icon-2.png')
+                        span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        | ایستگاه هیدرومتری
+                    div(style='text-align:right')
+                        img(src='/assets/img/mapbox-icon-3.png')
+                        span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                        | ایستگاه هواشناسی
+
+                #county-legend.legend(style='display: none;')
+                    h4 Population
+                    div
+                        span(style='background-color: #723122')
+                        | 1,000,000
+                    div
+                        span(style='background-color: #8B4225')
+                        | 500,000
+                    div
+                        span(style='background-color: #A25626')
+                        | 100,000
+
                 script.
                     let lineColor = '#2732ff';
                     let lineWidth = 2;
@@ -1003,10 +1058,20 @@ div.content
                                 'line-width': lineWidth
                             }
                         });
-                        mymap.loadImage('/assets/img/mapbox-icon.png',
+                        mymap.loadImage('/assets/img/mapbox-icon-1.png',
                             function (error, image) {
                                 if (error) throw error;
                                 mymap.addImage('marker1', image);
+                            });
+                        mymap.loadImage('/assets/img/mapbox-icon-2.png',
+                            function (error, image) {
+                                if (error) throw error;
+                                mymap.addImage('marker2', image);
+                            });
+                        mymap.loadImage('/assets/img/mapbox-icon-3.png',
+                            function (error, image) {
+                                if (error) throw error;
+                                mymap.addImage('marker3', image);
                             });
                         mymap.addSource('stations', {
                             'type': 'geojson',
@@ -1021,11 +1086,12 @@ div.content
                                             'icon': 'marker1',
                                             'id':'101',
                                             'sensor': 'rain',
-                                            'position': 'بن کوه'
+                                            'position': 'بن کوه',
+                                            //'client_id':
                                         },
                                         'geometry': {
                                             'type': 'Point',
-                                            'coordinates': [52.43179920638, 35.304329583645]
+                                            'coordinates': [52.41179920638, 35.304329583645]
                                         }
                                     },
                                     {
@@ -1048,7 +1114,7 @@ div.content
                                         'properties': {
                                             'description':
                                                 '<strong>ایستگاه هواشناسی تصفیه خانه</strong><p>کد ایستگاه : ۰۲۴-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۸۴</p><p>utmx : ۶۲۵۲۷۸</p><p>utmy : ۳۹۰۲۷۶۰</p>',
-                                            'icon': 'marker1',
+                                            'icon': 'marker3',
                                             'id':'84',
                                             'sensor': 'clima',
                                             'position': 'تصفیه خانه'
@@ -1063,7 +1129,7 @@ div.content
                                         'properties': {
                                             'description':
                                                 '<strong>ایستگاه سطح سنج لبرود</strong><p>کد ایستگاه : ۰۲۹-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علی</p><p>سال تاسیس : ۱۳۶۰</p><p>utmx : ۲۴۹۷۷۸</p><p>utmy : ۴۰۱۳۳۳۲</p>',
-                                            'icon': 'marker1',
+                                            'icon': 'marker2',
                                             'id':'99',
                                             'sensor': 'level',
                                             'position': 'لبرود'
@@ -1168,7 +1234,7 @@ div.content
                                         'properties': {
                                             'description':
                                                 '<strong>ایستگاه سطح سنج بند انحرافي</strong><p>کد ایستگاه : ۰۳۱-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۲۸۹۴۳۸</p><p>utmy : ۴۰۳۹۳۲۶</p>',
-                                            'icon': 'marker1',
+                                            'icon': 'marker2',
                                             'id':'136',
                                             'sensor': 'level',
                                             'position': 'بند انحرافي'
@@ -1183,7 +1249,7 @@ div.content
                                         'properties': {
                                             'description':
                                                 '<strong>ایستگاه سطح سنج شهمیرزاد</strong><p>کد ایستگاه : ۹۹۲-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۸۷</p><p>utmx : ۷۰۹۳۸۵</p><p>utmy : ۳۹۶۱۳۴۰</p>',
-                                            'icon': 'marker1',
+                                            'icon': 'marker2',
                                             'id':'149',
                                             'sensor': 'level',
                                             'position': 'شهمیرزاد'
@@ -1198,7 +1264,7 @@ div.content
                                         'properties': {
                                             'description':
                                                 '<strong>ایستگاه سطح سنج بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
-                                            'icon': 'marker1',
+                                            'icon': 'marker2',
                                             'id':'98',
                                             'sensor': 'level',
                                             'position': 'بن کون'
@@ -1228,7 +1294,7 @@ div.content
                                         'properties': {
                                             'description':
                                                 '<strong>ایستگاه هواشناسی دانشگاه آزاد دامغان</strong><p>کد ایستگاه : ۳۰۱-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علي</p><p>سال تاسیس : ۱۳۷۰</p><p>utmx : ۲۵۸۱۶۵</p><p>utmy : ۴۰۰۵۹۸۰</p>',
-                                            'icon': 'marker1',
+                                            'icon': 'marker3',
                                             'id': '93',
                                             'sensor': 'clima',
                                             'position': 'دانشگاه آزاد دامغان'
@@ -1482,7 +1548,18 @@ div.content
                         let id = e.features[0].properties.id;
                         let sensor = e.features[0].properties.sensor;
                         let position = e.features[0].properties.position;
-                        location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + window.currentSlideIndex;
+                        switch(sensor){
+                            case ('rain'):
+                                location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + 'r' + '-' + window.currentSlideIndex;
+                                break;
+                            case ('level'):
+                                location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + 'l' + '-' + window.currentSlideIndex;
+                                break;
+                            case ('clima'):
+                                location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + 'c' + '-' + window.currentSlideIndex;
+                                break;
+                        }
+
                     });
                     mymap.on('click', 'ostan-semnan-polygon', function (e) {
                             mymap.setZoom(zoomDegreeOnZoomMap);

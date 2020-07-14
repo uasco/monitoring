@@ -2,10 +2,9 @@ const path = require('path');
 let flatCache = require('flat-cache');
 const cacheController = require('./controllers2/cacheController');
 const my_date = require('./utils/my_date');
-const CronJob = require('cron').CronJob;
-const CronTime = require('cron').CronTime;
+
 const winston = require('winston');
-let axios = require('axios');
+
 const dotenv = require('dotenv');
 const logger = winston.createLogger({
     level: 'info',
@@ -21,47 +20,6 @@ const logger = winston.createLogger({
     ],
 });
 
-
-dotenv.config({ path: './config.env' });
-const port = process.env.PORT;
-const url = 'http://localhost:' + port.toString() ;
-
-const job2 = new CronJob('0 */30 9-17 * * *', function() {
-    const d = new Date();
-    //console.log('Every 30 minutes between 9-17:', d);
-});
-const job3 = new CronJob('00 00 00 * * *', function() {
-    const d = new Date();
-    //console.log('Midnight:', d);
-});
-
-
-const clearRainCachePeriodInMinutes = 25;
-const clearLevelCachePeriodInHours=5;
-const clearClimaCachePeriodInMinutes=25;
-
-logger.info('application started', { message: `time : ${new Date()}` });
-// let date = new Date();
-// date.setSeconds(date.getSeconds()+4);
-// console.log( `${date.getMinutes()}  ${date.getHours()}  ${date.getDate()}    ${date.getMonth()+1}    ${date.getFullYear()}  `);
-// const job1 = new CronJob(
-//     date,
-//     function() {
-//         console.log(`job1 executed at  ${date}`);
-//         date.setSeconds(date.getSeconds()+4);
-//         this.setTime(new CronTime(date));
-//     },
-//     function(){
-//         let nextDate = date.getMinutes().toString()+' '+ date.getHours().toString() +' '+  date.getDate().toString() + ' ' + (date.getMonth()+1).toString() + ' ' + '*' ;
-//         this.start();
-//     },
-//     false,
-//     'Asia/Tehran'
-// );
-// job1.start();
-// date.setSeconds(date.getSeconds()+4);
-// job1.setTime(new CronTime(date));
-//let start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
 //RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 exports.clearRainValuesCache = () => {
     let after50MinutesFromNow = new Date();

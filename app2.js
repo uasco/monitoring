@@ -23,6 +23,7 @@ const statusRouter = require('./routes2/statusRoutes');
 const stnRouter = require('./routes2/stnRoutes');
 const userRouter = require('./routes2/userRoutes');
 
+const cacheRouter = require('./routes2/cacheRoutes');
 
 var helpers = require('./utils/helpers.js');
 
@@ -116,6 +117,8 @@ app.use('/api/stns', stnRouter);
 
 app.use('/api/users', userRouter);
 
+app.use('/api/caches', cacheRouter);
+
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
@@ -163,5 +166,6 @@ scheduler.clearLevelLastHoursCache();
 scheduler.clearClimaLastHoursCache();
 scheduler.clearClimaRainTotalsMonthsCache();
 
+require('events').EventEmitter.defaultMaxListeners = 60;
 
 module.exports = app;

@@ -74,31 +74,31 @@ let CronTime = require('cron').CronTime;
 // let jmb = jm;
 // console.log(`now=${now} , end_of_this_months= ${end_of_this_months}, jy= ${jy} , jm=${jm}, my=${my_date.get_end_of_this_month_in_georgian()} \n, my2=${my_date.get_start_of_next_month_in_georgian()} \n my3 = ${new Date(my_date.get_start_of_next_month_in_georgian())}`);
 
-exports.clearRainValuesCache = () => {
-    let after45MinutesFromNow = new Date();
-    after45MinutesFromNow.setSeconds(after45MinutesFromNow.getSeconds()+4);
-    const clearLevelValueCacheJob = new CronJob(
-        after45MinutesFromNow,
-        async () => {
-            try{
-                console.log(`this job happend at: ${my_date.jNow()}`)
-                after45MinutesFromNow.setSeconds(after45MinutesFromNow.getSeconds()+4);
-                this.setTime(new CronTime(after45MinutesFromNow));
-                this.start();
-            }catch(err){
-                console.log('ERROR');
-                console.log(err);
-            }
-
-        },
-        function(){
-        },
-        true,
-        'Asia/Tehran'
-    );
-    clearLevelValueCacheJob.start();
-
-}
+// exports.clearRainValuesCache = () => {
+//     let after45MinutesFromNow = new Date();
+//     after45MinutesFromNow.setSeconds(after45MinutesFromNow.getSeconds()+4);
+//     const clearLevelValueCacheJob = new CronJob(
+//         after45MinutesFromNow,
+//         async () => {
+//             try{
+//                 console.log(`this job happend at: ${my_date.jNow()}`)
+//                 after45MinutesFromNow.setSeconds(after45MinutesFromNow.getSeconds()+4);
+//                 this.setTime(new CronTime(after45MinutesFromNow));
+//                 this.start();
+//             }catch(err){
+//                 console.log('ERROR');
+//                 console.log(err);
+//             }
+//
+//         },
+//         function(){
+//         },
+//         true,
+//         'Asia/Tehran'
+//     );
+//     clearLevelValueCacheJob.start();
+//
+// }
 
 
 // console.log(`new Date = ${new Date()}`);
@@ -118,3 +118,10 @@ exports.clearRainValuesCache = () => {
 //     job1.start();
 // }
 
+let date = new Date(); //ex 2019-01-18T16:26:44.982Z
+let offset = - date.getTimezoneOffset();
+
+console.log(`date === ${date}`);
+console.log(`offset === ${offset}`);
+date.setMinutes(date.getMinutes()+offset);
+console.log(`date === ${date}`);

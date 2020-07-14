@@ -56,7 +56,7 @@ function myFunction(x) {
             elm.style.color = "rgba(243, 51, 255)";
         })
         $('[class="chart-area"]').css('height', '20vh').css('width', '100%')
-        $('div.ad > img.ad').css('height', '60vh').css('width', '90vw')
+        $('div.ad > img.ad').css('height', '90vh').css('width', '90vw')
 
         $('[class="fixed-plugin"]').css('top', '94vh').css('right', '18px').css('width', '45px')
         $('[class="control-box"]').css('top', '94vh').css('right', '64px').css('width', '130px')

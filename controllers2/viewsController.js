@@ -79,66 +79,14 @@ function pruneArray(stations,stns) {
 }
 exports.getOverView = catchAsync(async (req, res, next) => {
 
-    // var codeView = req.params.codeview;
-    // codeView = '100';
-    // var r = codeView.substr(0, 1);
-    //
-    // var l = codeView.substr(1, 1);
-    //
-    // var c = codeView.substr(2, 1);
-    //
-    // var rStations = [];// undefined;
-    // var lStations = [];
-    // var cStations = undefined;
-    // var rStations_temp = undefined;
-    // var lStations_temp = undefined;
-    //
-    // if (r === '1') {
-    //     rStations_temp = await Station.getStationsNamesAndIDs('rain');
-    //
-    //     if (rStations_temp.length > 8) {
-    //         for (i = 0; i < rStations_temp.length; i = i + 8) {
-    //             rStations.push(rStations_temp.slice(i, i + 8));
-    //         }
-    //     } else {
-    //         rStations[0] = rStations_temp;
-    //     }
-    //
-    // }
-    // //rStations ===>>> [[{"id":101,"position":"بن کوه"},{"id":102,"position":"خیرآباد"},{"id":103,"position":"شاهرود"}]]
-    // if (l === '1') {
-    //     lStations_temp = await Station.getStationsNamesAndIDs('level');
-    //     if (lStations_temp.length > 8) {
-    //         for (i = 0; i < lStations_temp.length; i = i + 8) {
-    //             lStations.push(lStations_temp.slice(i, i + 8));
-    //         }
-    //     } else {
-    //         lStations[0] = lStations_temp;
-    //     }
-    //
-    // }
-    // if (c === '1') {
-    //     cStations = await Station.getStationsNamesAndIDs('clima');
-    //
-    // }
-    // const sensores = [['TMP', 'دما'], ['HUM', 'رطوبت'], ['PRS', 'فشار'], ['WSP', 'سرعت باد'],
-    //     ['WDR', 'جهت باد'], ['EVP', 'تبخیر'], ['RAD', 'تشعشع'], ['RAINC', 'بارانسنج']];
-    // res.status(200).render('overview', {
-    //     pretty: true,
-    //     pageType: 'overview',
-    //     rStations,
-    //     lStations,
-    //     cStations,
-    //     sensores
-    // });
-
-
-    // console.log(`req.body=====================================${JSON.stringify(req.body)} `);
+    //console.log(`req.body=====================================${JSON.stringify(req.body)} `);
     let pageTypeArr = [0,0,0];
-    let data = req.body;// =  {"rstations":["101","102","103"],"lstations":["98","99","100"],"cstations":["84","93","104"]}
+    let data = req.body;// =  {"rstations":["101","102","103"],"rcstations":["93","104"],"lstations":["98","99","100"],"cstations":["84","93","104"]}
     // console.log(`data=====================================${JSON.stringify(data)} `);
     let rStns = data["rstations"];
     // console.log(`rStns=====================================${JSON.stringify(rStns)} `);
+    let rcStns = data["rcstations"];
+    // console.log(`rcStns=====================================${JSON.stringify(rStns)} `);
     let lStns = data["lstations"];
     // console.log(`lStns=====================================${JSON.stringify(lStns)} `);
     let cStns = data["cstations"];
@@ -147,25 +95,57 @@ exports.getOverView = catchAsync(async (req, res, next) => {
     var rStations = [];// undefined;
     var lStations = [];
     var cStations = undefined;
+    var rcStations = undefined;
     var rStations_temp = undefined;
+    var rStations_temp2 = [];
     var lStations_temp = undefined;
-    if (rStns) {
-        rStations_temp = await Station.getStationsNamesAndIDs('rain');
-        rStations_temp = JSON.stringify(rStations_temp);
-        // console.log(`rStations_temp >>>>> ${rStations_temp}`);
-        rStations_temp = JSON.parse(rStations_temp);
-        // console.log(`rStations_temp ==== ${rStations_temp}`);
-        if(rStations_temp.length>0)
-            rStations_temp = pruneArray(rStations_temp,rStns);
-        // console.log(`rStations_temp *** ${rStations_temp}`);
-        if (rStations_temp.length > 8) {
-            for (i = 0; i < rStations_temp.length; i = i + 8) {
-                rStations.push(rStations_temp.slice(i, i + 8));
+    if(rStns || rcStns) {
+
+        if (rStns) {
+            rStations_temp = await Station.getStationsNamesAndIDs('rain');
+            //cStationsForR = await Station.getStationsNamesAndIDs('clima');
+
+            if (rStations_temp.length > 0)
+                rStations_temp = pruneArray(rStations_temp, rStns);
+
+            rStations_temp.map(el => {
+                let item = {"id": '', "position": "", "subtype": ""};
+                item['id'] = el['id'];
+                item['position'] = el['position'];
+                item['subtype'] = 'r';
+                rStations_temp2.push(item);
+            })
+        }
+        if (rcStns) {
+            rcStations = await Station.getStationsNamesAndIDs('clima');
+            if (rcStations.length > 0)
+                rcStations = pruneArray(rcStations, rcStns);
+
+            rcStations.map(el => {
+                let item = {"id": '', "position": "", "subtype": ""};
+                item['id'] = el['id'];
+                item['position'] = el['position'];
+                item['subtype'] = 'c';
+                rStations_temp2.push(item);
+            })
+
+        }
+
+
+        rStations_temp2 = JSON.stringify(rStations_temp2);
+        console.log(`rStations_temp2 >>>>> ${rStations_temp2}`);
+        rStations_temp2 = JSON.parse(rStations_temp2);
+
+        if (rStations_temp2.length > 8) {
+            for (i = 0; i < rStations_temp2.length; i = i + 8) {
+                rStations.push(rStations_temp2.slice(i, i + 8));
             }
         } else {
-            rStations[0] = rStations_temp;
+            rStations[0] = rStations_temp2;
         }
         pageTypeArr[0] = 1;
+
+        console.log(`rStations >>>>> ${rStations}`);
     }
     if (lStns) {
         lStations_temp = await Station.getStationsNamesAndIDs('level');
@@ -183,7 +163,8 @@ exports.getOverView = catchAsync(async (req, res, next) => {
     }
     if (cStns) {
         cStations = await Station.getStationsNamesAndIDs('clima');
-        cStations = pruneArray(cStations, cStns);
+        if(cStations.length>0)
+            cStations = pruneArray(cStations, cStns);
         pageTypeArr[2] = 1;
     }
     ////////////////////////////////////////////////
@@ -197,6 +178,14 @@ exports.getOverView = catchAsync(async (req, res, next) => {
         slideIndex = 0;
     else
         slideIndex = global.si;
+
+    console.log(`slideIndex ============>>>>>>>>>   ${slideIndex}`);
+    rStations = JSON.stringify(rStations);
+    console.log(`rstations :=> ${rStations}`);
+    rStations = JSON.parse(rStations);
+
+
+
     res.status(200).render('overview', {
         pretty: true,
         pageType: pageType,//'overview'
@@ -212,6 +201,7 @@ exports.getDetail = catchAsync(async (req, res, next) => {
     let stnID = req.params.stnid;
     //console.log(`StnID=========== ${stnID}`);
     let sensor = req.params.sensor;
+    let subtype = req.params.subtype;
     let slideIndex = req.params.slideindex;
     global.si=slideIndex;
     let position = req.params.position;
@@ -231,12 +221,14 @@ exports.getDetail = catchAsync(async (req, res, next) => {
     console.log(`stnID === ${stnID}`);
     console.log(`sensor === ${sensor}`);
     console.log(`position === ${position}`);
+    console.log(`subtype === ${subtype}`);
     res.status(200).render('detail', {
         pretty: true,
         pageType: pageType,//'detail',
         stnID,
         sensor,
-        position
+        position,
+        subtype
     });
 });
 

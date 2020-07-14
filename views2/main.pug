@@ -27,6 +27,12 @@ block sidebar
                                                 input.mycheck-r(type='checkbox' id=stn.id )
                                                 span &nbsp&nbsp
                                                 label.mylabel(id=stn.id) #{stn.position}
+                                        each stn in cStations
+                                            div(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                span &nbsp&nbsp&nbsp&nbsp
+                                                input.mycheck-rc(type='checkbox' id=stn.id )
+                                                span &nbsp&nbsp
+                                                label.mylabel(id=stn.id) #{stn.position}
                                 if(typ.id === 'level')
                                     ul.list-group
                                         each stn in lStations

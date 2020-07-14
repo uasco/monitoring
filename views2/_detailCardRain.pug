@@ -1,9 +1,24 @@
-mixin detailCardRain(stnID,sensor,position)
+mixin detailCardRain(stnID,sensor,position,subtype)
     script(type='text/javascript').
         $(document).ready(function () {
-            getRainValuesForDetailCard(#{stnID});
-            checkRainStart(#{stnID},'false');
+            if(`#{subtype}` === 'r'){
+                getRainValuesForRainDetailCard(#{stnID});
+                checkRainStart(#{stnID}, 'false');
+            }else if (`#{subtype}` === 'c') {
+                getClimaRainValuesForRainDetailCard(#{stnID});
+                console.log(`checkRainStart`);
+                checkRainStart(#{stnID}, 'true');
+            }
         })
+        if (`#{subtype}` === 'r') {
+            var chackAlarm = setInterval(function () {
+                checkRainStart(#{stnID}, 'false');
+            }, 30000);
+        } else if (`#{subtype}` === 'c') {
+            var chackAlarm = setInterval(function () {
+                checkRainStart(#{stnID}, 'true');
+            }, 30000);
+        }
     .content
         +title('ایستگاه باران سنجی ' + position)
         .row
@@ -109,9 +124,9 @@ mixin detailCardRain(stnID,sensor,position)
                                                     option(value='43200') ۱ &nbspماه
                                 .col-lg-6
                                     h3.card-category(style='display:flex;justify-content: space-around')
-                                        button.btn(onclick='submit_amari()')
+                                        button.btn(onclick='submit_amari(' + '"' + subtype + '"' + ')')
                                             i(style='font-size : 20px ') نمایش
-                                        button.btn(id='download-button' onclick='download_amari()')
+                                        button.btn(id='download-button' onclick='download_amari(' + '"' + subtype + '"' + ')')
                                             i(style='font-size : 20px ') بارگذاری در فایل
                 .col-lg-12(id='standard-report-div')
                     .card
@@ -144,11 +159,11 @@ mixin detailCardRain(stnID,sensor,position)
                                                     input.pdate.form-control-lg(id='cal-mantaghei-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
                                 .col-lg-6
                                     h3.card-category(style='display:flex;justify-content: flex-start')
-                                        button.btn(onclick='submit_Mantaghei()')
+                                        button.btn(onclick='submit_mantaghei(' + '"' + subtype + '"' + ')')
                                             i(style='font-size : 20px ') نمایش
                                 .col-lg-6
                                     h3.card-category(style='display:flex;justify-content: flex-start')
-                                        button.btn(id='download-button' onclick='download_Mantaghei()')
+                                        button.btn(id='download-button' onclick='download_mantaghei(' + '"' + subtype + '"' + ')')
                                             i(style='font-size : 20px ') بارگذاری در فایل
                 .card(id='report-chart')
                     .card-header
@@ -156,7 +171,7 @@ mixin detailCardRain(stnID,sensor,position)
                             h3.card-category
                     .card-body
                         div.chart-area(id='chart-container')
-                            - chart_id = 'CountryChart' + stnID
+                            - chart_id = 'BigCountryChart' + stnID
                             canvas(id= chart_id)
                 .card(id='mantaghei-table')
                     .card-header.text-right
@@ -281,7 +296,7 @@ mixin detailCardRain(stnID,sensor,position)
             return isValid;
         }
         function resetCanvas () {
-            let chID='CountryChart' + #{stnID};
+            let chID='BigCountryChart' + #{stnID};
             console.log(chID);
             console.log($('#'+chID));
             $('#'+chID).remove(); // this is my <canvas> element
@@ -292,10 +307,12 @@ mixin detailCardRain(stnID,sensor,position)
             let tableID = 'Table' + #{stnID};
             console.log(tableID);
             console.log($('#' + tableID));
-            //$('#' + tableID).remove(); // this is my <table> element
-            $('#table' + #{stnID}+' tbody').remove();
-            //$('.chartjs-size-monitor').remove();
-            $('#table' + #{stnID}).append('<tbody></tbody>');
+
+            $('#amari-table' + #{stnID}+' tbody').remove();
+            $('#amari-table' + #{stnID}).append('<tbody></tbody>');
+
+            $('#mantaghei-table' + #{stnID} + ' tbody').remove();
+            $('#mantaghei-table' + #{stnID}).append('<tbody></tbody>');
         }
         let amariReport = true;
         let standardReport = false;
@@ -491,7 +508,7 @@ mixin detailCardRain(stnID,sensor,position)
         //     console.log('first ===' + selectedPeriod);
         // });
 
-        function  submit_amari() {
+        function  submit_amari(subtype) {
             if((startDate=='') ||($('#cal-amari-start').val()=="")) {
                 alert('لطفا تاریخ شروع را انتخاب کنید!');
                 return;
@@ -515,7 +532,11 @@ mixin detailCardRain(stnID,sensor,position)
             resetCanvas();
             resetTable();
             //displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            displayRainAmariReport(#{stnID},false,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+            if(subtype == 'r'){
+                displayRainAmariReport(#{stnID}, false, totalRainBool, absoluteRainBool, rateRainBool, barDisplayBool, lineDisplayBool, startDate, endDate, startTime, endTime, selectedPeriod);
+            }else if(subtype == 'c'){
+                displayRainAmariReport(#{stnID}, true, totalRainBool, absoluteRainBool, rateRainBool, barDisplayBool, lineDisplayBool, startDate, endDate, startTime, endTime, selectedPeriod);
+            }
             periodLabel = periodLabels[selectedPeriod];
             // switch(selectedPeriod){
             //     case (30): periodLabel
@@ -530,11 +551,15 @@ mixin detailCardRain(stnID,sensor,position)
             chartLabel=chartLabel + periodLabel;
             $('#report-chart'+' h3').text("").append(chartLabel);
         }
-        function  download_amari() {
+        function  download_amari(subtype) {
             //getExcelRainAmariReport(#{stnID},false,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            getExcelRainAmariReport(#{stnID},false,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+            if (subtype == 'r') {
+                getExcelRainAmariReport(#{stnID}, false, totalRainBool, absoluteRainBool, rateRainBool, barDisplayBool, lineDisplayBool, startDate, endDate, startTime, endTime, selectedPeriod);
+            } else if (subtype == 'c') {
+                getExcelRainAmariReport(#{stnID}, true, totalRainBool, absoluteRainBool, rateRainBool, barDisplayBool, lineDisplayBool, startDate, endDate, startTime, endTime, selectedPeriod);
+            }
         }
-        function submit_Mantaghei() {
+        function submit_mantaghei(subtype) {
             if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
                 alert('لطفا تاریخ شروع را انتخاب کنید!');
                 return;
@@ -545,10 +570,19 @@ mixin detailCardRain(stnID,sensor,position)
             }
             resetCanvas();
             resetTable();
-            displayRainMantagheireport(#{stnID}, false, startDate, endDate);
+            if (subtype == 'r') {
+                displayRainMantagheireport(#{stnID}, false, startDate, endDate);
+            } else if (subtype == 'c') {
+                displayRainMantagheireport(#{stnID}, true, startDate, endDate);
+            }
+
             chartLabel = 'باران تجمیعی';
             $('#report-chart' + ' h3').text("").append(chartLabel);
         }
-        function download_Mantaghei() {
-            getExcelRainMantagheiReport(#{stnID}, false, startDate, endDate);
+        function download_mantaghei(subtype) {
+            if (subtype == 'r') {
+                getExcelRainMantagheiReport(#{stnID}, false, startDate, endDate);
+            } else if (subtype == 'c') {
+                getExcelRainMantagheiReport(#{stnID}, true, startDate, endDate);
+            }
         }

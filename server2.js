@@ -17,7 +17,8 @@ mongoose
     .connect(DB, {
         auth: {
             user: process.env.DB_USER,
-            password: process.env.DATABASE_PASSWORD
+            password: process.env.DATABASE_PASSWORD,
+            port: process.env.DB_PORT
         },
         useNewUrlParser: true,
         useCreateIndex: true,
@@ -26,7 +27,7 @@ mongoose
     })
     .then(() => console.log('MongoDB connection successful!'));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 const server = app.listen(port, () => {
     console.log(`App running on port ${port}...`);
 });

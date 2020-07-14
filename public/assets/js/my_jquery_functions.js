@@ -85,7 +85,7 @@ function mysiema(si) {
         onChange: setSlideIndex,
     });
     window.active = 1;
-    window.timerId = setInterval(() => mySiema.next(), 1000000)
+    window.timerId = setInterval(() => mySiema.next(), 10000)
 
     document.querySelector('.prev').addEventListener('click', () => mySiema.prev());
     document.querySelector('.next').addEventListener('click', () => mySiema.next());
@@ -103,6 +103,13 @@ function checkSubItems(chb){
         switch(chb.id) {
             case 'rain':
                 checkBoxes = document.querySelectorAll(".mycheck-r");//("[id^='rain']");
+                checkBoxes.forEach(ch => {
+                    if (chb.checked === true)
+                        ch.checked = true;
+                    else
+                        ch.checked = false;
+                });
+                checkBoxes = document.querySelectorAll(".mycheck-rc");//("[id^='rain']");
                 checkBoxes.forEach(ch => {
                     if (chb.checked === true)
                         ch.checked = true;
@@ -177,12 +184,15 @@ function displayOverview() {
     let checkBoxes = document.querySelectorAll("[class^='mycheck-']");
     // console.log(checkBoxes);
     let rstations=[];
+    let rcstations=[];
     let lstations=[];
     let cstations=[];
     checkBoxes.forEach(ch => {
         if(ch.checked === true){
             if(ch.className === 'mycheck-r')
                 rstations.push(ch.id);
+            if(ch.className === 'mycheck-rc')
+                rcstations.push(ch.id);
             if(ch.className === 'mycheck-l')
                 lstations.push(ch.id);
             if(ch.className === 'mycheck-c')
@@ -195,20 +205,24 @@ function displayOverview() {
     const url = '/overview/';
     let data ={
         rstations,
+        rcstations,
         lstations,
         cstations
     }
     $.redirect(url, data, "POST");
 
 }
-function loadDetailCard(id,position,sensor){
-    location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + window.currentSlideIndex;
+function loadDetailCard(id,position,sensor,subtype){
+    location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + subtype +'-' + window.currentSlideIndex;
 }
 function checkRainStart(stnID,clima){
+    // console.log(`checkRainStart2`);
     var status=undefined;
     let url = undefined;
-    if(clima === 'true')
-        url = '/api/status/rainc/start/' + stnID
+    if(clima === 'true'){
+        console.log('/api/status/rainrc/start/' + stnID);
+        url = '/api/status/rainrc/start/' + stnID
+    }
     else
         url = '/api/status/rain/start/' + stnID
     $.ajax({
@@ -216,12 +230,20 @@ function checkRainStart(stnID,clima){
         type: 'GET',
         dataType: 'json',
         success: (response) => {
-            //console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
+            console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
             status = response.data;
             if(clima === 'false') {
                 if (status === 1) {
                     $('#' + stnID + ' i' + '#rain_status').text("");//.append("&nbsp&nbsp&nbsp;");//append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
                     $('#' + stnID + ' i' + '#rain_status_result').text("").append('در حال بارش');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-sun-cloud');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-cloud-rain');
+                    $('#' + stnID).addClass('rain');
+
+                    //clear cache befor refresh here
+                    $.ajax({url: '/api/caches/rain/' + stnID + '/' + 'r' , success: function(){}});
+                    getRainValues(stnID,'r')//for refreshing data
+                    getRainTotalOfEndOfPastMonthsForDrawingCharts(stnID,'r')//for refreshing chart
                     checkRainAlarm(stnID, clima);
                 } else if (status === 0) {
                     $('#' + stnID + ' i' + '#rain_status').text("");//.append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
@@ -229,18 +251,33 @@ function checkRainStart(stnID,clima){
                     $('#' + stnID + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + ' i' + '#rain_alarm1').text("").append('');
                     $('#' + stnID + ' i' + '#rain_alarm8').text("").append('');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-sun-cloud');
+                    $('#' + stnID).removeClass('rain');
                 }
             }else if(clima === 'true'){
                 if (status === 1) {
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_status').text("").append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_status_result').text("").append('در حال بارش');
+                    $('#' + stnID + ' i' + '#rain_status').text("").append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
+                    $('#' + stnID + ' i' + '#rain_status_result').text("").append('در حال بارش');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-sun-cloud');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-cloud-rain');
+                    $('#' + stnID).addClass('rain');
+
+
+                    //clear cache befor refresh here
+                    $.ajax({url: '/api/caches/rain/' + stnID + '/' + 'c' , success: function(){}});
+                    getRainValues(stnID,'c')//for refreshing data
+                    getRainTotalOfEndOfPastMonthsForDrawingCharts(stnID,'c')//for refreshing chart
                     checkRainAlarm(stnID, clima);
                 } else if (status === 0) {
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_status').text("");//.append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_status_result').text("").append('بدون بارش');
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_alarm1').text("").append('');
-                    $('#' + stnID +'RAINC'+ ' i' + '#rain_alarm8').text("").append('');
+                    $('#' + stnID + ' i' + '#rain_status').text("");//.append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
+                    $('#' + stnID + ' i' + '#rain_status_result').text("").append('بدون بارش');
+                    $('#' + stnID + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
+                    $('#' + stnID + ' i' + '#rain_alarm1').text("").append('');
+                    $('#' + stnID + ' i' + '#rain_alarm8').text("").append('');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-sun-cloud');
+                    $('#' + stnID).removeClass('rain');
 
                 }
             }
@@ -252,8 +289,8 @@ function checkRainAlarm(stnID,clima){
     let url1 = undefined;
     let url8 = undefined;
     if(clima === 'true') {
-        url1 = '/api/status/rainc/alarm1/' + stnID;
-        url8 = '/api/status/rainc/alarm8/' + stnID;
+        url1 = '/api/status/rainrc/alarm1/' + stnID;
+        url8 = '/api/status/rainrc/alarm8/' + stnID;
     }
     else {
         url1 = '/api/status/rain/alarm1/' + stnID;
@@ -271,17 +308,23 @@ function checkRainAlarm(stnID,clima){
                 if (status === 1) {
                     $('#' + stnID + ' i' + '#rain_alarm').text("").append(' هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + ' i' + '#rain_alarm1').text("").append('رگبار ۱ میلی').append("&nbsp&nbsp&nbsp;");
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                    // $('#' + stnID + ' svg' + '#icon-status').addClass('fa-cloud-showers');
                 } else if (status === 0) {
                     $('#' + stnID + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + ' i' + '#rain_alarm1').text("").append('');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-showers');
                 }
             }else if(clima === 'true'){
                 if (status === 1) {
                     $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append(' هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm1').text("").append('رگبار ۱ میلی').append("&nbsp&nbsp&nbsp;");
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                    // $('#' + stnID + ' svg' + '#icon-status').addClass('fa-cloud-showers');
                 } else if (status === 0) {
                     $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm1').text("").append('');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-showers');
                 }
             }
         }
@@ -298,18 +341,111 @@ function checkRainAlarm(stnID,clima){
                 if (status === 1) {
                     $('#' + stnID + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + ' i' + '#rain_alarm8').text("").append('رگبار ۸ میلی');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-showers');
+                    // $('#' + stnID + ' svg' + '#icon-status').addClass('fa-cloud-showers-heavy');
                 } else if (status === 0) {
                     $('#' + stnID + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + ' i' + '#rain_alarm8').text("").append('');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-showers-heavy');
                 }
             }else if(clima === 'true'){
                 if (status === 1) {
-                    $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' هشدار').append("&nbsp&nbsp&nbsp;");
-                    $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm8').text("").append('رگبار ۸ میلی');
+                    $('#' + stnID + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' هشدار').append("&nbsp&nbsp&nbsp;");
+                    $('#' + stnID + ' i' + '#rain_alarm8').text("").append('رگبار ۸ میلی');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-showers');
+                    // $('#' + stnID + ' svg' + '#icon-status').addClass('fa-cloud-showers-heavy');
                 } else if (status === 0) {
-                    $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
-                    $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm8').text("").append('');
+                    $('#' + stnID + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
+                    $('#' + stnID + ' i' + '#rain_alarm8').text("").append('');
+                    // $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-cloud-showers-heavy');
                 }
+            }
+        }
+    })
+}
+function checkRainStartFromClima(stnID){
+    // console.log(`checkRainStart2`);
+    var status=undefined;
+    let url = '/api/status/rainc/start/' + stnID
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
+            status = response.data;
+            if (status === 1) {
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_status').text("").append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_status_result').text("").append('در حال بارش');
+                $('#' + stnID + 'RAINC'+ ' svg' + '#icon-status').removeClass('fa-sun-cloud');
+                $('#' + stnID + 'RAINC'+ ' svg' + '#icon-status').addClass('fa-cloud-rain');
+                $('#' + stnID + 'RAINC').addClass('rain');
+
+                //clear cache befor refresh here
+                $.ajax({url: '/api/caches/clima/' + 'rainc' + '/' + stnID, success: function(){}});
+                getClimaValues(stnID, 'RAINC', '');//for refreshing values
+                let sensor = ['RAINC', 'mm'];
+                getClimaLastHoursForDrawingCharts(stnID, sensor);//for refreshing values
+                checkRainAlarmFromClima(stnID);
+            } else if (status === 0) {
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_status').text("");//.append("&nbsp&nbsp&nbsp;");//.append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_status_result').text("").append('بدون بارش');
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_alarm1').text("").append('');
+                $('#' + stnID + 'RAINC'+ ' i' + '#rain_alarm8').text("").append('');
+                $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').addClass('fa-sun-cloud');
+                $('#' + stnID + 'RAINC').removeClass('rain');
+
+            }
+        }
+    })
+}
+function checkRainAlarmFromClima(stnID){
+    let status=undefined;
+    let url1 = '/api/status/rainc/alarm1/' + stnID;
+    let url8 = '/api/status/rainc/alarm8/' + stnID;
+
+    $.ajax({
+        url: url1,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            //console.log("RESPONSE");
+            //console.log(response);
+            status = response.data;
+            if (status === 1) {
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append(' هشدار').append("&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm1').text("").append('رگبار ۱ میلی').append("&nbsp&nbsp&nbsp;");
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').addClass('fa-cloud-showers');
+            } else if (status === 0) {
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm1').text("").append('');
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').removeClass('fa-cloud-showers');
+            }
+        }
+    })
+    $.ajax({
+        url: url8,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            // console.log("RESPONSE");
+            // console.log(response);
+            status = response.data;
+            if (status === 1) {
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' هشدار').append("&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm8').text("").append('رگبار ۸ میلی');
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').removeClass('fa-cloud-rain');
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').removeClass('fa-cloud-showers');
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').addClass('fa-cloud-showers-heavy');
+            } else if (status === 0) {
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm').text("").append("&nbsp&nbsp&nbsp;").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
+                $('#' + stnID + 'RAINC' + ' i' + '#rain_alarm8').text("").append('');
+                // $('#' + stnID + 'RAINC' + ' svg' + '#icon-status').removeClass('fa-cloud-showers-heavy');
             }
         }
     })
@@ -323,21 +459,26 @@ function checkFloodStatus(stnID){
         type: 'GET',
         dataType: 'json',
         success: (response) => {
-            console.log('inside checkFloodStatus:');
-            console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
+            // console.log('inside checkFloodStatus:');
+            // console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
             status = response.data;
 
             if (status === 1) {
                 $('#' + stnID + ' i' + '#flood_status').text("");//.append("&nbsp&nbsp&nbsp;");//append(' وضعیت بارندگی').append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;");
                 $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('سیلاب');
-                console.log('HHHAAAAPPPEEEENNNIIIINNNGGGGG');
+
+                //clear cache befor refresh here
+                $.ajax({url: "/api/caches/level/" + stnID , success: function(result){}});
+                getLevelValue(stnID);//for refreshing values
+                getLevelOfLastHoursForDrawingCharts(stnID);//for refreshing values
+
+                // console.log('HHHAAAAPPPEEEENNNIIIINNNGGGGG');
             } else if (status === 0) {
                 $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('بدون سیلاب');
             }
         }
     })
 }
-
 function lntpn(ln) {
     return $.latin2Arabic.toArabic(ln); s//ln must be string
 }
@@ -424,7 +565,7 @@ function drawCharts_rl(station_ID, labels, valus, label, stnType) {
     }
 }
 function drawBigCharts_rl(station_ID, labels, valus, label, stnType, chartType) {
-    let chart_id = 'CountryChart' + station_ID;
+    let chart_id = 'BigCountryChart' + station_ID;
     if (stnType === 'rain') {
         if(chartType == 'bar'){
             $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
@@ -440,7 +581,6 @@ function drawBigCharts_rl(station_ID, labels, valus, label, stnType, chartType) 
             });
         }
     }else if (stnType === 'level') {
-        let chart_id = 'chartLinePurple' + station_ID;
         $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
             $.getScript('/assets/js/mychart.js', function () {
                 drawBigLineChart(chart_id, labels, valus, label , 'ارتفاع آب');
@@ -469,7 +609,7 @@ function drawCharts_c(station_ID, labels, valus, sensor) {
 }
 function drawBigCharts_c(station_ID, labels, valus, sensor) {
     if (sensor === 'RAINC') {
-        var chart_id = 'CountryChart' + station_ID + sensor;
+        var chart_id = 'BigCountryChart' + station_ID + sensor;
         $('.chart-area' + ' canvas' + '#' + chart_id).each(function (index, el) {
             $.getScript('/assets/js/mychart.js', function () {
                 drawBigBarChart(chart_id, labels, valus, 'باران تجمیعی');
@@ -504,7 +644,7 @@ function fillAmariTable(stationID, labels, values){
         //console.log(`HEY => ${i} ${labels[i]}`);
     }
 }
-function fillMantagheiTable(stationID, months, days,  values_6_30,values_18_30,values_24_00){
+function fillRainMantagheiTable(stationID, months, days,  values_6_30,values_18_30,values_24_00){
     //console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
     //console.log(values.length.toString());
     //console.log(labels.length.toString());
@@ -526,6 +666,28 @@ function fillMantagheiTable(stationID, months, days,  values_6_30,values_18_30,v
         cell3.innerHTML = lntpn(values_18_30[i].toString());
         cell4.innerHTML = lntpn(values_24_00[i].toString());
         //console.log(`HEY => ${i} ${labels[i]}`);
+    }
+}
+function fillLevelMantagheiTable(stationID, months, days,  values_8,values_16){
+    //console.log("mmmmmmmmmmmmmmmmmmmmmmmmmm");
+    //console.log(values.length.toString());
+    //console.log(labels.length.toString());
+    //console.log(values[values.length -1]);
+    //console.log(labels[labels.length -1]);
+    //let table = $('#table' + stationID)[0];
+    let table = document.getElementById('mantaghei-table' + stationID).getElementsByTagName('tbody')[0];
+    let n = days.length;
+    for (let i = 0; i < n; i++) {
+        let row = table.insertRow();
+        let cell0 = row.insertCell(0);
+        let cell1 = row.insertCell(1);
+        let cell2 = row.insertCell(2);
+        let cell3 = row.insertCell(3);
+
+        cell0.innerHTML = months[i];
+        cell1.innerHTML = lntpn(days[i].toString());
+        cell2.innerHTML = lntpn(values_8[i].toString());
+        cell3.innerHTML = lntpn(values_16[i].toString());
     }
 }
 function displayRainAmariReport(stationID,clima,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,period){
@@ -620,7 +782,7 @@ function getExcelRainAmariReport(stationID,clima,totalRainBool,absoluteRainBool,
 
         // If you want to use the image in your DOM:
         var blob = new Blob([arrayBuffer], {type: 'data:application/vnd.ms-excel'});
-        saveAs(blob, 'amari-report.xlsx');
+        saveAs(blob, 'rain-amari-report.xlsx');
         var saving = document.createElement('a');
         document.body.appendChild(saving);
         saving.click();
@@ -676,7 +838,7 @@ function displayRainMantagheireport(stationID, clima, startDate, endDate){
                 console.log('values_24_00');
                 console.log(values_24_00);
                 drawBigCharts_rl(stationID, days, values_24_00, 'باران تجمیعی', 'rain','bar');
-                fillMantagheiTable(stationID,months, days, values_6_30,values_18_30,values_24_00);
+                fillRainMantagheiTable(stationID,months, days, values_6_30,values_18_30,values_24_00);
                 $('#download-button').removeClass("disabled");
             }
         }
@@ -694,6 +856,7 @@ function getExcelRainMantagheiReport(stationID, clima, startDate, endDate){
         var byteArray = new Uint8Array(arrayBuffer);
         // ...
 
+
         // If you want to use the image in your DOM:
         var blob = new Blob([arrayBuffer], {type: 'data:application/vnd.ms-excel'});
         saveAs(blob, 'Mantaghei-report.xlsx');
@@ -704,9 +867,61 @@ function getExcelRainMantagheiReport(stationID, clima, startDate, endDate){
     };
     oReq.send();
 }
-function getRainValuesForDetailCard(id) {
+function getRainValuesForRainDetailCard(id) {
     $.ajax({
-        url: '/api/values/rain/' + id,
+        url: '/api/values/rain/' + id+ '/' + 'r',
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                //$("div.card-title  span").text(response.data[2].value);
+                var rt = JSON.stringify(response.data[2].value);
+                var r24 = JSON.stringify(response.data[1].value);
+                var r12 = JSON.stringify(response.data[0].value);
+                rt = lntpn(rt);
+                r24 = lntpn(r24);
+                r12 = lntpn(r12);
+                let date = response.data[2].date;
+                let hour = response.data[2].hour;
+                date = lntpn(date);
+                hour = lntpn(hour);
+                $('#' + id + ' i' + '#rain_total').text("").append("&nbsp&nbsp&nbsp;").append(' تجمیعی').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
+                $('#' + id + ' i' + '#rain_total_value').text("").append(rt)
+                $('#' + id + ' i' + '#rain_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#rain_24').text("").append("&nbsp&nbsp&nbsp;").append(' ۲۴ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[1].value).append("&nbsp&nbsp&nbsp;mm");// 1->rain_24
+                $('#' + id + ' i' + '#rain_24_value').text("").append(r24)
+                $('#' + id + ' i' + '#rain_24_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
+                $('#' + id + ' i' + '#rain_12_value').text("").append(r12)
+                $('#' + id + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+
+                //console.log(date);
+                //drawCharts(rain_stations_names_and_ids,labels,values);
+            }
+        }
+    })
+    $.ajax({
+        url: '/api/stations/installdate/' + id  ,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                let date = response.data[0].date;
+                //console.log(`date = ${date}`);
+                date = lntpn(date);
+                //console.log(`date = ${date}`);
+                $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+            }
+        }
+    })
+}
+function getClimaRainValuesForRainDetailCard(id) {
+    $.ajax({
+        //url: '/api/values/clima/' + 'rainc' + '/' + id,
+        url : '/api/values/rain/' + id+ '/' + 'c',
         type: 'GET',
         dataType: 'json',
         success: (response) => {
@@ -746,18 +961,24 @@ function getRainValuesForDetailCard(id) {
         success: (response) => {
             if (response.data.length > 0) {
                 let date = response.data[0].date;
-                //console.log(`date = ${date}`);
+                console.log(`date = ${date}`);
                 date = lntpn(date);
-                //console.log(`date = ${date}`);
+                console.log(`date = ${date}`);
                 $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
                 $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
             }
         }
     })
 }
-function getRainValues(id) {
+function getRainValues(id,subtype) {
+    let url = '';
+    if(subtype === 'r'){
+        url = '/api/values/rain/' + id + '/' + 'r';
+    }else if(subtype === 'c'){
+        url = '/api/values/rain/' + id+ '/' + 'c';
+    }
     $.ajax({
-        url: '/api/values/rain/' + id,
+        url: url,
         type: 'GET',
         dataType: 'json',
         success: (response) => {
@@ -767,6 +988,7 @@ function getRainValues(id) {
                 var r24 = JSON.stringify(response.data[1].value);
                 var r12 = JSON.stringify(response.data[0].value);
                 rt = lntpn(rt);
+                console.log(`rt ===>>> ${id} ->  ${rt}`);
                 r24 = lntpn(r24);
                 r12 = lntpn(r12);
                 //let time = response.data[2].sample_time;
@@ -783,16 +1005,22 @@ function getRainValues(id) {
                 $('#' + id + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
                 $('#' + id + ' i' + '#rain_12_value').text("").append(r12)
                 $('#' + id + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
                 $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
             }
         }
     })
 }
-function getRainTotalOfEndOfPastMonthsForDrawingCharts(station_ID) {
+function getRainTotalOfEndOfPastMonthsForDrawingCharts(station_ID,subtype) {
+    let url = '';
+    if(subtype === 'r'){
+        url = '/api/values/raintotalsmonths/' + station_ID + '/' + 'r';
+    }else if(subtype === 'c'){
+        url = '/api/values/raintotalsmonths/' + station_ID + '/' + 'c';
+    }
         let rain_total_of_past_months;
         $.ajax({
-            url: '/api/values/raintotalsmonths/' + station_ID,
+            url: url,
             type: 'GET',
             dataType: 'json',
             success: (response) => {
@@ -834,7 +1062,7 @@ function getRainTotalOfEndOfPastMonthsForDrawingCharts(station_ID) {
         })
 }
 function getRainStationsNamesAndIDs() {
-    var rain_stations_names_and_ids;
+    let rain_stations_names_and_ids;
     $.ajax({
         url: '/api/stations/rain',
         type: 'GET',
@@ -846,13 +1074,177 @@ function getRainStationsNamesAndIDs() {
                 //$(this).text("ایستگاه بارانسنجی   ").append("&nbsp&nbsp;").append(rain_stations_names_and_ids[index].name);
                 // $(this).text(" ").append("&nbsp&nbsp;").append(rain_stations_names_and_ids[index].position);
                 rain_stations_names_and_ids.map(el => {
-                    getRainValues(el.id);
-                    getRainTotalOfEndOfPastMonthsForDrawingCharts(el.id);
+                    getRainValues(el.id,'r');
+                    getRainTotalOfEndOfPastMonthsForDrawingCharts(el.id,'r');
                 });
 
             }
         }
     })
+    let clima_rain_stations_names_and_ids;
+    $.ajax({
+        url: '/api/stations/clima',
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                clima_rain_stations_names_and_ids = response.data;
+                // $('div.card-header.rain h3.card-category').each(function (index, el) {
+                //$(this).text("ایستگاه بارانسنجی   ").append("&nbsp&nbsp;").append(rain_stations_names_and_ids[index].name);
+                // $(this).text(" ").append("&nbsp&nbsp;").append(rain_stations_names_and_ids[index].position);
+                clima_rain_stations_names_and_ids.map(el => {
+                    getRainValues(el.id,'c');
+                    getRainTotalOfEndOfPastMonthsForDrawingCharts(el.id,'c');
+                });
+
+            }
+        }
+    })
+}
+function displayLevelAmariReport(stationID,startDate,endDate,startTime,endTime,period){
+    //console.log(stationID,totalRainBool.toString() + '-' + absoluteRainBool.toString() + '-' + rateRainBool.toString() + '-' + barDisplayBool.toString() + '-' + lineDisplayBool.toString())
+    //console.log(startDate.toString()+ '###' +endDate.toString()+ '###' +startTime.toString()+ '###' +endTime.toString()+ '###' + period.toString());
+
+    $.ajax({
+        url: '/api/values/levelamarireport/' + stationID +  '/' +  startDate + '/' + endDate + '/' + startTime+ '/' + endTime+'/'  + period ,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data) {
+                let levelAmariReort = response.data;
+                /*
+                [
+                 {"value":673.5,"sample_time":"2020-04-26 00:45:29"},
+                 {"value":689.3,"sample_time":"2020-04-27 00:47:50"},
+                 {"value":701.3,"sample_time":"2020-04-28 00:38:34"}
+                ]
+                 */
+                levelAmariReort = JSON.parse(levelAmariReort);
+                if(levelAmariReort.length == 0){
+                    alert('در بازه زمانی درخواستی داده ای وجود ندارد');
+                    return;
+                }
+                $('#report-chart').show();
+                $('#amari-table').show();
+
+                let labels = [];
+                let values = [];
+                for(let i=0;i<levelAmariReort.length;i++){
+
+                    labels.push(levelAmariReort[i]['sample_time']);
+                    values.push(levelAmariReort[i]['value']);
+                }
+
+                        drawBigCharts_rl(stationID, labels, values, 'ارتفاع آب', 'level','line');
+
+                fillAmariTable(stationID, labels, values);
+                $('#download-button').removeClass("disabled");
+            }
+        }
+    })
+}
+function getExcelLevelAmariReport(stationID,startDate,endDate,startTime,endTime,period){
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", '/api/values/excellevelamarireport/' + stationID + '/'  +  startDate + '/' + endDate + '/' + startTime + '/' + endTime + '/' + period  , true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(oEvent) {
+        var arrayBuffer = oReq.response;
+
+        // if you want to access the bytes:
+        var byteArray = new Uint8Array(arrayBuffer);
+        // ...
+
+        // If you want to use the image in your DOM:
+        var blob = new Blob([arrayBuffer], {type: 'data:application/vnd.ms-excel'});
+        saveAs(blob, 'hydrometry-amari-report.xlsx');
+        var saving = document.createElement('a');
+        document.body.appendChild(saving);
+        saving.click();
+        document.body.removeChild(saving);
+    };
+    oReq.send();
+
+}
+function displayLevelMantagheireport(stationID,startDate,endDate){
+    $.ajax({
+        url: '/api/values/levelmantagheireport/' + stationID + '/' +  startDate + '/' + endDate  ,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data) {
+                console.log('response');
+                console.log(response);
+                let levelMantagheiReort = response.data;
+                console.log('levelMantagheiReort');
+                console.log(levelMantagheiReort);
+                /*
+
+                 */
+                console.log('levelMantagheiReort[0]');
+                console.log(levelMantagheiReort[0]);
+
+                //levelMantagheiReort = JSON.parse(levelMantagheiReort[0]);
+                if(levelMantagheiReort.length == 0){
+                    alert('در بازه زمانی درخواستی داده ای وجود ندارد');
+                    return;
+                }
+                $('#report-chart').show();
+                $('#mantaghei-table').show();
+
+                let months = [];
+                let days = [];
+                let values_8 = [];
+                let values_16 = [];
+                for(let i=0;i<levelMantagheiReort.length;i++){
+
+                    months.push(levelMantagheiReort[i]['month']);
+                    days.push(levelMantagheiReort[i]['day']);
+                    values_8.push(levelMantagheiReort[i]['val_8']);
+                    values_16.push(levelMantagheiReort[i]['val_16']);
+                }
+
+                console.log('days');
+                console.log(days);
+                let labels = [];
+                let values = [];
+                days.map(el=>{
+                    labels.push(el);
+                    labels.push(el);
+                });
+                values_8.map((el,i)=>{
+                    values.push(el);
+                    values.push(values_16[i]);
+                });
+
+                drawBigCharts_rl(stationID, labels, labels, 'ارتفاع آب', 'level','line');
+                fillLevelMantagheiTable(stationID,months, days, values_8,values_16);
+                $('#download-button').removeClass("disabled");
+            }
+        }
+    })
+}
+function getExcelLevelMantagheiReport(stationID,startDate,endDate){
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", '/api/values/excellevelmantagheireport/' + stationID + '/' +  startDate + '/' + endDate , true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function(oEvent) {
+        var arrayBuffer = oReq.response;
+
+        // if you want to access the bytes:
+        var byteArray = new Uint8Array(arrayBuffer);
+        // ...
+
+        // If you want to use the image in your DOM:
+        var blob = new Blob([arrayBuffer], {type: 'data:application/vnd.ms-excel'});
+        saveAs(blob, 'Mantaghei-report.xlsx');
+        var saving = document.createElement('a');
+        document.body.appendChild(saving);
+        saving.click();
+        document.body.removeChild(saving);
+    };
+    oReq.send();
 }
 function getLevelValueForDetailCard(id) {
     $.ajax({
@@ -909,7 +1301,7 @@ function getLevelValue(id) {
                 $('#' + id + ' i' + '#level_total').text("").append("&nbsp&nbsp&nbsp;").append('ارتفاع ').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
                 $('#' + id + ' i' + '#level_total_value').text("").append(lt)
                 $('#' + id + ' i' + '#level_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
                 $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
 
                 //console.log(date);
@@ -919,10 +1311,8 @@ function getLevelValue(id) {
         }
     })
 }
-function getLevelOfLastHoursForDrawingCharts(level_stations_names_and_ids) {
-    level_stations_names_and_ids.map(el => {
-        var level_last_hours;
-        var station_ID = el.id;
+function getLevelOfLastHoursForDrawingCharts(station_ID) {
+        let level_last_hours;
         $.ajax({
             url: '/api/values/levellasthours/' + station_ID,
             type: 'GET',
@@ -946,10 +1336,9 @@ function getLevelOfLastHoursForDrawingCharts(level_stations_names_and_ids) {
                 }
             }
         })
-    })
 }
 function getLevelStationsNamesAndIDs() {
-    var level_stations_names_and_ids;
+    let level_stations_names_and_ids;
     $.ajax({
         url: '/api/stations/level',
         type: 'GET',
@@ -962,8 +1351,8 @@ function getLevelStationsNamesAndIDs() {
                 // $(this).text(" ").append("&nbsp&nbsp;").append(level_stations_names_and_ids[index].position);
                 level_stations_names_and_ids.map(el => {
                     getLevelValue(el.id);
+                    getLevelOfLastHoursForDrawingCharts(el.id)
                 });
-                getLevelOfLastHoursForDrawingCharts(level_stations_names_and_ids)
             }
         }
     })
@@ -1006,10 +1395,10 @@ function getLevelValueForDetailCard(id) {
         }
     })
 }
-function getClimaValuesForDetailCard(id) {
+function getClimaRainValuesForClimaDetailCard(id) {
     $.ajax({
-        //url: '/api/values/rain/' + id,
-        url: '/api/values/clima/' + 'rainc' + '/' + id,
+        //url: '/api/values/clima/' + 'rainc' + '/' + id,
+        url : '/api/values/rain/' + id+ '/' + 'c',
         type: 'GET',
         dataType: 'json',
         success: (response) => {
@@ -1025,17 +1414,17 @@ function getClimaValuesForDetailCard(id) {
                 let hour = response.data[2].hour;
                 date = lntpn(date);
                 hour = lntpn(hour);
-                $('#' + id + ' i' + '#rain_total').text("").append("&nbsp&nbsp&nbsp;").append(' تجمیعی').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
-                $('#' + id + ' i' + '#rain_total_value').text("").append(rt)
-                $('#' + id + ' i' + '#rain_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#rain_24').text("").append("&nbsp&nbsp&nbsp;").append(' ۲۴ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[1].value).append("&nbsp&nbsp&nbsp;mm");// 1->rain_24
-                $('#' + id + ' i' + '#rain_24_value').text("").append(r24)
-                $('#' + id + ' i' + '#rain_24_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
-                $('#' + id + ' i' + '#rain_12_value').text("").append(r12)
-                $('#' + id + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+                $('#' + id + 'RAINC' + ' i' + '#rain_total').text("").append("&nbsp&nbsp&nbsp;").append(' تجمیعی').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
+                $('#' + id + 'RAINC' + ' i' + '#rain_total_value').text("").append(rt)
+                $('#' + id + 'RAINC' + ' i' + '#rain_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + 'RAINC' + ' i' + '#rain_24').text("").append("&nbsp&nbsp&nbsp;").append(' ۲۴ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[1].value).append("&nbsp&nbsp&nbsp;mm");// 1->rain_24
+                $('#' + id + 'RAINC' + ' i' + '#rain_24_value').text("").append(r24)
+                $('#' + id + 'RAINC' + ' i' + '#rain_24_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + 'RAINC' + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
+                $('#' + id + 'RAINC' + ' i' + '#rain_12_value').text("").append(r12)
+                $('#' + id + 'RAINC' + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + 'RAINC' + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + 'RAINC' + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
 
                 //console.log(date);
                 //drawCharts(rain_stations_names_and_ids,labels,values);
@@ -1049,11 +1438,11 @@ function getClimaValuesForDetailCard(id) {
         success: (response) => {
             if (response.data.length > 0) {
                 let date = response.data[0].date;
-                //console.log(`date = ${date}`);
+                console.log(`date = ${date}`);
                 date = lntpn(date);
-                //console.log(`date = ${date}`);
-                $('#' + id + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
-                $('#' + id + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+                console.log(`date = ${date}`);
+                $('#' + id + 'RAINC' + ' i' + '#date_of_installation_label').text("").append('تاریخ نصب ایستگاه').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + 'RAINC' + ' i' + '#date_of_installation_value').text("").append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
             }
         }
     })
@@ -1086,7 +1475,7 @@ function getClimaValues(id, sensor, fa_unit) {
                     $('#' + id + sensor + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
                     $('#' + id + sensor + ' i' + '#rain_12_value').text("").append(r12)
                     $('#' + id + sensor + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
-                    $('#' + id + sensor + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ داده').append("&nbsp&nbsp&nbsp;");
+                    $('#' + id + sensor + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
                     $('#' + id + sensor + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
                     //console.log(date);
                     //drawCharts(rain_stations_names_and_ids,labels,values);
@@ -1116,7 +1505,7 @@ function getClimaValues(id, sensor, fa_unit) {
                     $('#' + id + sensor + ' i' + '#' + sensor + '_min').text("").append("&nbsp&nbsp&nbsp;").append('کمینه').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;سانتیگراد");// 0`${sensor`+->_min
                     $('#' + id + sensor + ' i' + '#' + sensor + '_min_value').text("").append(vn)
                     $('#' + id + sensor + ' i' + '#' + sensor + '_min_unit').text("").append(fa_unit).append("&nbsp&nbsp&nbsp;");
-                    $('#' + id + sensor + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ داده').append("&nbsp&nbsp&nbsp;");
+                    $('#' + id + sensor + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
                     $('#' + id + sensor + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
 
                 }
@@ -1124,11 +1513,8 @@ function getClimaValues(id, sensor, fa_unit) {
         }
     })
 }
-function getClimaLastHoursForDrawingCharts(clima_stations_names_and_ids, sensores) {
-    clima_stations_names_and_ids.map(el => {
-        sensores.map(sensor => {
-            var clima_last_hours;
-            var station_ID = el.id;
+function getClimaLastHoursForDrawingCharts(station_ID, sensor) {
+            let clima_last_hours;
             if (sensor[0] === 'RAINC') {
                 $.ajax({
                     url: '/api/values/climaraintotalsmonths/' + sensor[0].toLowerCase() + '/' + station_ID,
@@ -1189,74 +1575,12 @@ function getClimaLastHoursForDrawingCharts(clima_stations_names_and_ids, sensore
                     }
                 })
             }
-
-        })
-    })
 }
-function getClimaLastHoursForDrawingCharts_old(clima_stations_names_and_ids, sensores) {
-    clima_stations_names_and_ids.map(el => {
-        sensores.map(sensor => {
-            var clima_last_hours;
-            var station_ID = el.id;
-            $.ajax({
-                url: '/api/values/climalasthours/' + sensor[0].toLowerCase() + '/' + station_ID,
-                type: 'GET',
-                dataType: 'json',
-                success: (response) => {
-                    if (response.data) {
-                        if (sensor[0] === 'RAINC') {
-                            rain_total_of_past_months = response.data;
-                            var labels = [];
-                            var values = [];
-                            rain_total_of_past_months.slice(1).map(elm => {//slice(1) for ignoring first item in array(the past year same cuurent month)
-                                if(elm) {
-                                    labels.push(elm[0]);
-                                }
-                            })
-                            rain_total_of_past_months.map(elm => {
-                                if(elm){
-                                    values.push(elm[1]);
-                                }else{
-                                    values.push(-1);
-                                }
-                            })
-                            labels = convertNumsLabelToNamesLabel(labels);
-                            values = calcEachMonth(values);
-                            for( var i = 0; i < values.length; i++){
-                                if ( values[i] === -1) {
-                                    values.splice(i, 1);
-                                    i--;
-                                }
-                            }
-                            drawCharts_c(station_ID, labels, values, sensor[0]);
 
-                        } else {
-                            clima_last_hours = response.data;
-                            var labels = [];
-                            var values = [];
-                            clima_last_hours.map(elm => {
-                                labels.push(elm['sample_time']);
-                            })
-                            clima_last_hours.map(elm => {
-                                values.push(elm['value']);
-                            })
-                            //labels = prepareLabels(labels);
-                            //values = calcEachMonth(values);
-                            // console.log(labels);
-                            // console.log(values);
-                            drawCharts_c(station_ID, labels, values, sensor[0]);
-                        }
-                    }
-                }
-            })
-        })
-    })
-}
 function getClimaStationsNamesAndIDs() {
     var clima_stations_names_and_ids;
-    const sensores = [['TMP', 'c'], ['HUM', '%'], ['PRS', 'mb'], ['WSP', 'm/s'], ['WDR', 'deg'], ['EVP', 'mm'], ['RAD', 'w/m2'], ['RAINC', 'mm']]
-    sensores.map(s => {
-    })
+    const sensores = [['TMP', 'c'], ['HUM', '%'], ['PRS', 'mb'], ['WSP', 'm/s'], ['WDR', 'deg'], ['EVP', 'mm'], ['RAD', 'w/m2'], ['RAINC', 'mm']];
+
     $.ajax({
         url: '/api/stations/clima',
         type: 'GET',
@@ -1270,12 +1594,60 @@ function getClimaStationsNamesAndIDs() {
                 clima_stations_names_and_ids.map(el => {
                     sensores.map(s => {
                         getClimaValues(el.id, s[0], s[1]);
+                        getClimaLastHoursForDrawingCharts(el.id,s);
                     });
+
                 });
-                getClimaLastHoursForDrawingCharts(clima_stations_names_and_ids, sensores);
+
             }
         }
     })
+}
+function refreshRainCard(id,subtype) {
+    let url = '';
+    if(subtype === 'r'){
+        url = '/api/values/rain/' + id + '/' + 'r';
+    }else if(subtype === 'c'){
+        url = '/api/values/rain/' + id+ '/' + 'c';
+    }
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.data.length > 0) {
+                //$("div.card-title  span").text(response.data[2].value);
+                var rt = JSON.stringify(response.data[2].value);
+                var r24 = JSON.stringify(response.data[1].value);
+                var r12 = JSON.stringify(response.data[0].value);
+                rt = lntpn(rt);
+                r24 = lntpn(r24);
+                r12 = lntpn(r12);
+                //let time = response.data[2].sample_time;
+                let date = response.data[2].date;
+                let hour = response.data[2].hour;
+                date = lntpn(date);
+                hour = lntpn(hour);
+                $('#' + id + ' i' + '#rain_total').text("").append("&nbsp&nbsp&nbsp;").append(' تجمیعی').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
+                $('#' + id + ' i' + '#rain_total_value').text("").append(rt)
+                $('#' + id + ' i' + '#rain_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#rain_24').text("").append("&nbsp&nbsp&nbsp;").append(' ۲۴ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[1].value).append("&nbsp&nbsp&nbsp;mm");// 1->rain_24
+                $('#' + id + ' i' + '#rain_24_value').text("").append(r24)
+                $('#' + id + ' i' + '#rain_24_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#rain_12').text("").append("&nbsp&nbsp&nbsp;").append(' ۱۲ ساعته').append("&nbsp&nbsp&nbsp;");//.append(response.data[0].value).append("&nbsp&nbsp&nbsp;mm");// 0 ->rain_12
+                $('#' + id + ' i' + '#rain_12_value').text("").append(r12)
+                $('#' + id + ' i' + '#rain_12_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ داده').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
+            }
+        }
+    })
+}
+function refreshRaincCard(id) {
+}
+function refreshLevelCard(id) {
+}
+function refreshClimaCard(id) {
 }
 let this_js_script = $('script[src*=my_jquery_functions]'); // or better regexp to get the file name..
 let pageType = this_js_script.attr('page_type');
@@ -1322,12 +1694,12 @@ $(document).ready(() => {
             case '7':;
         }
     }
-    setInterval(function(){
-        getRainStationsNamesAndIDs(); // this will run after every 50 minutes
-        getLevelStationsNamesAndIDs();
-        getClimaStationsNamesAndIDs();
-        console.log('***');
-        console.log('after 50 minutes executed')
-        console.log('***');
-    }, 3000000);
+    // setInterval(function(){
+    //     getRainStationsNamesAndIDs(); // this will run after every 50 minutes
+    //     getLevelStationsNamesAndIDs();
+    //     getClimaStationsNamesAndIDs();
+    //     console.log('***');
+    //     console.log('after 50 minutes executed')
+    //     console.log('***');
+    // }, 3000000);
 });

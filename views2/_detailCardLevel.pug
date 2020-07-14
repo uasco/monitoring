@@ -43,7 +43,7 @@ mixin detailCardLevel(stnID,sensor,position)
                                             span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                             .col-md-4
                                                 .md-form.md-outline.datepicker(darktheme='true')
-                                                    input.pdate.form-control-lg(id='pcal1' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                                    input.pdate.form-control-lg(id='cal-amari-start' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
                                 .col-lg-6.text-right
                                     .card
                                         .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
@@ -52,7 +52,7 @@ mixin detailCardLevel(stnID,sensor,position)
                                             span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                             .col-md-4
                                                 .md-form.md-outline.datepicker(darktheme='true')
-                                                    input.pdate.form-control-lg(id='pcal2' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                                    input.pdate.form-control-lg(id='cal-amari-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
                             .row
                                 .col-lg-6
                                     .card
@@ -94,34 +94,10 @@ mixin detailCardLevel(stnID,sensor,position)
                                                     option(value='43200') ۱ &nbspماه
                                 .col-lg-6
                                     h3.card-category(style='display:flex;justify-content: space-around')
-                                        button.btn(onclick='submit()')
+                                        button.btn(onclick='submit_amari()')
                                             i(style='font-size : 20px ') نمایش
-                                        button.btn(id='download-button' onclick='download()')
+                                        button.btn(id='download-button' onclick='download_amari()')
                                             i(style='font-size : 20px ') بارگذاری در فایل
-                    .card(id='report-chart')
-                        .card-header
-                            div(style='text-align:right')
-                                h3.card-category
-                        .card-body
-                            div.chart-area(id='chart-container')
-                                - chart_id = 'CountryChart' + stnID
-                                canvas(id= chart_id)
-                    .card
-                        .card-header.text-right
-                            h4.card-title  Simple Table
-                        .card-body.text-right
-                            .table-responsive(id='table-container')
-                                table.table.tablesorter(id='table' + stnID)
-                                    thead.text-primary
-                                        tr
-                                            th
-                                                | ردیف
-                                            th
-                                                | مقدار
-                                            th
-                                                | تاریخ داده
-                                    tbody
-
                 .col-lg-12(id='standard-report-div')
                     .card
                         .card-header.text-right
@@ -132,6 +108,74 @@ mixin detailCardLevel(stnID,sensor,position)
                         .card-header.text-right
                             h3.card-category گزارش آب منطقه ای :
                             .row
+                                .col-lg-6.text-right
+                                    .card
+                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                            //- h4.card-title تاریخ شروع :
+                                            div
+                                                label(for='cal-mantaghei-start') تاریخ شروع :
+                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            .col-md-4
+                                                .md-form.md-outline.datepicker(darktheme='true')
+                                                    input.pdate.form-control-lg(id='cal-mantaghei-start' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6.text-right
+                                    .card
+                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                            div
+                                                label(for='cal-mantaghei-end') تاریخ پایان :
+                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                            .col-md-4
+                                                .md-form.md-outline.datepicker(darktheme='true')
+                                                    input.pdate.form-control-lg(id='cal-mantaghei-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
+                                .col-lg-6
+                                    h3.card-category(style='display:flex;justify-content: flex-start')
+                                        button.btn(onclick='submit_mantaghei()')
+                                            i(style='font-size : 20px ') نمایش
+                                .col-lg-6
+                                    h3.card-category(style='display:flex;justify-content: flex-start')
+                                        button.btn(id='download-button' onclick='download_mantaghei()')
+                                            i(style='font-size : 20px ') بارگذاری در فایل
+                .card(id='report-chart')
+                    .card-header
+                        div(style='text-align:right')
+                            h3.card-category
+                    .card-body
+                        div.chart-area(id='chart-container')
+                            - chart_id = 'BigCountryChart' + stnID
+                            canvas(id= chart_id)
+                .card(id='mantaghei-table')
+                    .card-header.text-right
+                        //- h4.card-title  Simple Table
+                    .card-body.text-right
+                        .table-responsive(id='mantaghei-table-container')
+                            table.table.tablesorter(id='mantaghei-table' + stnID)
+                                thead.text-primary
+                                    tr
+                                        th
+                                            | ماه
+                                        th
+                                            | روز
+                                        th
+                                            |      ارتفاع آب به سانتیمتر   ساعت ۸:۰۰
+                                        th
+                                            |      ارتفاع آب به سانتیمتر   ساعت ۱۶:۰۰
+                                tbody
+                .card(id='amari-table')
+                    .card-header.text-right
+                        //- h4.card-title  Simple Table
+                    .card-body.text-right
+                        .table-responsive(id='amari-table-container')
+                            table.table.tablesorter(id='amari-table' + stnID)
+                                thead.text-primary
+                                    tr
+                                        th
+                                            | ردیف
+                                        th
+                                            | مقدار
+                                        th
+                                            | تاریخ داده
+                                tbody
+
             div.col-lg-2.text-right
                 div.card.card-chart
                     div.card-header.rain
@@ -199,7 +243,7 @@ mixin detailCardLevel(stnID,sensor,position)
             return isValid;
         }
         function resetCanvas () {
-            let chID='CountryChart' + #{stnID};
+            let chID='BigCountryChart' + #{stnID};
             console.log(chID);
             console.log($('#'+chID));
             $('#'+chID).remove(); // this is my <canvas> element
@@ -210,28 +254,31 @@ mixin detailCardLevel(stnID,sensor,position)
             let tableID = 'Table' + #{stnID};
             console.log(tableID);
             console.log($('#' + tableID));
-            //$('#' + tableID).remove(); // this is my <table> element
-            $('#table' + #{stnID}+' tbody').remove();
-            //$('.chartjs-size-monitor').remove();
-            $('#table' + #{stnID}).append('<tbody></tbody>');
+
+            $('#amari-table' + #{stnID} + ' tbody').remove();
+            $('#amari-table' + #{stnID}).append('<tbody></tbody>');
+
+            $('#mantaghei-table' + #{stnID} + ' tbody').remove();
+            $('#mantaghei-table' + #{stnID}).append('<tbody></tbody>');
         }
         let amariReport = true;
         let standardReport = false;
         let mantagheiReport = false;
-        let totalRainBool = true;
-        let absoluteRainBool = false;
-        let rateRainBool = false;
-        let barDisplayBool = true;
-        let lineDisplayBool = false;
         let selectedPeriod = '';
         $('#standard-report-div').hide();
         $('#mantaghei-report-div').hide();
 
-        // $('#report-chart').hide();
-        // $('#report-table').hide();
+        $('#report-chart').hide();
+        $('#amari-table').hide();
+        $('#mantaghei-table').hide();
         $('#download-button').addClass("disabled");
 
         $('#amari-report-input').on("change", function () {
+            resetCanvas();
+            resetTable();
+            $('#report-chart').hide();
+            $('#amari-table').hide();
+            $('#mantaghei-table').hide();
             amariReport = true;
             standardReport = false;
             mantagheiReport = false;
@@ -240,6 +287,11 @@ mixin detailCardLevel(stnID,sensor,position)
             $('#mantaghei-report-div').hide();
         });
         $('#standard-report-input').on("change", function () {
+            resetCanvas();
+            resetTable();
+            $('#report-chart').hide();
+            $('#amari-table').hide();
+            $('#mantaghei-table').hide();
             amariReport = false;
             standardReport = true;
             mantagheiReport = false;
@@ -248,6 +300,11 @@ mixin detailCardLevel(stnID,sensor,position)
             $('#mantaghei-report-div').hide();
         });
         $('#mantaghei-report-input').on("change", function () {
+            resetCanvas();
+            resetTable();
+            $('#report-chart').hide();
+            $('#amari-table').hide();
+            $('#mantaghei-table').hide();
             amariReport = false;
             standardReport = false;
             mantagheiReport = true;
@@ -255,41 +312,6 @@ mixin detailCardLevel(stnID,sensor,position)
             $('#amari-report-div').hide();
             $('#standard-report-div').hide();
 
-        });
-        $('#rate-rain-input').on("change", function () {
-            rateRainBool = true;
-            totalRainBool = false;
-            absoluteRainBool = false;
-            barDisplayBool = true;
-            lineDisplayBool = false;
-            $('#4').addClass("disabled");
-            $('#4').removeClass("active");
-            $('#3').addClass("active");
-        });
-        $('#absolute-rain-input').on("change", function () {
-            absoluteRainBool = true;
-            totalRainBool = false;
-            rateRainBool = false;
-            barDisplayBool = true;
-            lineDisplayBool = false;
-            $('#4').addClass("disabled");
-            $('#4').removeClass("active");
-            $('#3').addClass("active");
-        });
-        $('#total-rain-input').on("change", function () {
-            totalRainBool = true;
-            absoluteRainBool = false;
-            rateRainBool = false;
-            $('#4').removeClass("disabled");
-        });
-
-        $('#bar-display-input').on("change", function () {
-            barDisplayBool = true;
-            lineDisplayBool = false;
-        });
-        $('#line-display-input').on("change", function () {
-            lineDisplayBool = true;
-            barDisplayBool = false;
         });
 
         $('#start-time-input').pickatime({
@@ -304,26 +326,48 @@ mixin detailCardLevel(stnID,sensor,position)
         let endTime = '';
         let startTimeIsCorrect=false;
         let endTimeIsCorrect=false;
-        let objCal1 = new AMIB.persianCalendar('pcal1', {
+        let obj_cal_amari_start = new AMIB.persianCalendar('cal-amari-start', {
                 onchange: function (pdate) {
                     if (pdate) {
                         //- alert(pdate.join('/'));
                         startDate = pdate.join('-');
-                    }
-                    else {
+                    } else {
                         startDate = '';
                         alert('تاریخ واردشده نادرست است');
                     }
                 }
             }
         );
-        let objCal2 = new AMIB.persianCalendar('pcal2', {
+        let obj_cal_amari_end = new AMIB.persianCalendar('cal-amari-end', {
                 onchange: function (pdate) {
                     if (pdate) {
                         //- alert(pdate.join('/'));
                         endDate = pdate.join('-');
+                    } else {
+                        endDate = '';
+                        alert('تاریخ واردشده نادرست است');
                     }
-                    else {
+                }
+            }
+        );
+        let obj_cal_mantaghei_start = new AMIB.persianCalendar('cal-mantaghei-start', {
+                onchange: function (pdate) {
+                    if (pdate) {
+                        //- alert(pdate.join('/'));
+                        startDate = pdate.join('-');
+                    } else {
+                        startDate = '';
+                        alert('تاریخ واردشده نادرست است');
+                    }
+                }
+            }
+        );
+        let obj_cal_mantaghei_end = new AMIB.persianCalendar('cal-mantaghei-end', {
+                onchange: function (pdate) {
+                    if (pdate) {
+                        //- alert(pdate.join('/'));
+                        endDate = pdate.join('-');
+                    } else {
                         endDate = '';
                         alert('تاریخ واردشده نادرست است');
                     }
@@ -370,7 +414,7 @@ mixin detailCardLevel(stnID,sensor,position)
         //     console.log('first ===' + selectedPeriod);
         // });
 
-        function  submit() {
+        function  submit_amari() {
             if((startDate=='') ||($('#pcal1').val()=="")) {
                 alert('لطفا تاریخ شروع را انتخاب کنید!');
                 return;
@@ -393,23 +437,38 @@ mixin detailCardLevel(stnID,sensor,position)
             }
             resetCanvas();
             resetTable();
-        //displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+            //displayLevelAmariReport(#{stnID},'1399-03-07','1399-03-09','01:02','12:00','60');
+            displayLevelAmariReport(#{stnID},startDate,endDate,startTime,endTime,selectedPeriod);
             periodLabel = periodLabels[selectedPeriod];
             // switch(selectedPeriod){
             //     case (30): periodLabel
             // }
-            if(totalRainBool)
-                chartLabel='باران تجمیعی';
-            if (absoluteRainBool)
-                chartLabel = 'میزان بارش';
-            if (rateRainBool)
-                chartLabel = 'شدت بارش';
+
+                chartLabel='ارتفاع آب';
+
             chartLabel=chartLabel + " در بازه های ";
             chartLabel=chartLabel + periodLabel;
             $('#report-chart'+' h3').text("").append(chartLabel);
         }
-        function  download() {
-        //getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            getExcelRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,startDate,endDate,startTime,endTime,selectedPeriod);
+        function  download_amari() {
+        //getExcelRainAmariReport(#{stnID},'1399-03-07','1399-03-09','01:02','12:00','60');
+            getExcelLevelAmariReport(#{stnID},startDate,endDate,startTime,endTime,selectedPeriod);
+        }
+        function submit_mantaghei() {
+            if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
+                alert('لطفا تاریخ شروع را انتخاب کنید!');
+                return;
+            }
+            if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
+                alert('لطفا تاریخ پایان را انتخاب کنید!');
+                return;
+            }
+            resetCanvas();
+            resetTable();
+            displayLevelMantagheireport(#{stnID}, startDate, endDate);
+            chartLabel = 'ارتفاع آب';
+            $('#report-chart' + ' h3').text("").append(chartLabel);
+        }
+        function download_mantaghei() {
+            getExcelLevelMantagheiReport(#{stnID}, startDate, endDate);
         }

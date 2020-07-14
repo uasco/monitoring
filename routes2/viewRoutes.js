@@ -19,7 +19,7 @@ router.get('/', authController.isLoggedIn, viewsController.getConfigForm);
 //router.get('/overview/:codeview', authController.isLoggedIn, viewsController.getOverView);
 router.post('/overview/', authController.isLoggedIn, viewsController.getOverView);
 
-router.get('/detail/:stnid-:sensor-:position-:slideindex', authController.isLoggedIn,  viewsController.getDetail);
+router.get('/detail/:stnid-:sensor-:position-:subtype-:slideindex', authController.isLoggedIn,  viewsController.getDetail);
 
 router.post('/settings/', authController.isLoggedIn, viewsController.getSettings);
 /////router.get('/tour/:slug', authController.isLoggedIn, viewsController.getStation);

@@ -46,33 +46,37 @@ const rain_alarm8_height= process.env.RAIN_ALARM8_HEIGHT;
 const level_alarm_height_diff= process.env.LEVEL_ALARM_HEIGHT_DIFF;
 const level_flood_sample_count= process.env.LEVEL_FLOOD_SAMPLE_COUNT;
 
+const start_stop_rain_period= process.env.START_STOP_RAIN_PERIOD;
 
 async  function setStationStatus(stnType,stnID,statusType,status) {
+    let date = new Date(); //ex 2019-01-18T16:26:44.982Z
+    let offset = - date.getTimezoneOffset();
+    date.setMinutes(date.getMinutes()+offset);
     if(stnType==='rain'){
         if(statusType==='start'){
-            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_start_time:Date()}});
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_start_time:date}});
         }
         if(statusType==='stop'){
-            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_stop_time:Date()}});
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_stop_time:date}});
         }
         if(statusType==='alarm1'){
             if(status)
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_start_time:Date()}});
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_start_time:date}});
             else
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_stop_time:Date()}});
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_stop_time:date}});
         }
         if(statusType==='alarm8'){
             if(status)
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_start_time:Date()}});
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_start_time:date}});
             else
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_stop_time:Date()}});
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_stop_time:date}});
         }
     }else if(stnType==='level'){
         if(statusType==='flood'){
             if(status)
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_start_time:Date()}});
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_start_time:date}});
             else
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_stop_time:Date()}});
+                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_stop_time:date}});
         }
     }
 }
@@ -83,7 +87,7 @@ async function enoughSpentTimeAfterRainStop(stnID,statusType) {
     let diff = Math.abs(res.rain_start_time - cd);
     let diffh = Math.ceil(diff / (1000 * 60 ));
     //console.log(`diffh = ${diffh}` );
-    if(diffh >= 4 ){
+    if(diffh >= start_stop_rain_period ){
         return true ;
     }else{
         return false;
@@ -117,37 +121,25 @@ async function isFloodStoped(stnID,statusType) {
 }
 exports.getRainStartStatus = catchAsync(async (req, res, next) => {
     // console.log(`url === ${req.url.split('/')[1]}`);
-    const rain_rainc = req.url.split('/')[1];
+    const rain_rainrc_rainc = req.url.split('/')[1];
     const client_id = req.params.id * 1;
     let channelIndexRainTotal = undefined;
-    if(rain_rainc === 'rain')
+    if(rain_rainrc_rainc === 'rain')
         channelIndexRainTotal = channel_index_rain_total;
-    else if(rain_rainc === 'rainc')
+    else if(rain_rainrc_rainc === 'rainrc' )
+        channelIndexRainTotal = channel_index_rainc_total;
+    else if(rain_rainrc_rainc === 'rainc' )
         channelIndexRainTotal = channel_index_rainc_total;
 
-    let result = await Status.getRainStartStatus(client_id,channelIndexRainTotal);
+    let result = await Status.getRainStartStatus2(client_id,channelIndexRainTotal,start_stop_rain_period);
     let resultJson = JSON.stringify(result);
     resultJson = JSON.parse(resultJson);
 
-    let st = await getStatus(client_id,'rain-start');
+    //let st = await getStatus(client_id,'rain-start');
     if(result===1){//it's raining
-        resultJson =1;
-        if( !st) //rain has not started already
-            await setStationStatus('rain',client_id,'start',true);
-    }else if(result===0){//it's not raining'
-
-        if( !st) {//rain has not started already
+            resultJson =1;
+    }else if(result===0){//it's not raining
             resultJson = 0;
-        }else{//rain has started already
-            let enough=await enoughSpentTimeAfterRainStop(client_id);
-            if (enough) {
-                resultJson = 0;//rain stopped and enaugh  spent after stop
-                await setStationStatus('rain', client_id, 'stop', false);
-                //rain_start is still true and should change to false and also rain_stop_time sholud be written
-            } else {
-                resultJson = 1;//rain stopped but enaugh time still does not spend after stop
-            }
-        }
     }
     let apiResult = {};
     apiResult.data = resultJson;
@@ -155,25 +147,27 @@ exports.getRainStartStatus = catchAsync(async (req, res, next) => {
 });
 exports.getRainAlarm1Status = catchAsync(async (req, res) => {
     const client_id = req.params.id * 1;
-    const rain_rainc = req.url.split('/')[1];
+    const rain_rainrc_rainc = req.url.split('/')[1];
     let channelIndexRainTotal = undefined;
-    if(rain_rainc === 'rain')
+    if(rain_rainrc_rainc === 'rain')
         channelIndexRainTotal = channel_index_rain_total;
-    else
+    else if(rain_rainrc_rainc === 'rainrc' )
+        channelIndexRainTotal = channel_index_rainc_total;
+    else if(rain_rainrc_rainc === 'rainc' )
         channelIndexRainTotal = channel_index_rainc_total;
     let result = await Status.getRainAlarmStatus(client_id,channelIndexRainTotal,rain_alarm1_period,rain_alarm1_height);
     let resultJson = JSON.stringify(result);
     resultJson = JSON.parse(resultJson);
 
-    let st = await getStatus(client_id,'alarm1');
+    // let st = await getStatus(client_id,'alarm1');
     if(result===1){//shower
         resultJson =1;
-        if( !st) //no shower already
-            await setStationStatus('rain',client_id,'alarm1',true);
+        // if( !st) //no shower already
+        //     await setStationStatus('rain',client_id,'alarm1',true);
     }else if(result===0){//No shower
         resultJson = 0;//rain stopped and enaugh  spent after stop
-        if(st) //shower already
-            await setStationStatus('rain', client_id, 'alarm1', false);
+        // if(st) //shower already
+        //     await setStationStatus('rain', client_id, 'alarm1', false);
     }
     let apiResult = {};
     apiResult.data = resultJson;
@@ -181,25 +175,29 @@ exports.getRainAlarm1Status = catchAsync(async (req, res) => {
 });
 exports.getRainAlarm8Status = catchAsync(async (req, res) => {
     const client_id = req.params.id * 1;
-    const rain_rainc = req.url.split('/')[1];
+    const rain_rainrc_rainc = req.url.split('/')[1];
     let channelIndexRainTotal = undefined;
-    if(rain_rainc === 'rain')
+
+    if(rain_rainrc_rainc === 'rain')
         channelIndexRainTotal = channel_index_rain_total;
-    else
+    else if(rain_rainrc_rainc === 'rainrc' )
         channelIndexRainTotal = channel_index_rainc_total;
+    else if(rain_rainrc_rainc === 'rainc' )
+        channelIndexRainTotal = channel_index_rainc_total;
+
     let result = await Status.getRainAlarmStatus(client_id,channelIndexRainTotal,rain_alarm8_period,rain_alarm8_height);
     let resultJson = JSON.stringify(result);
     resultJson = JSON.parse(resultJson);
 
-    let st = await getStatus(client_id,'alarm8');
+    // let st = await getStatus(client_id,'alarm8');
     if(result===1){//shower
         resultJson =1;
-        if( !st) //no shower already
-            await setStationStatus('rain',client_id,'alarm8',true);
+        // if( !st) //no shower already
+        //     await setStationStatus('rain',client_id,'alarm8',true);
     }else if(result===0){//No shower
         resultJson = 0;//rain stopped and enaugh  spent after stop
-        if(st) //shower already
-            await setStationStatus('rain', client_id, 'alarm8', false);
+        // if(st) //shower already
+        //     await setStationStatus('rain', client_id, 'alarm8', false);
     }
     let apiResult = {};
     apiResult.data = resultJson;

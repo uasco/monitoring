@@ -172,3 +172,25 @@ END
 -----
 call uasco.mantaghei_report(103,24,'2020-06-21 00:00:00','2020-06-26 23:59:59');
 -----
+
+
+CREATE DEFINER=`root`@`%` PROCEDURE `detect_rain_start2`(in cl_id int,in ch_index int ,in difftime int,out result bool)
+BEGIN
+	declare  last_val,pre_last_val decimal(8,2);
+    declare last_time, pre_last_time datetime;
+	select value from(select * from sample_values where client_id=cl_id and channel_index=ch_index order by sample_time desc limit 2) table_alias order by sample_time desc limit 1 into last_val;
+	select value from(select * from sample_values where client_id=cl_id and channel_index=ch_index order by sample_time desc limit 2) table_alias order by sample_time asc limit 1 into pre_last_val;
+    select value , sample_time from sample_values where client_id=cl_id and channel_index=ch_index order by sample_time desc limit 1 into last_val , last_time;
+    set pre_last_time = DATE_SUB(last_time, INTERVAL difftime MINUTE);
+    select value , sample_time from sample_values where client_id=cl_id and channel_index=ch_index and sample_time <= pre_last_time order by sample_time desc limit 1 into pre_last_val , pre_last_time;
+
+   if (last_val-pre_last_val)>=0.15 then
+      set result = true;
+	else
+	  set result = false;
+   end if;
+END
+
+---
+call detect_rain_start2(114,24,120,@result);select @result
+---

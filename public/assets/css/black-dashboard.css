@@ -17093,10 +17093,10 @@ table.tablesorter thead tr .headerSortDown {
 
 .fixed-plugin .fa-cog {
   color: #ffffff;
-  padding: 10px;
+  padding: 5px;
   border-radius: 0 0 6px 6px;
   width: auto;
-  font-size: 6.5vh;
+  font-size: 4.5vh;
 }
 
 .fixed-plugin .dropdown-menu {
@@ -20035,6 +20035,12 @@ Copyright (c) 2015 Daniel Eden
   margin-bottom: 10px;
   box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
 }
+/* ///// */
+.rain {
+  background: #3e4dd5;
+}
+
+/* ///// */
 
 .card label {
   color: rgba(255, 255, 255, 0.6);

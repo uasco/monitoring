@@ -26,6 +26,28 @@ router
         authController.restrictTo('admin', 'lead-guide')
     );
 router
+    .route('/rainrc/start/:id')
+    .get(statusController.getRainStartStatus)//without cache
+    //.get(cacheController.rainValuesFlatCacheMiddleWare, statusController.getRainStartStatus)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/rainrc/alarm1/:id')
+    .get(statusController.getRainAlarm1Status)//without cache
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/rainrc/alarm8/:id')
+    .get(statusController.getRainAlarm8Status)//without cache
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
     .route('/rainc/start/:id')
     .get(statusController.getRainStartStatus)//without cache
     //.get(cacheController.rainValuesFlatCacheMiddleWare, statusController.getRainStartStatus)

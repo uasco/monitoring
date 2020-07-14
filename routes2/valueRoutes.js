@@ -15,7 +15,7 @@ const router = express.Router();
 
 //////////////////////////////////////////////////////////////////B
 router
-  .route('/rain/:id')
+  .route('/rain/:id/:subtype')
   //.get(valuesController.getRainStationRainValues)//without cache
   .get(cacheController.rainValuesFlatCacheMiddleWare, valuesController.getRainStationRainValues)
   .post(
@@ -23,7 +23,10 @@ router
     authController.restrictTo('admin', 'lead-guide')
   );
 router
-  .route('/raintotalsmonths/:id')
+    .route('/allrain/')
+    .get(valuesController.getAllRainStationsRainValues)
+router
+  .route('/raintotalsmonths/:id/:subtype')
   //.get(valuesController.getRainTotalsOfPastMonths)//without cache
   .get(cacheController.rainTotalsMonthsFlatCacheMiddleWare, valuesController.getRainTotalsOfPastMonths)
   .post(
@@ -74,6 +77,36 @@ router
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
   );
+router
+    .route('/levelamarireport/:id/:sd/:ed/:sh/:eh/:p')
+    //.get(valuesController.getRainTotalsOfPastMonths)//without cache
+    .get(valuesController.getLevelAmariReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/excellevelamarireport/:id/:sd/:ed/:sh/:eh/:p')
+    .get(valuesController.getExcelLevelAmariReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/levelmantagheireport/:id/:sd/:ed')
+    //.get(valuesController.getRainTotalsOfPastMonths)//without cache
+    .get(valuesController.getLevelMantagheiReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
+    .route('/excellevelmantagheireport/:id/:sd/:ed')
+    .get(valuesController.getExcelLevelMantagheiReport)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
 router
   .route('/clima/*/:id')
   //.get(valuesController.getStationValues)//without cache

@@ -48,3 +48,7 @@ ul
   each i in range(1,20)
   li range is at #{i}
 */
+
+exports.round = function (value, decimals) {
+    return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
+}

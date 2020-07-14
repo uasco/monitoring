@@ -1,24 +1,40 @@
 mixin raincard(stn)
     script.
         $(document).ready(function () {
-            checkRainStart(`#{stn.id}`,'false');
+            if (`#{stn.subtype}` === 'r')
+                setTimeout(function() { checkRainStart(`#{stn.id}`,'false'); }, 5000);
+            else if (`#{stn.subtype}` === 'c'){
+                setTimeout(function() { checkRainStart(`#{stn.id}`,'true'); }, 5000);
+            }
         })
-        // setTimeout(() =>
-        //     checkRainStart(`#{stn.id}`),1);
-        var chackAlarm = setInterval(function () {
-            checkRainStart(`#{stn.id}`,'false');
 
-        }, 30000);
+        if (`#{stn.subtype}` === 'r'){
+            var chackAlarm = setInterval(function () {
+                checkRainStart(`#{stn.id}`, 'false');
+            }, 180000);//180000
+        }else if (`#{stn.subtype}` === 'c') {
+            var chackAlarm = setInterval(function () {
+                checkRainStart(`#{stn.id}`, 'true');
+            }, 180000);//180000
+        }
+
+        var refreshValues = setInterval(function () {
+            getRainValues(`#{stn.id}`, `#{stn.subtype}`);
+            getRainTotalOfEndOfPastMonthsForDrawingCharts(`#{stn.id}`, `#{stn.subtype}`);
+        }, 1500000);
+
+
     div.col-lg-3.text-right
         // - dest = 'location.href=' + '"' + '/detail/' + stn.id + '-' + 'NAN' + '"' +  ';'
-        div.card.card-chart(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'rain' + '"' + ')' style='cursor: pointer;')
-            div.card-header.rain
-                i.far.fa-sun-cloud.fa-pull-left.fa-3x
+        - i = stn.id
+        div.card.card-chart(id= i )
+            div.card-header.rain(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'rain' + '"' + ',' + '"' + stn.subtype + '"' +')' style='cursor: pointer;')
+                i.far.fa-sun-cloud.fa-pull-left.fa-3x(id='icon-status')
                 //- i.far.fa-cloud-rain.fa-pull-left.fa-3x
                 //- i.far.fa-cloud-showers-heavy.fa-pull-left.fa-3x
                 h3.card-category  #{stn.position}
-                - i = stn.id
-                h4.card-title(id= i )
+
+                h4.card-title
                     //- i.far.fa-umbrella.fa-fw
                     //- i.livicon(data-n='umbrella')
                     i.card-label(id='rain_status')
@@ -65,7 +81,7 @@ mixin raincard(stn)
                     canvas(id= chart_id)
 mixin levelcard(stn)
     div.col-lg-3.text-right
-        div.card.card-chart(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'level' + '"' + ')' style='cursor: pointer;')
+        div.card.card-chart
             script.
                 $(document).ready(function () {
                     checkFloodStatus(`#{stn.id}`);
@@ -73,8 +89,8 @@ mixin levelcard(stn)
                 var chackAlarm = setInterval(function () {
                     checkFloodStatus(`#{stn.id}`);
 
-                }, 30000);
-            div.card-header.level
+                }, 180000);
+            div.card-header.level(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'level' + '"' +')' style='cursor: pointer;')
                 i.fal.fa-water.fa-fw.fa-pull-left.fa-3x
                 h3.card-category  #{stn.position}
                 - i = stn.id
@@ -106,24 +122,29 @@ mixin levelcard(stn)
 mixin climacard(stn , sensor)
     div.col-md-3.text-right
         if (sensor[0] === 'RAINC')
-            div.card.card-chart(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'clima' + '"' + ')' style='cursor: pointer;')
+            - i = stn.id + sensor[0]
+            div.card.card-chart(id= i )
                 script.
                     $(document).ready(function () {
-                        checkRainStart(`#{stn.id}`,'true');
+                        setTimeout(function() { checkRainStartFromClima(`#{stn.id}`); }, 5000);
                     })
                     // setTimeout(() =>
                     //     checkRainStart(`#{stn.id}`),1);
                     var chackAlarm = setInterval(function () {
-                        checkRainStart(`#{stn.id}`,'true');
+                        checkRainStartFromClima(`#{stn.id}`);
 
-                    }, 30000);
-                div.card-header.clima
-                    i.far.fa-sun-cloud.fa-pull-left.fa-3x
+                    }, 180000);
+                    var s = ['RAINC', 'mm'];
+                    var refreshValues = setInterval(function () {
+                        getClimaValues(`#{stn.id}`, 'RAINC' , 'mm');//- getClimaValues(id, sensor, fa_unit)
+                        getClimaLastHoursForDrawingCharts(`#{stn.id}`, s); //- getClimaLastHoursForDrawingCharts(station_ID, sensor)
+                    }, 1500000);
+                div.card-header.clima(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'climar' + '"' +')' style='cursor: pointer;')
+                    i.far.fa-sun-cloud.fa-pull-left.fa-3x(id='icon-status')
                     //- i.far.fa-cloud-rain.fa-pull-left.fa-3x
                     //- i.far.fa-cloud-showers-heavy.fa-pull-left.fa-3x
                     h3.card-category  #{sensor[1]}
-                    - i = stn.id + sensor[0]
-                    h4.card-title(id= i )
+                    h4.card-title
                         //i.tim-icons.icon-bell-55.text-primary
                         i.fas.fa-umbrella.fa-fw
                         i.card-label(id='rain_status')
@@ -166,7 +187,7 @@ mixin climacard(stn , sensor)
                         canvas(id= chart_id)
         else
             div.card.card-chart
-                div.card-header.clima
+                div.card-header.clima(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'climax' + '"' +')' style='cursor: pointer;')
                     if(sensor[0] === 'TMP')
                         i.far.fa-temperature-low.fa-fw.fa-pull-left.fa-3x
                     if(sensor[0] === 'WSP')

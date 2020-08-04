@@ -6587,7 +6587,7 @@ footer.page-footer {
   .list-group a:hover,
   .list-group button:hover {
     transition: 0.5s; }
-
+/*
 table th {
   font-size: 0.9rem;
   font-weight: 400; }
@@ -6645,7 +6645,7 @@ table.table-sm td {
 .table-responsive-lg > .table-bordered,
 .table-responsive-xl > .table-bordered {
   border-top: 1px solid #dee2e6; }
-
+*/
 /*
 .navbar {
   &.fixed-top,

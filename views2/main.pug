@@ -24,13 +24,13 @@ block sidebar
                                         each stn in rStations
                                             div(style='display:flex;justify-content:flex-start;align-items:baseline')
                                                 span &nbsp&nbsp&nbsp&nbsp
-                                                input.mycheck-r(type='checkbox' id=stn.id )
+                                                input.mycheck-r(type='checkbox' id='r-' + stn.id )
                                                 span &nbsp&nbsp
                                                 label.mylabel(id=stn.id) #{stn.position}
                                         each stn in cStations
                                             div(style='display:flex;justify-content:flex-start;align-items:baseline')
                                                 span &nbsp&nbsp&nbsp&nbsp
-                                                input.mycheck-rc(type='checkbox' id=stn.id )
+                                                input.mycheck-rc(type='checkbox' id='rc-' + stn.id )
                                                 span &nbsp&nbsp
                                                 label.mylabel(id=stn.id) #{stn.position}
                                 if(typ.id === 'level')
@@ -38,7 +38,7 @@ block sidebar
                                         each stn in lStations
                                             div(style='display:flex;justify-content:flex-start;align-items:baseline')
                                                 span &nbsp&nbsp&nbsp&nbsp
-                                                input.mycheck-l(type='checkbox' id=stn.id )
+                                                input.mycheck-l(type='checkbox' id='l-' + stn.id )
                                                 span &nbsp&nbsp
                                                 label.mylabel(id=stn.id) #{stn.position}
                                 if(typ.id === 'clima')
@@ -46,7 +46,7 @@ block sidebar
                                         each stn in cStations
                                             div(style='display:flex;justify-content:flex-start;align-items:baseline')
                                                 span &nbsp&nbsp&nbsp&nbsp
-                                                input.mycheck-c(type='checkbox' id=stn.id )
+                                                input.mycheck-c(type='checkbox' id='c-' + stn.id )
                                                 span &nbsp&nbsp
                                                 label.mylabel(id=stn.id) #{stn.position}
         ul.nav

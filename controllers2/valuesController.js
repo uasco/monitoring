@@ -186,16 +186,17 @@ exports.getRainAmariReport = catchAsync(async (req, res, next) => {
     let minutes = my_date.subtract_times(endDate,startDate,endHour,startHour);
     //console.log(`minutes ========== ${minutes}`);
     let rainAmariReport=undefined;
-    console.log(`clima bool == ${clima}`);
-    console.log(`channel_index_rainc_total == ${channel_index_rainc_total}`);
-    console.log(`channel_index_rain_total == ${channel_index_rain_total}`);
+    // console.log(`clima bool == ${clima}`);
+    // console.log(`channel_index_rainc_total == ${channel_index_rainc_total}`);
+    // console.log(`channel_index_rain_total == ${channel_index_rain_total}`);
+
     if(clima=='true')
             rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rainc_total,startTime,endTime,period );
     else
             rainAmariReport = await Values.getRainAmariReport(client_id, channel_index_rain_total,startTime,endTime,period );
     var resultJson = JSON.stringify(rainAmariReport);
-    console.log("new pars:::::::::::::::");
-    console.log(resultJson);
+    // console.log("new pars:::::::::::::::");
+    // console.log(resultJson);
     resultJson = JSON.parse(resultJson);
     /*
     [
@@ -357,24 +358,24 @@ exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
         el['value']=values[i];
     })
     const workbook = new Excel.Workbook();
-    workbook.creator = 'Justin Williamson';
-        workbook.lastModifiedBy = 'Justin Williamson';
+    // workbook.creator = 'Justin Williamson';
+    //     workbook.lastModifiedBy = 'Justin Williamson';
         workbook.created = new Date();
         workbook.modified = new Date();
         workbook.date1904 = true;
     // (optional) - Freeze the header
-    workbook.views = [
-       {
-           state: 'frozen',
-           ySplit: 1,
-       },
-    ];
+    // workbook.views = [
+    //    {
+    //        state: 'frozen',
+    //        ySplit: 1,
+    //    },
+    // ];
     const worksheet = workbook.addWorksheet(req.body.sheetName || 'Sheet 1');
 
-    worksheet.columns = [
-       { header: 'sample_time', key: 'sample_time', width: 18, outlineLevel: 1 },
-       { header: 'value', key: 'value', width: 10 }
-    ];
+    // worksheet.columns = [
+    //    { header: 'sample_time', key: 'sample_time', width: 18, outlineLevel: 1 },
+    //    { header: 'value', key: 'value', width: 10 }
+    // ];
     switch(rainType){
         case 'total':
             worksheet.columns = [
@@ -395,14 +396,14 @@ exports.getExcelRainAmariReport = catchAsync(async (req, res, next) => {
             ];
             break;
     }
-
+    console.log(`worksheet.columns = ${worksheet.columns}`);
          // Add the row data
     let rows = [];
     resultJson.map(row => {
         rows.push(row);
     })
     worksheet.addRows(rows);
-
+    console.log(`rows = ${JSON.stringify(rows)}`);
     // Format the header text
     worksheet.getRow(1).font = {
         name: 'Arial Black',
@@ -1442,4 +1443,695 @@ exports.getClimaRainTotalsOfPastMonths = catchAsync(async (req, res, next) => {
 
     //send JSON to Express
     res.json(apiResult);//{"data":[{"value":23.9,"sample_time":"07:54:39, 6 اسفند 1398"},{"value":23.9,"sample_time":"05:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"03:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"01:54:40, 6 اسفند 1398"},{"value":23.9,"sample_time":"23:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"21:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"19:54:41, 5 اسفند 1398"},{"value":23.9,"sample_time":"17:54:40, 5 اسفند 1398"},{"value":23.9,"sample_time":"15:54:41, 5 اسفند 1398"}]}
+});
+exports.getClimaAmariReport = catchAsync(async (req, res, next) => {
+
+    console.log('Post a Customer: ' + JSON.stringify(req.body));
+
+    let data = JSON.stringify(req.body);
+    data = JSON.parse(data);
+
+    const client_id = data["stationID"] * 1;
+    const startDate = data["startDate"];
+    const endDate = data["endDate"];
+    const startHour = data["startTime"];
+    const endHour = data["endTime"];
+    const period = data["period"];
+    let sensors = JSON.stringify(data["sensors"]);
+    sensors = JSON.parse(sensors);
+
+    let sensors_indexes = {'tmp':'0','wsp':'0','hum':'0','evp':'0','wdr':'0','rad':'0','prs':'0'};
+
+    if(sensors['tmp']=='true')
+        sensors_indexes['tmp']= channel_index_tmp_l;
+
+    if(sensors['wsp']=='true')
+        sensors_indexes['wsp']= channel_index_wsp_l;
+
+    if(sensors['hum']=='true')
+        sensors_indexes['hum']= channel_index_hum_l;
+
+    if(sensors['evp']=='true')
+        sensors_indexes['evp']= channel_index_evp_l;
+
+    if(sensors['wdr']=='true')
+        sensors_indexes['wdr']= channel_index_wdr_l;
+
+    if(sensors['rad']=='true')
+        sensors_indexes['rad']= channel_index_rad_l;
+
+    if(sensors['prs']=='true')
+        sensors_indexes['prs']= channel_index_prs_l;
+
+    // console.log( '### ' + sensors_indexes );
+
+    let startTime = startDate+ ' ' + startHour;
+    let endTime = endDate+ ' ' + endHour;
+
+    let climaAmariReport=undefined;
+    console.log(`befor call: ${client_id}, ${sensors_indexes}, ${startTime},  ${endTime},   ${period}  `);
+    climaAmariReport = await Values.getClimaAmariReport(client_id, sensors_indexes,startTime,endTime,period );
+
+    var resultJson = JSON.stringify(climaAmariReport);
+    resultJson = JSON.parse(resultJson);
+
+    resultJson = resultJson[0];
+
+
+    var resultJson = JSON.stringify(resultJson);
+    resultJson = JSON.parse(resultJson);
+
+
+    for(let i=0;i<resultJson.length;i++){
+        resultJson[i]['sample_time']=myDate.convert_gdate_to_jdate(resultJson[i]['sample_time']);
+    }
+
+    var resultJson = JSON.stringify(resultJson);
+
+
+    var apiResult = {};
+
+    //add our JSON results to the data table
+    //console.log(resultJson);
+    apiResult.data = resultJson;
+
+    //send JSON to Express
+    res.json(apiResult);
+
+
+});
+exports.getExcelClimaAmariReport = catchAsync(async (req, res, next) => {
+    //console.log('Post a Customer: ' + JSON.stringify(req.body));
+    let data = JSON.stringify(req.body);
+    data = JSON.parse(data);
+
+    const client_id = data["stationID"] * 1;
+    const startDate = data["startDate"];
+    const endDate = data["endDate"];
+    const startHour = data["startTime"];
+    const endHour = data["endTime"];
+    const period = data["period"];
+    let sensors = JSON.stringify(data["sensors"]);
+    sensors = JSON.parse(sensors);
+
+    let sensors_indexes = {'tmp':'0','wsp':'0','hum':'0','evp':'0','wdr':'0','rad':'0','prs':'0'};
+
+    if(sensors['tmp']==true)
+        sensors_indexes['tmp']= channel_index_tmp_l;
+
+    if(sensors['wsp']==true)
+        sensors_indexes['wsp']= channel_index_wsp_l;
+
+    if(sensors['hum']==true)
+        sensors_indexes['hum']= channel_index_hum_l;
+
+    if(sensors['evp']==true)
+        sensors_indexes['evp']= channel_index_evp_l;
+
+    if(sensors['wdr']==true)
+        sensors_indexes['wdr']= channel_index_wdr_l;
+
+    if(sensors['rad']==true)
+        sensors_indexes['rad']= channel_index_rad_l;
+
+    if(sensors['prs']==true)
+        sensors_indexes['prs']= channel_index_prs_l;
+
+    // console.log( '### ' + JSON.stringify(sensors_indexes) );
+
+    let startTime = startDate+ ' ' + startHour;
+    let endTime = endDate+ ' ' + endHour;
+
+    let climaAmariReport=undefined;
+
+    console.log(`befor call: ${client_id}, ${sensors_indexes}, ${startTime},  ${endTime},   ${period}  `);
+    climaAmariReport = await Values.getClimaAmariReport(client_id, sensors_indexes,startTime,endTime,period );
+
+    var resultJson = JSON.stringify(climaAmariReport);
+    resultJson = JSON.parse(resultJson);
+
+    resultJson = resultJson[0];
+
+    var resultJson = JSON.stringify(resultJson);
+    resultJson = JSON.parse(resultJson);
+
+    for(let i=0;i<resultJson.length;i++){
+        resultJson[i]['sample_time']=myDate.convert_gdate_to_jdate(resultJson[i]['sample_time']);
+    }
+
+    //var resultJson = JSON.stringify(resultJson);
+
+
+    var apiResult = {};
+
+    // console.log(`resultJson: ${JSON.stringify(resultJson)}`);
+
+
+    //console.log(resultJson);
+
+
+
+
+    let tmp_labels = [];
+    let tmp_values = [];
+    let wsp_labels = [];
+    let wsp_values = [];
+    let hum_labels = [];
+    let hum_values = [];
+    let evp_labels = [];
+    let evp_values = [];
+    let wdr_labels = [];
+    let wdr_values = [];
+    let rad_labels = [];
+    let rad_values = [];
+    let prs_labels = [];
+    let prs_values = [];
+    resultJson.map(el => {
+        if(el['sensor']=='tmp'){
+            tmp_labels.push(el['sample_time']);
+            tmp_values.push(el['value']);
+        }
+        if(el['sensor']=='wsp'){
+            wsp_labels.push(el['sample_time']);
+            wsp_values.push(el['value']);
+        }
+        if(el['sensor']=='hum'){
+            hum_labels.push(el['sample_time']);
+            hum_values.push(el['value']);
+        }
+        if(el['sensor']=='evp'){
+            evp_labels.push(el['sample_time']);
+            evp_values.push(el['value']);
+        }
+        if(el['sensor']=='wdr'){
+            wdr_labels.push(el['sample_time']);
+            wdr_values.push(el['value']);
+        }
+        if(el['sensor']=='rad'){
+            rad_labels.push(el['sample_time']);
+            rad_values.push(el['value']);
+        }
+        if(el['sensor']=='prs'){
+            prs_labels.push(el['sample_time']);
+            prs_values.push(el['value']);
+        }
+    })
+
+    const workbook = new Excel.Workbook();
+    // workbook.creator = 'Justin Williamson';
+    // workbook.lastModifiedBy = 'Justin Williamson';
+    workbook.created = new Date();
+    workbook.modified = new Date();
+    workbook.date1904 = true;
+    // // (optional) - Freeze the header
+    // workbook.views = [
+    //     {
+    //         state: 'frozen',
+    //         ySplit: 1,
+    //     },
+    // ];
+    const worksheet = workbook.addWorksheet(req.body.sheetName || 'Sheet 1');
+
+    //worksheet.columns = [{ header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 }];
+    worksheet.columns = [
+        { header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 },
+        { header: 'دما', key: 'tmp', width: 10 },
+        { header: 'سرعت باد', key: 'wsp', width: 10 },
+        { header: 'رطوبت', key: 'hum', width: 10 },
+        { header: 'تبخیر', key: 'evp', width: 10 },
+        { header: 'جهت باد', key: 'wdr', width: 10 },
+        { header: 'تشعشع', key: 'rad', width: 10 },
+        { header: 'فشارهوا', key: 'prs', width: 10 }
+    ];
+
+    let def_labels = undefined;
+    let spliceIndex = 2;
+    if(tmp_labels.length >0) {
+        def_labels = tmp_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex, 1);
+    if(wsp_labels.length >0) {
+        def_labels = wsp_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(hum_labels.length >0) {
+        def_labels = hum_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(evp_labels.length >0) {
+        def_labels = evp_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(wdr_labels.length >0) {
+        def_labels = wdr_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(rad_labels.length >0) {
+        def_labels = rad_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(prs_labels.length >0) {
+        def_labels = prs_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+
+
+
+
+
+
+    console.log(`worksheet.columns = ${worksheet.columns}`);
+    let result_data = [];
+
+    for(let i=0;i<def_labels.length;i++){
+        let item = {};
+        item['sample_time'] = def_labels[i];
+        if(tmp_values.length >0){
+            item['tmp'] = tmp_values[i];
+        }
+        if(wsp_values.length >0) {
+            item['wsp'] = wsp_values[i];
+        }
+        if(hum_values.length >0){
+            item['hum'] = hum_values[i];
+        }
+        if(evp_values.length >0){
+            item['evp'] = evp_values[i];
+        }
+        if(wdr_values.length >0){
+            item['wdr'] = wdr_values[i];
+        }
+        if(rad_values.length >0){
+            item['rad'] = rad_values[i];
+        }
+        if(prs_values.length >0){
+            item['prs'] = prs_values[i];
+        }
+
+        result_data.push(item);
+    }
+
+    //console.log(`result_data: ${JSON.stringify(result_data)}`);
+    let rows = [];
+    result_data.map(row => {
+        rows.push(row);
+    })
+    worksheet.addRows(rows);
+    // console.log(`rows = ${JSON.stringify(rows)}`);
+    // Format the header text
+    worksheet.getRow(1).font = {
+        name: 'Arial Black',
+        size: 10,
+    };
+
+    const fileName = 'clima-amari-report.xlsx';
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+    const fileBuffer = await workbook.xlsx.writeBuffer()
+    res.send(fileBuffer);
+});
+exports.getClimaMantagheiReport = catchAsync(async (req, res, next) => {
+    let data = JSON.stringify(req.body);
+    data = JSON.parse(data);
+
+    const client_id = data["stationID"] * 1;
+    const startDate = data["startDate"];
+    const endDate = data["endDate"];
+    const period = 1440;
+    let sensors = JSON.stringify(data["sensors"]);
+    sensors = JSON.parse(sensors);
+
+    let sensors_indexes = {'tmp':'0','wsp':'0','hum':'0','evp':'0','wdr':'0','rad':'0','prs':'0'};
+
+    if(sensors['tmp']=='true')
+        sensors_indexes['tmp']= channel_index_tmp_l;
+
+    if(sensors['wsp']=='true')
+        sensors_indexes['wsp']= channel_index_wsp_l;
+
+    if(sensors['hum']=='true')
+        sensors_indexes['hum']= channel_index_hum_l;
+
+    if(sensors['evp']=='true')
+        sensors_indexes['evp']= channel_index_evp_l;
+
+    if(sensors['wdr']=='true')
+        sensors_indexes['wdr']= channel_index_wdr_l;
+
+    if(sensors['rad']=='true')
+        sensors_indexes['rad']= channel_index_rad_l;
+
+    if(sensors['prs']=='true')
+        sensors_indexes['prs']= channel_index_prs_l;
+
+    // console.log( '### ' + sensors_indexes );
+
+    let startTime = startDate;
+    let endTime = endDate;
+
+    let climaMantagheiReport=undefined;
+    console.log(`befor call: ${client_id}, ${sensors_indexes}, ${startTime},  ${endTime},   ${period}  `);
+    climaMantagheiReport = await Values.getClimaAmariReport(client_id, sensors_indexes,startTime,endTime,period );
+
+    var resultJson = JSON.stringify(climaMantagheiReport);
+    resultJson = JSON.parse(resultJson);
+
+    resultJson = resultJson[0];
+
+
+    var resultJson = JSON.stringify(resultJson);
+    resultJson = JSON.parse(resultJson);
+
+
+    for(let i=0;i<resultJson.length;i++){
+        resultJson[i]['sample_time']=myDate.convert_gdate_to_jdate_2(resultJson[i]['sample_time']);
+    }
+
+    var resultJson = JSON.stringify(resultJson);
+
+
+    var apiResult = {};
+
+    //add our JSON results to the data table
+    //console.log(resultJson);
+    apiResult.data = resultJson;
+
+    //send JSON to Express
+    res.json(apiResult);
+
+
+});
+exports.getEXcelClimaMantagheiReport = catchAsync(async (req,res,next)=>{
+    let data = JSON.stringify(req.body);
+    data = JSON.parse(data);
+
+    const client_id = data["stationID"] * 1;
+    const startDate = data["startDate"];
+    const endDate = data["endDate"];
+    const period = 1440;
+    let sensors = JSON.stringify(data["sensors"]);
+    sensors = JSON.parse(sensors);
+
+    let sensors_indexes = {'tmp':'0','wsp':'0','hum':'0','evp':'0','wdr':'0','rad':'0','prs':'0'};
+
+    if(sensors['tmp']==true)
+        sensors_indexes['tmp']= channel_index_tmp_l;
+
+    if(sensors['wsp']==true)
+        sensors_indexes['wsp']= channel_index_wsp_l;
+
+    if(sensors['hum']==true)
+        sensors_indexes['hum']= channel_index_hum_l;
+
+    if(sensors['evp']==true)
+        sensors_indexes['evp']= channel_index_evp_l;
+
+    if(sensors['wdr']==true)
+        sensors_indexes['wdr']= channel_index_wdr_l;
+
+    if(sensors['rad']==true)
+        sensors_indexes['rad']= channel_index_rad_l;
+
+    if(sensors['prs']==true)
+        sensors_indexes['prs']= channel_index_prs_l;
+
+    // console.log( '### ' + JSON.stringify(sensors_indexes) );
+
+    let startTime = startDate;
+    let endTime = endDate;
+
+    let stnName = undefined;
+    let stnCode = undefined;
+    let zoneName = undefined;
+    let riverName = undefined;
+    let longitude = undefined;
+    let latitude = undefined;
+    let utmX = undefined;
+    let utmY = undefined;
+    let height = undefined;
+    let establishYear = undefined;
+    const stateName= process.env.STATE_NAME;
+    const organizationCode= process.env.ORGANIZATION_CODE;
+    await Stn.find({"client_id": client_id}).
+    then(stn => {
+        console.log(`stn['station_name'] ==>> ${stn[0].longitude}`);
+        stnName =  stn[0].station_name;
+        stnCode=  stn[0].station_code;
+        zoneName=  stn[0].zone_name;
+        riverName=  stn[0].river_name;
+        longitude=  stn[0].longitude ;
+        latitude = stn[0].latitude ;
+        utmX=  stn[0].utm_x;
+        utmY=  stn[0].utm_y;
+        height=  stn[0].height;
+        establishYear=  stn[0].establish_year;
+    }).
+    catch(err => {
+        console.log('Caught:', err.message)
+    });
+
+    let rainMantagheiReport = await Values.getRainMantagheiReport(client_id, channel_index_rainc_total,startTime,endTime);
+    let climaMantagheiReport = await Values.getClimaAmariReport(client_id, sensors_indexes,startTime,endTime,period );
+
+    let rainResultJson2 =  [];
+    let rainResultJson = rainMantagheiReport[0];
+
+    for(let i=0;i<rainResultJson.length;i++){
+        if(rainResultJson[i]['time_0']!='1111-11-11 00:00:00')
+            rainResultJson[i]['time_0']=myDate.convert_gdate_to_jdate(rainResultJson[i]['time_0']);
+        if(rainResultJson[i]['time_6_30']!='1111-11-11 00:00:00')
+            rainResultJson[i]['time_6_30']=myDate.convert_gdate_to_jdate(rainResultJson[i]['time_6_30']);
+        if(rainResultJson[i]['time_18_30']!='1111-11-11 00:00:00')
+            rainResultJson[i]['time_18_30']=myDate.convert_gdate_to_jdate(rainResultJson[i]['time_18_30']);
+        if(rainResultJson[i]['time_24_00']!='1111-11-11 00:00:00')
+            rainResultJson[i]['time_24_00']=myDate.convert_gdate_to_jdate(rainResultJson[i]['time_24_00']);
+    }
+
+    for(let i=0;i<rainResultJson.length;i++){
+        let item = {'month':'','day':'','val_6_30':-1,'val_18_30':-1,'val_24_00':-1};
+        if(rainResultJson[i]['time_0']!='1111-11-11 00:00:00') {
+            item['month'] = myDate.get_name_of_month_of_given_date(rainResultJson[i]['time_0']);
+            item['day'] = myDate.get_number_of_day_of_given_date(rainResultJson[i]['time_0']);
+            if (rainResultJson[i]['val_6_30'] != -1 && rainResultJson[i]['val_0'] != -1) {
+                item['val_6_30'] = rainResultJson[i]['val_6_30'] - rainResultJson[i]['val_0'];
+            }
+            if (rainResultJson[i]['val_18_30'] != -1 && rainResultJson[i]['val_6_30'] != -1) {
+                item['val_18_30'] = rainResultJson[i]['val_18_30'] - rainResultJson[i]['val_6_30'];
+            }
+            if (rainResultJson[i]['val_24_00'] != -1 && rainResultJson[i]['val_0'] != -1) {
+                item['val_24_00'] = rainResultJson[i]['val_24_00'] - rainResultJson[i]['val_0'];
+            }
+            rainResultJson2.push(item);
+        }
+    }
+    rainResultJson2 = JSON.stringify(rainResultJson2);
+    rainResultJson2 = JSON.parse(rainResultJson2);
+
+
+
+
+
+
+
+
+
+
+    let climaResultJson = JSON.stringify(climaMantagheiReport);
+    climaResultJson = JSON.parse(climaResultJson);
+
+    climaResultJson = climaResultJson[0];
+
+    for(let i=0;i<climaResultJson.length;i++){
+        climaResultJson[i]['sample_time']=myDate.convert_gdate_to_jdate_2(climaResultJson[i]['sample_time']);
+    }
+
+    let tmp_labels = [];
+    let tmp_values = [];
+    let wsp_labels = [];
+    let wsp_values = [];
+    let hum_labels = [];
+    let hum_values = [];
+    let evp_labels = [];
+    let evp_values = [];
+    let wdr_labels = [];
+    let wdr_values = [];
+    let rad_labels = [];
+    let rad_values = [];
+    let prs_labels = [];
+    let prs_values = [];
+    climaResultJson.map(el => {
+        if(el['sensor']=='tmp'){
+            tmp_labels.push(el['sample_time']);
+            tmp_values.push(el['value']);
+        }
+        if(el['sensor']=='wsp'){
+            wsp_labels.push(el['sample_time']);
+            wsp_values.push(el['value']);
+        }
+        if(el['sensor']=='hum'){
+            hum_labels.push(el['sample_time']);
+            hum_values.push(el['value']);
+        }
+        if(el['sensor']=='evp'){
+            evp_labels.push(el['sample_time']);
+            evp_values.push(el['value']);
+        }
+        if(el['sensor']=='wdr'){
+            wdr_labels.push(el['sample_time']);
+            wdr_values.push(el['value']);
+        }
+        if(el['sensor']=='rad'){
+            rad_labels.push(el['sample_time']);
+            rad_values.push(el['value']);
+        }
+        if(el['sensor']=='prs'){
+            prs_labels.push(el['sample_time']);
+            prs_values.push(el['value']);
+        }
+    })
+
+    const workbook = new Excel.Workbook();
+    // workbook.creator = 'Justin Williamson';
+    // workbook.lastModifiedBy = 'Justin Williamson';
+    workbook.created = new Date();
+    workbook.modified = new Date();
+    workbook.date1904 = true;
+    // // (optional) - Freeze the header
+    // workbook.views = [
+    //     {
+    //         state: 'frozen',
+    //         ySplit: 1,
+    //     },
+    // ];
+    const worksheet = workbook.addWorksheet(req.body.sheetName || 'Sheet 1');
+
+    //worksheet.columns = [{ header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 }];
+    worksheet.columns = [
+        { header: '   تاریخ          و   ساعت', key: 'sample_time', width: 18, outlineLevel: 1 },
+        { header: 'دما', key: 'tmp', width: 10 },
+        { header: 'سرعت باد', key: 'wsp', width: 10 },
+        { header: 'رطوبت', key: 'hum', width: 10 },
+        { header: 'تبخیر', key: 'evp', width: 10 },
+        { header: 'جهت باد', key: 'wdr', width: 10 },
+        { header: 'تشعشع', key: 'rad', width: 10 },
+        { header: 'فشارهوا', key: 'prs', width: 10 }
+    ];
+
+    let def_labels = undefined;
+    let spliceIndex = 2;
+    if(tmp_labels.length >0) {
+        def_labels = tmp_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex, 1);
+    if(wsp_labels.length >0) {
+        def_labels = wsp_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(hum_labels.length >0) {
+        def_labels = hum_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(evp_labels.length >0) {
+        def_labels = evp_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(wdr_labels.length >0) {
+        def_labels = wdr_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(rad_labels.length >0) {
+        def_labels = rad_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+    if(prs_labels.length >0) {
+        def_labels = prs_labels;
+        spliceIndex++;
+    }
+    else
+        worksheet.spliceColumns(spliceIndex,1);
+
+
+
+
+
+
+    console.log(`worksheet.columns = ${worksheet.columns}`);
+    let result_data = [];
+
+    for(let i=0;i<def_labels.length;i++){
+        let item = {};
+        item['sample_time'] = def_labels[i];
+        if(tmp_values.length >0){
+            item['tmp'] = tmp_values[i];
+        }
+        if(wsp_values.length >0) {
+            item['wsp'] = wsp_values[i];
+        }
+        if(hum_values.length >0){
+            item['hum'] = hum_values[i];
+        }
+        if(evp_values.length >0){
+            item['evp'] = evp_values[i];
+        }
+        if(wdr_values.length >0){
+            item['wdr'] = wdr_values[i];
+        }
+        if(rad_values.length >0){
+            item['rad'] = rad_values[i];
+        }
+        if(prs_values.length >0){
+            item['prs'] = prs_values[i];
+        }
+
+        result_data.push(item);
+    }
+
+    //console.log(`result_data: ${JSON.stringify(result_data)}`);
+    let rows = [];
+    result_data.map(row => {
+        rows.push(row);
+    })
+    worksheet.addRows(rows);
+    // console.log(`rows = ${JSON.stringify(rows)}`);
+    // Format the header text
+    worksheet.getRow(1).font = {
+        name: 'Arial Black',
+        size: 10,
+    };
+
+    const fileName = 'clima-amari-report.xlsx';
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+    const fileBuffer = await workbook.xlsx.writeBuffer()
+    res.send(fileBuffer);
 });

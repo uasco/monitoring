@@ -1555,8 +1555,13 @@ div.content
                             case ('level'):
                                 location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + 'l' + '-' + window.currentSlideIndex;
                                 break;
+                            // case ('clima'):
+                            //     location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + 'c' + '-' + window.currentSlideIndex;
+                            //     break;
                             case ('clima'):
-                                location.href = '/detail/' + id + '-' + sensor + '-' + position + '-' + 'c' + '-' + window.currentSlideIndex;
+                                let checkBox = document.getElementById('c-' + id);
+                                checkBox.checked = true;
+                                displayOverview();
                                 break;
                         }
 

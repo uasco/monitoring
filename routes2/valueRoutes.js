@@ -129,6 +129,15 @@ router
         authController.protect,
         authController.restrictTo('admin', 'lead-guide')
     );
+// router
+//     .route('/climaamarireport/')
+//     .get(valuesController.getClimaStationLastHours)
+//     .post(valuesController.getClimaAmariReport);
+router.post('/climaamarireport/', valuesController.getClimaAmariReport);
+router.post('/excelclimaamarireport/', valuesController.getExcelClimaAmariReport);
+router.post('/climamantagheireport/', valuesController.getClimaMantagheiReport);
+router.post('/excelclimamantagheireport/', valuesController.getEXcelClimaMantagheiReport);
+
 //////////////////////////////////////////////////////////////////E
 
 module.exports = router;

@@ -1,9 +1,10 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const Station = require('../models2/stationModel');
-const Values = require('../models2/valuesModel');
 const Status = require('../models2/statusModel');
 const Stn = require('../models/stnModel');
+let my_date = require('../utils/my_date');
+const moment = require('moment');
 const channel_index_rain_12 = process.env.CHANNEL_INDEX_RAIN_12;
 const channel_index_rain_24 = process.env.CHANNEL_INDEX_RAIN_24;
 const channel_index_rain_total = process.env.CHANNEL_INDEX_RAIN_TOTAL;
@@ -39,45 +40,59 @@ const channel_index_rad_l= process.env.CHANNEL_INDEX_RAD_L;
 const channel_index_rad_a= process.env.CHANNEL_INDEX_RAD_A;
 const channel_index_rad_x= process.env.CHANNEL_INDEX_RAD_X;
 const channel_index_rad_n= process.env.CHANNEL_INDEX_RAD_N;
+const rain_start_height= process.env.RAIN_START_HEIGHT;
 const rain_alarm1_period= process.env.RAIN_ALARM1_PERIOD;
 const rain_alarm8_period= process.env.RAIN_ALARM8_PERIOD;
 const rain_alarm1_height= process.env.RAIN_ALARM1_HEIGHT;
 const rain_alarm8_height= process.env.RAIN_ALARM8_HEIGHT;
-const level_alarm_height_diff= process.env.LEVEL_ALARM_HEIGHT_DIFF;
-const level_flood_sample_count= process.env.LEVEL_FLOOD_SAMPLE_COUNT;
+const level_flood_height_diff= process.env.LEVEL_ALARM_HEIGHT_DIFF;
+const level_flood_start_sample_count= process.env.LEVEL_FLOOD_START_SAMPLE_COUNT;
+const level_flood_stop_sample_count= process.env.LEVEL_FLOOD_STOP_SAMPLE_COUNT;
+const level_flood_stop_enough_time= process.env.LEVEL_FLOOD_STOP_ENOUGH_TIME;
 
 const start_stop_rain_period= process.env.START_STOP_RAIN_PERIOD;
-
-async  function setStationStatus(stnType,stnID,statusType,status) {
+async  function setRainStationStartStatus(stnID,status,lastSampleTime) {
     let date = new Date(); //ex 2019-01-18T16:26:44.982Z
     let offset = - date.getTimezoneOffset();
     date.setMinutes(date.getMinutes()+offset);
+
+        if(status)
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_start_time:date,last_time_check:lastSampleTime}});
+        else
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_stop_time:date,last_time_check:lastSampleTime}});
+
+}
+async  function setRainStationAlarmStatus(stnID,statusType,status) {
+    let date = new Date(); //ex 2019-01-18T16:26:44.982Z
+    let offset = - date.getTimezoneOffset();
+    date.setMinutes(date.getMinutes()+offset);
+    if(statusType==='alarm1'){
+        if(status)
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_start_time:date}});
+        else
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_stop_time:date}});
+    }
+    if(statusType==='alarm8'){
+        if(status)
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_start_time:date}});
+        else
+            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_stop_time:date}});
+    }
+}
+async  function setLevelStationFloodStatus(stnID,status,flood_started_time,lastSampleTime) {
+    let date = new Date(); //ex 2019-01-18T16:26:44.982Z
+    let offset = - date.getTimezoneOffset();
+    date.setMinutes(date.getMinutes()+offset);
+    if(status)
+        await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_start_time:flood_started_time,last_time_check:lastSampleTime}});
+    else
+        await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_stop_time:date}});
+}
+async  function setStationLastTimeCheck(stnType,stnID,lastSampleTime) {
     if(stnType==='rain'){
-        if(statusType==='start'){
-            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_start_time:date}});
-        }
-        if(statusType==='stop'){
-            await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_start:status,rain_stop_time:date}});
-        }
-        if(statusType==='alarm1'){
-            if(status)
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_start_time:date}});
-            else
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_1m:status,rain_alarm1_stop_time:date}});
-        }
-        if(statusType==='alarm8'){
-            if(status)
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_start_time:date}});
-            else
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{rain_alarm_8m:status,rain_alarm1_stop_time:date}});
-        }
+        await Stn.findOneAndUpdate({ client_id:stnID },{$set:{last_time_check:lastSampleTime}});
     }else if(stnType==='level'){
-        if(statusType==='flood'){
-            if(status)
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_start_time:date}});
-            else
-                await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_stop_time:date}});
-        }
+        await Stn.findOneAndUpdate({ client_id:stnID },{$set:{last_time_check:lastSampleTime}});
     }
 }
 async function enoughSpentTimeAfterRainStop(stnID,statusType) {
@@ -93,6 +108,23 @@ async function enoughSpentTimeAfterRainStop(stnID,statusType) {
         return false;
     }
 }
+async function enoughSpentTimeAfterFloodStart(flood_started_time) {
+    let now = new Date();
+    now = my_date.convert_mongodate_to_isodate(now);
+    let a = moment(now,'YYYY-MM-DD HH:mm:ss');
+    let b = moment(flood_started_time,'YYYY-MM-DD HH:mm:ss');
+    let diff = a.diff(b, 'minutes');
+
+    // let diff = Math.abs( now - flood_started_time);
+    // let diffm = Math.ceil(diff / (1000 * 60 ));
+    // console.log(`enough = ${now} >>> ${flood_started_time} >>> ${diff}`);
+    // console.log(`diff = ${diff}` );
+    if(diff >= level_flood_stop_enough_time ){
+        return true ;
+    }else{
+        return false;
+    }
+}
 async function getStatus(stnID,statusType) {
     const res = await Stn.findOne({client_id: stnID});
     if (statusType === 'rain-start') {
@@ -102,9 +134,56 @@ async function getStatus(stnID,statusType) {
     } else if (statusType === 'alarm8') {
         return  res.rain_alarm8;
     }
-    else if (statusType === 'flood') {
-        return  res.flood;
-    }
+}
+async function getLevelStatus(stnID) {
+    const res = await Stn.findOne({client_id: stnID});
+    if (res != null){
+        let flood , floodStartedTime , lastTimeCheck = undefined;
+        if("flood" in res)
+            flood = res.flood;
+        if('flood_start_time' in res)
+            floodStartedTime = res.flood_start_time;
+        if('last_time_check' in res)
+            lastTimeCheck = res.last_time_check;
+        return  {'flood':flood,'floodStartedTime':floodStartedTime,'lastTimeCheck':lastTimeCheck};
+    }else
+        return -1;
+}
+async function checkRainNewData(stnID,channel_index){
+    const res = await Stn.findOne({client_id: stnID});
+    console.log(`${stnID} from newData`);
+    if(res != null && "last_time_check" in res){
+        console.log(`${stnID} from newData :res.last_time_check :  ${JSON.stringify(res.last_time_check)}`);
+        let lastTimeCheck = my_date.convert_mongodate_to_isodate(res.last_time_check);
+        let lastSampleTime = await Status.getLastSampleTime(stnID,channel_index);
+        console.log(`${stnID}   from newData :lastSampleTime :  ${JSON.stringify(lastSampleTime)}`);
+        lastSampleTime = lastSampleTime[0]['sample_time'];
+
+        if(lastSampleTime > lastTimeCheck)
+            return true;
+        else
+            return false;
+    }else
+        return  true;
+}
+async function checkLevelNewData(stnID,channel_index,lastTimeCheck){
+    //const res = await Stn.findOne({client_id: stnID});
+    //console.log(`${stnID} from newData`);
+    //if(res != null && res.last_time_check != undefined){
+        //console.log(`${stnID} from newData :res.last_time_check :  ${JSON.stringify(res.last_time_check)}`);
+        //let lastTimeCheck = my_date.convert_mongodate_to_isodate(res.last_time_check);
+    if(lastTimeCheck != undefined){
+        let lastSampleTime = await Status.getLastSampleTime(stnID,channel_index);
+        // let lastSampleTime = '2020-09-01 00:00:00';
+        console.log(`${stnID}   from newData :lastSampleTime :  ${JSON.stringify(lastSampleTime)}`);
+        lastSampleTime = lastSampleTime[0]['sample_time'];
+
+        if(lastSampleTime > lastTimeCheck)
+            return true;
+        else
+            return false;
+    }else
+        return true;
 }
 async function isFloodStoped(stnID,statusType) {
     const res = await Stn.findOne({ client_id:stnID });
@@ -130,17 +209,25 @@ exports.getRainStartStatus = catchAsync(async (req, res, next) => {
         channelIndexRainTotal = channel_index_rainc_total;
     else if(rain_rainrc_rainc === 'rainc' )
         channelIndexRainTotal = channel_index_rainc_total;
-
-    let result = await Status.getRainStartStatus2(client_id,channelIndexRainTotal,start_stop_rain_period);
-    let resultJson = JSON.stringify(result);
-    resultJson = JSON.parse(resultJson);
-
-    //let st = await getStatus(client_id,'rain-start');
-    if(result===1){//it's raining
+    let resultJson = undefined;
+    let newData = await checkRainNewData(client_id,channelIndexRainTotal);
+    if (!newData){
+        resultJson =-1;
+    }else{
+        let result = await Status.getRainStartStatus2(client_id,channelIndexRainTotal,rain_start_height,start_stop_rain_period);
+        console.log(`from status controller rain start = ${JSON.stringify(result)}`);
+        let start = result['@result'];
+        let lastSampleTime = result['@last_sample_time'];
+        //let st = await getStatus(client_id,'rain-start');
+        if(start===1){//it's raining
+            await setRainStationStartStatus(client_id,true,lastSampleTime);
             resultJson =1;
-    }else if(result===0){//it's not raining
+        }else if(start===0){//it's not raining
+            await setRainStationStartStatus(client_id,false,lastSampleTime);
             resultJson = 0;
+        }
     }
+
     let apiResult = {};
     apiResult.data = resultJson;
     res.json(apiResult);
@@ -163,11 +250,11 @@ exports.getRainAlarm1Status = catchAsync(async (req, res) => {
     if(result===1){//shower
         resultJson =1;
         // if( !st) //no shower already
-        //     await setStationStatus('rain',client_id,'alarm1',true);
+        // await setRainStationAlarmStatus(client_id,'alarm1',true);
     }else if(result===0){//No shower
         resultJson = 0;//rain stopped and enaugh  spent after stop
         // if(st) //shower already
-        //     await setStationStatus('rain', client_id, 'alarm1', false);
+        //     await setRainStationAlarmStatus(client_id, 'alarm1', false);
     }
     let apiResult = {};
     apiResult.data = resultJson;
@@ -193,11 +280,11 @@ exports.getRainAlarm8Status = catchAsync(async (req, res) => {
     if(result===1){//shower
         resultJson =1;
         // if( !st) //no shower already
-        //     await setStationStatus('rain',client_id,'alarm8',true);
+        //     await setRainStationAlarmStatus(client_id,'alarm8',true);
     }else if(result===0){//No shower
         resultJson = 0;//rain stopped and enaugh  spent after stop
         // if(st) //shower already
-        //     await setStationStatus('rain', client_id, 'alarm8', false);
+        //     await setRainStationAlarmStatus(client_id, 'alarm8', false);
     }
     let apiResult = {};
     apiResult.data = resultJson;
@@ -207,34 +294,88 @@ exports.getLevelFloodStatus = catchAsync(async (req, res) => {
     const client_id = req.params.id * 1;
     let channelIndexLevel = channel_index_level;
     let resultJson = undefined;
+    let floodStartedTime ='';
+    let lastTimeCheck ='';
+    let result = await getLevelStatus(client_id);
+    console.log(`floodStatusAndTime = ${JSON.stringify(result)}`);
+    let st = result['flood'];
+    if(result['floodStartedTime'] != undefined){
+        floodStartedTime = result['floodStartedTime'];
+        floodStartedTime = my_date.convert_mongodate_to_isodate(floodStartedTime);
+    }
+    lastTimeCheck = result['lastTimeCheck'];
+    console.log(`floodStartedTime = ${floodStartedTime}`);
+    console.log(`st = ${st}`);
 
-    let st = await getStatus(client_id,'flood');
-        if( !st) {//no flood already
+    let newData = await checkLevelNewData(client_id,channelIndexLevel,lastTimeCheck);
 
-            let result = await Status.getLevelFloodStart(client_id,channelIndexLevel,level_alarm_height_diff);//,level_flood_sample_count);
+    let flood = 0;
+    let lastSampleTime = undefined;
+    if(!st) {//no flood already
+        if (!newData){
+            resultJson = 0;
+            console.log(`${client_id} dade jadid mojood nist`);
+        }else{
+            let result = await Status.getLevelFloodStart2(client_id,channelIndexLevel,level_flood_start_sample_count,level_flood_height_diff);
+            console.log(`from status controller flood start check= ${JSON.stringify(result)}`);
+            // JSON.stringify(result) => [{"@flood":1,"@flood_started_time":"2020-08-02 06:04:01"}]
             resultJson = JSON.stringify(result);
             resultJson = JSON.parse(resultJson);
-            if(result===1) {//flood-start
-                await setStationStatus('level',client_id,'flood',true);
+            flood = result[0]['@flood'];
+            floodStartedTime = result[0]['@flood_started_time'];
+            lastSampleTime = result[0]['@last_sample_time'];
+            console.log(`floodStartedTime = ${floodStartedTime}`);
+            if(flood===1) {//flood-start
+                await setLevelStationFloodStatus(client_id,true,floodStartedTime,lastSampleTime);
                 resultJson =1;
-            }else if(result===0) {//no flood-start
+            }else if(flood===0) {//no flood-start
+                console.log('inja1');
+                await setStationLastTimeCheck('level',client_id,lastSampleTime)
                 resultJson = 0;
             }
-        }else if(st){//flood already
-            let result = await Status.getLevelFloodStop(client_id,channelIndexLevel,level_alarm_height_diff,level_flood_sample_count);
-            resultJson = JSON.stringify(result);
-            resultJson = JSON.parse(resultJson);
-            if(result===1){//flood stoped
+        }
+
+    }
+    else if(st){//flood already
+        if (!newData){
+            let enough = await enoughSpentTimeAfterFloodStart(floodStartedTime);
+            if(enough){
+                console.log(`enough time spent after flood started at  = ${JSON.stringify(floodStartedTime)}`);
                 resultJson =0;
-                await setStationStatus('level',client_id,'flood',false);
+                await setLevelStationFloodStatus(client_id,false,floodStartedTime,lastSampleTime);
+            }else{
+                resultJson =1;
+            }
+            console.log(`${client_id} dade jadid mojood nist`);
+        }else{
+            let result = await Status.getLevelFloodStop2(client_id,channelIndexLevel,level_flood_height_diff,level_flood_stop_sample_count,flood_started_time);
+            console.log(`from status controller flood stop check = ${JSON.stringify(result)}`);
+            //result => [{"@flood_stop":0}]
+
+            result = result[0]['@flood_stop'];
+            lastSampleTime = result[0]['@last_sample_time'];
+            console.log(`result = ${result}`);
+            if(result===1){//flood stoped
+                let enough = await enoughSpentTimeAfterFloodStart(floodStartedTime);
+                if(enough){
+                    console.log(`enough time spent after flood started at  = ${JSON.stringify(floodStartedTime)}`);
+                    resultJson =0;
+                    await setLevelStationFloodStatus(client_id,false,floodStartedTime,lastSampleTime);
+                }else{
+                    resultJson =1;
+                }
             }else if(result===0) {//flood has not stoped yet
+                await setStationLastTimeCheck('level',client_id,lastSampleTime)
                 resultJson =1;
             }
         }
 
+    }
+
     let apiResult = {};
     apiResult.data = resultJson;
     res.json(apiResult);
+
 });
 exports.getLevelFloodStop = catchAsync(async (req, res) => {
     const client_id = req.params.id * 1;
@@ -266,38 +407,5 @@ const channel_indexes = {
     'rad': { 'l': channel_index_rad_l, 'a': channel_index_rad_a, 'x': channel_index_rad_x, 'n': channel_index_rad_n }
 }
 exports.getClimaAlarmStatus = catchAsync(async (req, res, next) => {
-    const client_id = req.params.id * 1;
-    const sensor = req.url.split('/')[2];
-    let values = undefined;
-    //console.log("sensor============");
-    //console.log(sensor);
-    if (sensor === 'rainc') {
-        values = await Values.getRainValues(client_id, channel_indexes[sensor]['12'], channel_indexes[sensor]['24'], channel_indexes[sensor]['t']);
-    } else {
-        values = await Values.getClimaValues(client_id, sensor, channel_indexes[sensor]);
-    }
 
-    let resultJson = JSON.stringify(values);
-    resultJson = JSON.parse(resultJson);
-    ////////////////////////
-    //console.log('resultJson["data"] ====');
-    //console.log(resultJson);
-    if(resultJson.length>0){
-        resultJson.map(el => {
-            let d = el.sample_time;
-            //"2020-01-14T07:47:12.000Z"
-            d = moment(d, 'YYYY-M-D HH:mm:ss').format('HH:mm , jD jMMMM jYYYY');
-            el.sample_time = d;
-        })
-    }
-
-    ///////////////////////
-
-    let apiResult = {};
-
-    //add our JSON results to the data table
-    apiResult.data = resultJson;
-
-    //send JSON to Express
-    res.json(apiResult); //{"data":[{"value":0},{"value":0},{"value":12.2}]}
 });

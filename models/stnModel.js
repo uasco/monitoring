@@ -93,6 +93,9 @@ const stnSchema = new mongoose.Schema(
         flood_stop_time:{
             type: Date
         },
+        last_time_check:{
+            type: Date
+        },
     },
     {
         toJSON: { virtuals: true },

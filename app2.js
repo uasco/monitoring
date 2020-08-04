@@ -157,14 +157,16 @@ const Station = require('./models2/stationModel');
 // s();
 
 
+setTimeout(function() {
+  scheduler.clearRainValuesCache();
+  scheduler.clearLevelValueCache();
+  scheduler.clearClimaValuesCache();
+  scheduler.clearRainTotalsMonthsCache();
+  scheduler.clearLevelLastHoursCache();
+  scheduler.clearClimaLastHoursCache();
+  scheduler.clearClimaRainTotalsMonthsCache();
+}, 30000);
 
-scheduler.clearRainValuesCache();
-scheduler.clearLevelValueCache();
-scheduler.clearClimaValuesCache();
-scheduler.clearRainTotalsMonthsCache();
-scheduler.clearLevelLastHoursCache();
-scheduler.clearClimaLastHoursCache();
-scheduler.clearClimaRainTotalsMonthsCache();
 
 require('events').EventEmitter.defaultMaxListeners = 60;
 

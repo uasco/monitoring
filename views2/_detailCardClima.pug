@@ -486,23 +486,7 @@ mixin detailCardClimar(stnID,sensor,position)
             1440: '۱ روزه',
             43200: '۱ ماهه'
         };
-        //$("#select-period")
-        // .selectmenu()
-        //- .selectmenu("menuWidget")
-        //- .addClass("overflow");
 
-        // $('.mdb-select').materialSelect();
-        // $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
-        //     $(this).closest('.select-outline').find('label').toggleClass('active');
-        //     // $(this).closest('.select-outline').find('.caret').toggleClass('active');
-        // });
-        //
-        // $('.mdb-select').change(function (e) {
-        //     // e.preventDefault();
-        //     selectedPeriod = $('.mdb-select').val();
-        //
-        //     console.log('first ===' + selectedPeriod);
-        // });
 
         function submit_amari() {
             if ((startDate == '') || ($('#cal-amari-start').val() == "")) {
@@ -573,132 +557,256 @@ mixin detailCardClimax(stnID,sensor,position)
     .content
         +title('ایستگاه هواشناسی ' + position)
         .row
-            .col-lg-10
-                .col-lg-12(id='amari-report-div' style='text-align:center')
-                    .card
+            .col-lg-12
+                .col-lg-3(style='text-align:center')
+                    .card(id='sensors-box')
+                        .card-header
+                            .table-full-widt.table-responsive.table-bordered
+                                table.table
+                                    thead
+                                        tr
+                                            th
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox'  onchange='checkAll(this)')
+                                                        span.form-check-sign
+                                            th
+                                                p.table-title سنسورها
+                                    tbody
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-tmp')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title دما
+                                            td
+                                                i.far.fa-temperature-low.fa-fw.fa-2x
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-wsp')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title سرعت باد
+                                            td
+                                                i.far.fa-wind.fa-fw.fa-2x
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-hum')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title رطوبت
+                                            td
+                                                i.far.fa-humidity.fa-fw.fa-2x
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-evp')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title تبخیر
+                                            td
+                                                i.far.fa-heat.fa-fw.fa-2x
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-wdr')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title جهت باد
+                                            td
+                                                i.far.fa-windsock.fa-fw.fa-2x
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-rad')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title تشعشع
+                                            td
+                                                i.fad.fa-radiation.fa-2x
+                                        tr
+                                            td
+                                                .form-check
+                                                    label.form-check-label
+                                                        input.form-check-input(type='checkbox', id='check-prs')
+                                                        span.form-check-sign
+                                            td
+                                                p.table-title فشار
+                                            td
+                                                i.wi.wi-barometer(style={
+                                                    display: 'inline-block',
+                                                    'font-size': '2.5em',
+                                                    float: 'center'
+                                                })
+                .col-lg-9(id='amari-report-div' style='text-align:center')
+                    .card(id='amari-box')
                         .card-header
                             div(style='text-align:right')
                                 h3.card-category گزارش آماری :
-                            .row
-                                .col-lg-12.text-right
-                                    .card
-                                        .card-header
-                                            .btn-group.btn-group-toggle(data-toggle="buttons" style='display:flex;justify-content:space-around;align-items:baseline;flex-wrap:wrap')
-                                                label#0.btn.btn-xl.btn-primary.btn-simple.active(style='font-size:25')
-                                                    input(id="tmp-input" type="radio" name="options" checked="" )
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  دما
-                                                    span.d-block.d-sm-none
-                                                        i.far.fa-temperature-low.fa-fw.fa-pull-left.fa-3x
-                                                label#1.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
-                                                    input(id="wsp-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  سرعت باد
-                                                    span.d-block.d-sm-none
-                                                        i.far.fa-wind.fa-fw.fa-pull-left.fa-3x
-                                                label#2.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
-                                                    input(id="hum-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  رطوبت
-                                                    span.d-block.d-sm-none
-                                                        i.far.fa-humidity.fa-fw.fa-pull-left.fa-3x
-                                                label#3.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
-                                                    input(id="evp-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  تبخیر
-                                                    span.d-block.d-sm-none
-                                                        i.far.fa-heat.fa-fw.fa-pull-left.fa-3x
-                                                br
-                                                label#4.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
-                                                    input(id="wdr-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  جهت باد
-                                                    span.d-block.d-sm-none
-                                                        i.far.fa-windsock.fa-fw.fa-pull-left.fa-3x
-                                                label#5.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
-                                                    input(id="rad-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  تشعشع
-                                                    span.d-block.d-sm-none
-                                                        i.fad.fa-radiation.fa-pull-left.fa-3x
-                                                label#6.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
-                                                    input(id="prs-input" type="radio" name="options" checked="")
-                                                    span.d-none.d-sm-block.d-md-block.d-lg-block.d-xl-block  فشار
-                                                    span.d-block.d-sm-none
-                                                        i.wi.wi-barometer(style={display:'inline-block' ,'font-size':'3em', float:'left' ,'margin-right':'.3em'})
-                            .row
-                                .col-lg-6.text-right
-                                    .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
-                                            //- h4.card-title تاریخ شروع :
-                                            div
-                                                label(for='cal-amari-start') تاریخ شروع :
-                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                            .col-md-4
-                                                .md-form.md-outline.datepicker(darktheme='true')
-                                                    input.pdate.form-control-lg(id='cal-amari-start' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
-                                .col-lg-6.text-right
-                                    .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
-                                            div
-                                                label(for='cal-amari-end') تاریخ پایان :
-                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                            .col-md-4
-                                                .md-form.md-outline.datepicker(darktheme='true')
-                                                    input.pdate.form-control-lg(id='cal-amari-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
-                            .row
-                                .col-lg-6
-                                    .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
-                                            div
-                                                label(for='start-time') زمان شروع :
-                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                            .col-md-4
-                                                .md-form.md-outline.input-with-post-icon.timepicker(darktheme='true' style='font-family:Bahij')
-                                                    input.form-control-lg(id='start-time-input' type='text', placeholder= 'انتخاب زمان شروع', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
-                                .col-lg-6
-                                    .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
-                                            div
-                                                label(for='end-time') زمان پایان :
-                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                            .col-md-4
-                                                .md-form.md-outline.input-with-post-icon.timepicker(darktheme='true' style='font-family:Bahij')
-                                                    input.form-control-lg(id='end-time-input' type='text', placeholder='انتخاب زمان پایان', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.5rem')
-                            .row
-                                .col-lg-6
-                                    .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
-                                            //- h4.card-title بازه زمانی :
-                                            div
-                                                label(for='end-time') بازه زمانی :
-                                            span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                            .col-lg-6.text-right.text-right
-                                                select.selectpicker(id='select-period' data-style='select-with-transition', title='Single Select', data-size='10', data-dropdownAlignRight=true,style='text-align:right')
-                                                    option(value='', disabled='', selected='') انتخاب
-                                                    option(value='1') ۱ &nbspدقیقه
-                                                    option(value='5') ۵ &nbspدقیقه
-                                                    option(value='10') ۱۰ &nbspدقیقه
-                                                    option(value='30') ۳۰ &nbspدقیقه
-                                                    option(value='60') ۱ &nbspساعت
-                                                    option(value='360') ۶ &nbspساعت
-                                                    option(value='720') ۱۲ &nbspساعت
-                                                    option(value='1440') ۱ &nbspروز
-                                                    option(value='43200') ۱ &nbspماه
-                                .col-lg-6
-                                    h3.card-category(style='display:flex;justify-content: space-around')
-                                        button.btn(onclick='submit_amari()')
-                                            i(style='font-size : 20px ') نمایش
-                                        button.btn(id='download-button' onclick='download_amari()')
-                                            i(style='font-size : 20px ') بارگذاری در فایل
-                .col-lg-12(id='standard-report-div')
-                    .card
+                                .row(style='display:flex;flex-direction:row;justify-content: space-around')
+                                    .col-lg-6.text-right
+                                        .card
+                                            .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                div
+                                                    label(for='cal-amari-start') تاریخ شروع :
+                                                span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                .col-md-4
+                                                    .md-form.md-outline.datepicker(darktheme='true')
+                                                        input.pdate.form-control-lg(id='cal-amari-start' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.1rem')
+                                    .col-lg-6.text-right
+                                        .card
+                                            .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                div
+                                                    label(for='cal-amari-end') تاریخ پایان :
+                                                span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                .col-md-4
+                                                    .md-form.md-outline.datepicker(darktheme='true')
+                                                        input.pdate.form-control-lg(id='cal-amari-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.1rem')
+                                .row(style='display:flex;flex-direction:row;justify-content: space-around')
+                                    .col-lg-6.text-right
+                                        .card
+                                            .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                div
+                                                    label(for='start-time') زمان شروع :
+                                                span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                .col-md-4
+                                                    .md-form.md-outline.input-with-post-icon.timepicker(darktheme='true' style='font-family:Bahij')
+                                                        input.form-control-lg(id='start-time-input' type='text', placeholder= 'انتخاب زمان شروع', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.1rem')
+                                    .col-lg-6.text-right
+                                        .card
+                                            .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                div
+                                                    label(for='end-time') زمان پایان :
+                                                span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                .col-md-4
+                                                    .md-form.md-outline.input-with-post-icon.timepicker(darktheme='true' style='font-family:Bahij')
+                                                        input.form-control-lg(id='end-time-input' type='text', placeholder='انتخاب زمان پایان', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.1rem')
+                                .my-space-3
+                                .row(style='display:flex;flex-direction:row;justify-content: space-around')
+                                    .col-lg-6
+                                        .card
+                                            .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                div
+                                                    label(for='end-time')  بازه زمانی :
+                                                span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                    select.selectpicker(id='select-period' data-style='select-with-transition', title='Single Select', data-size='10', data-dropdownAlignRight=true,style='text-align:right;font-size:0.8rem')
+                                                        option(value='', disabled='', selected='') انتخاب
+                                                        option(value='1') ۱ &nbspدقیقه
+                                                        option(value='5') ۵ &nbspدقیقه
+                                                        option(value='10') ۱۰ &nbspدقیقه
+                                                        option(value='30') ۳۰ &nbspدقیقه
+                                                        option(value='60') ۱ &nbspساعت
+                                                        option(value='360') ۶ &nbspساعت
+                                                        option(value='720') ۱۲ &nbspساعت
+                                                        option(value='1440') ۱ &nbspروز
+                                                        option(value='43200') ۱ &nbspماه
+                                    .col-lg-6
+                                        .card
+                                            .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                                .btn-group.btn-group-toggle(data-toggle="buttons" )
+                                                    label#single-chart-label.btn.btn-sm.btn-secondary.btn-simple.active(style='font-size:1.1rem') نمودار تفکیکی
+                                                        input.d-none(id="single-chart-input" type="radio"  )
+                                                    label#multi-chart-label.btn.btn-sm.btn-secondary.btn-simple(style='font-size:1.1rem') نمودار چندگانه
+                                                        input.d-none(id="multi-chart-input" type="radio"  )
+                                .my-space-3
+                                .my-space-3
+                                .row(style='display:flex;flex-direction:row;justify-content: space-around')
+                                    .col-lg-5
+                                        .card
+                                            .card-header
+                                                h3.card-category(style='display:flex;justify-content: flex-start')
+                                                    button.btn(onclick='submit_amari()')
+                                                        i(style='font-size:1.1rem') &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp نمایش &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                    button.btn(id='download-button' onclick='download_amari()')
+                                                        i(style='font-size:1.1rem') بارگذاری در فایل
+                            //.col-lg-9
+                            //    .card
+                            //        .card-body
+                            //            .table-full-widt.table-responsive
+                            //                table.table
+                            //                    thead
+                            //                        tr
+                            //                            th
+                            //                    tbody
+                            //                        tr
+                            //                            td
+                            //                                div
+                            //                                    label(for='cal-amari-start') تاریخ شروع :
+                            //                                span
+                            //                                    .md-form.md-outline.datepicker(darktheme='true')
+                            //                                        input.pdate.form-control-md(id='cal-amari-start' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.3rem')
+                            //                            td
+                            //                                div
+                            //                                    label(for='cal-amari-end') تاریخ پایان :
+                            //                                span
+                            //                                    .md-form.md-outline.datepicker(darktheme='true')
+                            //                                        input.pdate.form-control-md(id='cal-amari-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.3rem')
+                            //                        tr
+                            //                            td
+                            //                                div
+                            //                                    label(for='start-time') زمان شروع :
+                            //                                span
+                            //                                    .md-form.md-outline.input-with-post-icon.timepicker(darktheme='true' style='font-family:Bahij')
+                            //                                        input.form-control-md(id='start-time-input' type='text', placeholder= 'انتخاب زمان شروع', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.3rem')
+                            //                            td
+                            //                                div
+                            //                                    label(for='end-time') زمان پایان :
+                            //                                span
+                            //                                    .md-form.md-outline.input-with-post-icon.timepicker(darktheme='true' style='font-family:Bahij')
+                            //                                        input.form-control-md(id='end-time-input' type='text', placeholder='انتخاب زمان پایان', style='text-align:center;color:#dadce0;font-family:Bahij;font-size:1.3rem')
+                            //                        tr
+                            //                            td
+                            //                                div
+                            //                                    label(for='end-time')  بازه زمانی : &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            //                                span
+                            //                                    select.selectpicker(id='select-period' data-style='select-with-transition', title='Single Select', data-size='10', data-dropdownAlignRight=true,style='text-align:right')
+                            //                                        option(value='', disabled='', selected='') انتخاب
+                            //                                        option(value='1') ۱ &nbspدقیقه
+                            //                                        option(value='5') ۵ &nbspدقیقه
+                            //                                        option(value='10') ۱۰ &nbspدقیقه
+                            //                                        option(value='30') ۳۰ &nbspدقیقه
+                            //                                        option(value='60') ۱ &nbspساعت
+                            //                                        option(value='360') ۶ &nbspساعت
+                            //                                        option(value='720') ۱۲ &nbspساعت
+                            //                                        option(value='1440') ۱ &nbspروز
+                            //                                        option(value='43200') ۱ &nbspماه
+                            //                            td
+                            //                                .btn-group.btn-group-toggle(data-toggle="buttons" style='display:flex;flex-direction:row;justify-content:space-evenly;')
+                            //                                    label#single-chart-label.btn.btn-sm.btn-secondary.btn-simple.active نمودار تفکیکی
+                            //                                        input.d-none(id="single-chart-input" type="radio"  )
+                            //                                    label#multi-chart-label.btn.btn-sm.btn-secondary.btn-simple نمودار چندگانه
+                            //                                        input.d-none(id="multi-chart-input" type="radio"  )
+                            //                        tr
+                            //                            td
+                            //
+                            //                                button.btn(onclick='submit_amari()')
+                            //                                    i(style='font-size : 20px ') &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp نمایش &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                            //                            td
+                            //                                button.btn(id='download-button' onclick='download_amari()')
+                            //                                    i(style='font-size : 20px ') بارگذاری در فایل
+
+                .col-lg-9(id='standard-report-div')
+                    .card(id='standard-box')
                         .card-header.text-right
                             h3.card-category گزارش استاندارد :
                             .row
-                .col-lg-12(id='mantaghei-report-div')
-                    .card
+                .col-lg-9(id='mantaghei-report-div')
+                    .card(id='mantaghei-box')
                         .card-header.text-right
                             h3.card-category گزارش آب منطقه ای :
                             .row
                                 .col-lg-6.text-right
                                     .card
                                         .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
-                                            //- h4.card-title تاریخ شروع :
                                             div
                                                 label(for='cal-mantaghei-start') تاریخ شروع :
                                             span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -714,122 +822,90 @@ mixin detailCardClimax(stnID,sensor,position)
                                             .col-md-4
                                                 .md-form.md-outline.datepicker(darktheme='true')
                                                     input.pdate.form-control-lg(id='cal-mantaghei-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
-                                .col-lg-6
-                                    h3.card-category(style='display:flex;justify-content: flex-start')
-                                        button.btn(onclick='submit_mantaghei()')
-                                            i(style='font-size : 20px ') نمایش
-                                .col-lg-6
-                                    h3.card-category(style='display:flex;justify-content: flex-start')
-                                        button.btn(id='download-button' onclick='download_mantaghei()')
-                                            i(style='font-size : 20px ') بارگذاری در فایل
-                .card(id='report-chart')
-                    .card-header
-                        div(style='text-align:right')
-                            h3.card-category
-                    .card-body
-                        div.chart-area(id='chart-container')
-                            - chart_id = 'BigCountryChart' + stnID
-                            canvas(id= chart_id)
-                .card(id='mantaghei-table')
+                            .row(style='display:flex;flex-direction:row;justify-content: space-around')
+                                .col-lg-5
+                                    .card
+                                        .card-header
+                                            h3.card-category(style='display:flex;justify-content: flex-start')
+                                                button.btn(onclick='submit_mantaghei()')
+                                                    i(style='font-size:1.1rem') &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp نمایش &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                button.btn(id='download-button' onclick='download_mantaghei()')
+                                                    i(style='font-size:1.1rem') بارگذاری در فایل
+                .clo-12
+                    .card.card-chart(id='report-chart')
+                        .card-header
+                            .col-sm-6(style='text-align:right')
+                                h3.card-category
+                            .col-sm-6.text-right(id='sensors-bar')
+                                .card
+                                    .card-header
+                                        .btn-group.btn-group-toggle(data-toggle="buttons" style='display:flex;justify-content:space-around;align-items:baseline;flex-wrap:wrap')
+                                            label#tmp-lb.btn.btn-xl.btn-primary.btn-simple.active(style='font-size:25')
+                                                input(id="tmp-input" type="radio" name="options" checked="" )
+                                                span.d-none.d-sm-block دما
+                                                span.d-block.d-sm-none
+                                                    i.far.fa-temperature-low.fa-1x
+                                            label#wsp-lb.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
+                                                input(id="wsp-input" type="radio" name="options" checked="")
+                                                span.d-none.d-sm-block  سرعت باد
+                                                span.d-block.d-sm-none
+                                                    i.far.fa-wind.fa-1x
+                                            label#hum-lb.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
+                                                input(id="hum-input" type="radio" name="options" checked="")
+                                                span.d-none.d-sm-block  رطوبت
+                                                span.d-block.d-sm-none
+                                                    i.far.fa-humidity.fa-1x
+                                            label#evp-lb.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
+                                                input(id="evp-input" type="radio" name="options" checked="")
+                                                span.d-none.d-sm-block  تبخیر
+                                                span.d-block.d-sm-none
+                                                    i.far.fa-heat.fa-1x
+                                            br
+                                            label#wdr-lb.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
+                                                input(id="wdr-input" type="radio" name="options" checked="")
+                                                span.d-none.d-sm-block  جهت باد
+                                                span.d-block.d-sm-none
+                                                    i.far.fa-windsock.fa-1x
+                                            label#rad-lb.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
+                                                input(id="rad-input" type="radio" name="options" checked="")
+                                                span.d-none.d-sm-block  تشعشع
+                                                span.d-block.d-sm-none
+                                                    i.fad.fa-radiation.fa-1x
+                                            label#prs-lb.btn.btn-xl.btn-primary.btn-simple(style='font-size:25')
+                                                input(id="prs-input" type="radio" name="options" checked="")
+                                                span.d-none.d-sm-block  فشار
+                                                span.d-block.d-sm-none
+                                                    i.wi.wi-barometer(style={display:'inline-block' ,'font-size':'1em', float:'center' })
+
+                        .card-body
+                            div.chart-area.chart-big(id='chart-container')
+                                - chart_id = 'BigCountryChart' + stnID
+                                canvas(id= chart_id)
+                .card(id='clima-mantaghei-table')
                     .card-header.text-right
                         //- h4.card-title  Simple Table
                     .card-body.text-right
-                        .table-responsive(id='mantaghei-table-container')
-                            table.table.tablesorter(id='mantaghei-table' + stnID)
-                                thead.text-primary
-                                    tr
-                                        th
-                                            | ماه
-                                        th
-                                            | روز
-                                        th
-                                            |      ارتفاع بارش به ميليمتر   ساعت ۶:۳۰
-                                        th
-                                            |      ارتفاع بارش به ميليمتر   ساعت ۱۸:۳۰
-                                        th
-                                            |      مجموع بارش در روز
+                        .table-responsive(id='clima-mantaghei-table-container')
+                            table.table.tablesorter(id='clima-mantaghei-table' + stnID)
                                 tbody
-                .card(id='amari-table')
+                .card(id='clima-amari-table')
                     .card-header.text-right
                         //- h4.card-title  Simple Table
                     .card-body.text-right
-                        .table-responsive(id='amari-table-container')
-                            table.table.tablesorter(id='amari-table' + stnID)
-                                thead.text-primary
-                                    tr
-                                        th
-                                            | ردیف
-                                        th
-                                            | مقدار
-                                        th
-                                            | تاریخ داده
+                        .table-responsive(id='clima-amari-table-container')
+                            table.table.tablesorter(id='clima-amari-table' + stnID)
+                                //thead.text-primary
                                 tbody
-            div.col-lg-2.text-right
-                div.card.card-chart
-                    div.card-header.rain
-                    - i = stnID
-                    div.card-body(id= i)
-                        .table-full-width.table-responsive
-                            table.table
-                                tbody.card-title
-                                    tr
-                                        td.text-right
-                                            //i.tim-icons.icon-bell-55.text-primary
-                                            i.card-label(id='rain_status')
-                                            i.status(id='rain_status_result') بدون بارش
-                                            br
-                                    tr
-                                        td.text-right
-                                            //i.tim-icons.icon-bell-55.text-primary
-                                            i.card-label(id='rain_alarm') بدون هشدار
-                                            i.status(id='rain_alarm1')
-                                            i.status(id='rain_alarm8')
-                                            br
 
-                                    tr
-
-                                        td.text-right(style='display:flex;justify-content:space-between;align-items:baseline ')
-                                            div
-                                                i.far.fa-cloud-rain.fa-fw
-                                                i.card-label(id='rain_total')
-                                            div(style='text-align:left')
-                                                i.unit(id='rain_total_unit')
-                                                i.value(id='rain_total_value')
-                                    tr
-                                        td.text-right(style='display:flex;justify-content:space-between;align-items:baseline ')
-                                            div
-                                                i.far.fa-cloud-rain.fa-fw
-                                                i.card-label(id='rain_24')
-                                            div(style='text-align:left')
-                                                i.unit(id='rain_24_unit')
-                                                i.value(id='rain_24_value')
-                                    tr
-                                        td.text-right(style='display:flex;justify-content:space-between;align-items:baseline ')
-                                            div
-                                                i.far.fa-cloud-rain.fa-fw
-                                                i.card-label(id='rain_12')
-                                            div(style='text-align:left')
-                                                i.unit(id='rain_12_unit')
-                                                i.value(id='rain_12_value')
-                                    tr
-                                        td.text-right
-                                            div
-                                                i(id='date_of_last_recieved_data_label') تاریخ آخرین داده
-                                            br
-                                            div(style='text-align:left')
-                                                i.value(id='date_of_last_recieved_data_value')
-                                                //-br
-                                                //-i.value(id='hour_of_last_recieved_data_value')
-                                    tr
-                                        td.text-right
-                                            div
-                                                i(id='date_of_installation_label') تاریخ نصب
-                                            br
-                                            div(style='text-align:left')
-                                                i.value(id='date_of_installation_value')
-                                            //-br
-                                            //-i.value(id='hour_of_installation_value')
     script(type='text/javascript').
+        $("#amari-report-div").height($("#sensors-box").height());
+        $("#amari-box").height($("#sensors-box").height());
+        $("#sensors-box").height($("#amari-report-div").height());
+
+        $("#mantaghei-report-div").height($("#sensors-box").height());
+        $("#mantaghei-box").height($("#sensors-box").height());
+        $("#sensors-box").height($("#mantaghei-report-div").height());
+
         function validateHhMm(inputField) {
             var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField.value);
 
@@ -871,29 +947,38 @@ mixin detailCardClimax(stnID,sensor,position)
             $('#mantaghei-table' + #{stnID} + ' tbody').remove();
             $('#mantaghei-table' + #{stnID}).append('<tbody></tbody>');
         }
+        function resetClimaTable() {
+            let tableID = 'Table' + #{stnID};
+
+            $('#clima-amari-table' + #{stnID} + ' tbody').remove();
+            $('#clima-amari-table' + #{stnID}).append('<tbody></tbody>');
+            $('#clima-amari-table' + #{stnID} + ' thead').remove();
+
+            $('#clima-mantaghei-table' + #{stnID} + ' tbody').remove();
+            $('#clima-mantaghei-table' + #{stnID}).append('<tbody></tbody>');
+            $('#clima-mantaghei-table' + #{stnID} + ' thead').remove();
+        }
         let amariReport = true;
         let standardReport = false;
         let mantagheiReport = false;
-        let totalRainBool = true;
-        let absoluteRainBool = false;
-        let rateRainBool = false;
-        let barDisplayBool = true;
-        let lineDisplayBool = false;
         let selectedPeriod = '';
+
+        let multi_line_chart = false;
+
         $('#standard-report-div').hide();
         $('#mantaghei-report-div').hide();
 
         $('#report-chart').hide();
-        $('#amari-table').hide();
-        $('#mantaghei-table').hide();
-        $('#download-button').addClass("disabled");
+        $('#clima-amari-table').hide();
+        $('#clima-mantaghei-table').hide();
+        // $('#download-button').addClass("disabled");
 
         $('#amari-report-input').on("change", function () {
             resetCanvas();
             resetTable();
             $('#report-chart').hide();
-            $('#amari-table').hide();
-            $('#mantaghei-table').hide();
+            $('#clima-amari-table').hide();
+            $('#clima-mantaghei-table').hide();
             amariReport = true;
             standardReport = false;
             mantagheiReport = false;
@@ -905,8 +990,8 @@ mixin detailCardClimax(stnID,sensor,position)
             resetCanvas();
             resetTable();
             $('#report-chart').hide();
-            $('#amari-table').hide();
-            $('#mantaghei-table').hide();
+            $('#clima-amari-table').hide();
+            $('#clima-mantaghei-table').hide();
             amariReport = false;
             standardReport = true;
             mantagheiReport = false;
@@ -918,8 +1003,8 @@ mixin detailCardClimax(stnID,sensor,position)
             resetCanvas();
             resetTable();
             $('#report-chart').hide();
-            $('#amari-table').hide();
-            $('#mantaghei-table').hide();
+            $('#clima-amari-table').hide();
+            $('#clima-mantaghei-table').hide();
             amariReport = false;
             standardReport = false;
             mantagheiReport = true;
@@ -928,41 +1013,143 @@ mixin detailCardClimax(stnID,sensor,position)
             $('#standard-report-div').hide();
 
         });
-        $('#rate-rain-input').on("change", function () {
-            rateRainBool = true;
-            totalRainBool = false;
-            absoluteRainBool = false;
-            barDisplayBool = true;
-            lineDisplayBool = false;
-            $('#4').addClass("disabled");
-            $('#4').removeClass("active");
-            $('#3').addClass("active");
-        });
-        $('#absolute-rain-input').on("change", function () {
-            absoluteRainBool = true;
-            totalRainBool = false;
-            rateRainBool = false;
-            barDisplayBool = true;
-            lineDisplayBool = false;
-            $('#4').addClass("disabled");
-            $('#4').removeClass("active");
-            $('#3').addClass("active");
-        });
-        $('#total-rain-input').on("change", function () {
-            totalRainBool = true;
-            absoluteRainBool = false;
-            rateRainBool = false;
-            $('#4').removeClass("disabled");
+
+        $('#multi-chart-input').on("change", function () {
+            if (this.checked === true) {
+                $('#sensors-bar').hide();
+                resetCanvas();
+                multi_line_chart = true;
+            }
+            if (this.checked === false) {
+                $('#sensors-bar').show();
+                resetCanvas();
+                multi_line_chart = false;
+            }
         });
 
-        $('#bar-display-input').on("change", function () {
-            barDisplayBool = true;
-            lineDisplayBool = false;
+        $('#single-chart-input').on("change", function () {
+            $("[id*='-lb']").hide();
+            if (this.checked === true) {
+                $('#sensors-bar').show();
+                resetCanvas();
+                multi_line_chart = false;
+            }
+            if (this.checked === false) {
+                $('#sensors-bar').hide();
+                resetCanvas();
+                multi_line_chart = true;
+            }
         });
-        $('#line-display-input').on("change", function () {
-            lineDisplayBool = true;
-            barDisplayBool = false;
+
+
+
+
+        let chk_tmp = false;
+        let chk_wsp = false;
+        let chk_hum = false;
+        let chk_evp = false;
+        let chk_wdr = false;
+        let chk_rad = false;
+        let chk_prs = false;
+        sensores = {'tmp':false,'wsp':false,'hum':false,'evp':false,'wdr':false,'rad':false,'prs':false};
+        $('#check-tmp').on("change", function () {
+            if (this.checked === true){
+                chk_tmp = true;
+                sensores['tmp'] = true;
+            }
+            if (this.checked === false){
+                chk_tmp = false;
+                sensores['tmp'] = false;
+            }
         });
+        $('#check-wsp').on("change", function () {
+            if (this.checked === true) {
+                chk_wsp = true;
+                sensores['wsp'] = true;
+            }
+            if (this.checked === false) {
+                chk_wsp = false;
+                sensores['wsp'] = false;
+            }
+        });
+        $('#check-hum').on("change", function () {
+            if (this.checked === true) {
+                chk_hum = true;
+                sensores['hum'] = true;
+            }
+            if (this.checked === false) {
+                chk_hum = false;
+                sensores['hum'] = false;
+            }
+        });
+        $('#check-evp').on("change", function () {
+            if (this.checked === true) {
+                chk_evp = true;
+                sensores['evp'] = true;
+            }
+            if (this.checked === false) {
+                chk_evp = false;
+                sensores['evp'] = false;
+            }
+        });
+        $('#check-wdr').on("change", function () {
+            if (this.checked === true) {
+                chk_wdr = true;
+                sensores['wdr'] = true;
+            }
+            if (this.checked === false) {
+                chk_wdr = false;
+                sensores['wdr'] = false;
+            }
+        });
+        $('#check-rad').on("change", function () {
+            if (this.checked === true) {
+                chk_rad = true;
+                sensores['rad'] = true;
+            }
+            if (this.checked === false) {
+                chk_rad = false;
+                sensores['rad'] = false;
+            }
+        });
+        $('#check-prs').on("change", function () {
+            if (this.checked === true) {
+                chk_prs = true;
+                sensores['prs'] = true;
+            }
+            if (this.checked === false) {
+                chk_prs = false;
+                sensores['prs'] = false;
+            }
+        });
+
+        function checkAll(chb) {
+            let checkBoxes = document.querySelectorAll("[id^='check-']");
+            checkBoxes.forEach(ch => {
+                if(chb.checked === true)
+                ch.checked = true;
+                else
+                ch.checked = false;
+            });
+            if(chb.checked === true){
+                sensores['tmp'] = true;
+                sensores['wsp'] = true;
+                sensores['hum'] = true;
+                sensores['evp'] = true;
+                sensores['wdr'] = true;
+                sensores['rad'] = true;
+                sensores['prs'] = true;
+            }else{
+                sensores['tmp'] = false;
+                sensores['wsp'] = false;
+                sensores['hum'] = false;
+                sensores['evp'] = false;
+                sensores['wdr'] = false;
+                sensores['rad'] = false;
+                sensores['prs'] = false;
+            }
+        }
+
 
         $('#start-time-input').pickatime({
             darktheme: true
@@ -1056,64 +1243,132 @@ mixin detailCardClimax(stnID,sensor,position)
             43200: '۱ ماهه'
         };
 
+        let resultLabels = undefined;
+        let resultValues = undefined;
+        let myChart1 = undefined;
+        let myChart2 = undefined;
+
+        $("#tmp-lb").click(function () {
+            let chart_data = resultValues[0];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[0];
+            myChart2.update();
+        });
+        $("#wsp-lb").click(function () {
+            let chart_data = resultValues[1];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[1];
+            myChart2.update();
+        });
+
+        $("#hum-lb").click(function () {
+            let chart_data = resultValues[2];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[2];
+            myChart2.update();
+        });
+        $("#evp-lb").click(function () {
+            let chart_data = resultValues[3];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[3];
+            myChart2.update();
+        });
+        $("#wdr-lb").click(function () {
+            let chart_data = resultValues[4];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[4];
+            myChart2.update();
+        });
+        $("#rad-lb").click(function () {
+            let chart_data = resultValues[5];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[5];
+            myChart2.update();
+        });
+        $("#prs-lb").click(function () {
+            let chart_data = resultValues[6];
+            let data = myChart2.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = resultLabels[6];
+            myChart2.update();
+        });
         function submit_amari() {
-            if ((startDate == '') || ($('#cal-amari-start').val() == "")) {
-                alert('لطفا تاریخ شروع را انتخاب کنید!');
-                return;
-            }
-            if ((endDate == '') || ($('#cal-amari-end').val() == "")) {
-                alert('لطفا تاریخ پایان را انتخاب کنید!');
-                return;
-            }
-            if ((!startTimeIsCorrect) || ($('#start-time-input').val() == '')) {
-                alert('لطفا زمان شروع را انتخاب کنید!');
-                return;
-            }
-            if ((!endTimeIsCorrect) || ($('#end-time-input').val() == '')) {
-                alert('لطفا زمان پایان را انتخاب کنید!');
-                return;
-            }
-            if (selectedPeriod == '') {
-                alert('لطفا بازه زمانی را انتخاب کنید!');
-                return;
-            }
+            // if ((startDate == '') || ($('#cal-amari-start').val() == "")) {
+            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
+            //     return;
+            // }
+            // if ((endDate == '') || ($('#cal-amari-end').val() == "")) {
+            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
+            //     return;
+            // }
+            // if ((!startTimeIsCorrect) || ($('#start-time-input').val() == '')) {
+            //     alert('لطفا زمان شروع را انتخاب کنید!');
+            //     return;
+            // }
+            // if ((!endTimeIsCorrect) || ($('#end-time-input').val() == '')) {
+            //     alert('لطفا زمان پایان را انتخاب کنید!');
+            //     return;
+            // }
+            // if (selectedPeriod == '') {
+            //     alert('لطفا بازه زمانی را انتخاب کنید!');
+            //     return;
+            // }
             resetCanvas();
-            resetTable();
-        //displayRainAmariReport(#{stnID},totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            displayRainAmariReport(#{stnID}, true, totalRainBool, absoluteRainBool, rateRainBool, barDisplayBool, lineDisplayBool, startDate, endDate, startTime, endTime, selectedPeriod);
+            resetClimaTable();
+
+
+            displayClimaAmariReport(#{stnID}, '1399-04-26', '1399-04-29', '01:02', '12:00', '60', sensores , multi_line_chart);
+            //displayClimaAmariReport(#{stnID}, startDate, endDate, startTime, endTime, selectedPeriod, sensores, multi_line_chart);
+
+
             periodLabel = periodLabels[selectedPeriod];
             // switch(selectedPeriod){
             //     case (30): periodLabel
             // }
-            if (totalRainBool)
-                chartLabel = 'باران تجمیعی';
-            if (absoluteRainBool)
-                chartLabel = 'میزان بارش';
-            if (rateRainBool)
-                chartLabel = 'شدت بارش';
+
+            chartLabel = 'مقادیر درخواستی';
+
             chartLabel = chartLabel + " در بازه های ";
             chartLabel = chartLabel + periodLabel;
             $('#report-chart' + ' h3').text("").append(chartLabel);
         }
         function download_amari() {
-        //getExcelRainAmariReport(#{stnID},false,totalRainBool,absoluteRainBool,rateRainBool,barDisplayBool,lineDisplayBool,'1399-03-07','1399-03-09','01:02','12:00','60');
-            getExcelRainAmariReport(#{stnID}, true, totalRainBool, absoluteRainBool, rateRainBool, barDisplayBool, lineDisplayBool, startDate, endDate, startTime, endTime, selectedPeriod);
+              getExcelClimaAmariReport(#{stnID},'1399-04-26', '1399-04-29', '01:02', '12:00', '60', sensores);
+            //getExcelClimaAmariReport(#{stnID}, startDate, endDate, startTime, endTime, selectedPeriod, sensores);
         }
         function submit_mantaghei() {
-            if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
-                alert('لطفا تاریخ شروع را انتخاب کنید!');
-                return;
-            }
-            if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
-                alert('لطفا تاریخ پایان را انتخاب کنید!');
-                return;
-            }
-            resetCanvas();
-            resetTable();
-            displayRainMantagheireport(#{stnID}, true, startDate, endDate);
-            chartLabel = 'باران تجمیعی';
+            // if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
+            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
+            //     return;
+            // }
+            // if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
+            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
+            //     return;
+            // }
+
+            resetClimaTable();
+            displayClimaMantagheireport(#{stnID}, '1399-04-26', '1399-04-29', sensores);
+            //displayClimaMantagheireport(#{stnID}, startDate, endDate, sensores);
+            chartLabel = 'مقادیر درخواستی';
             $('#report-chart' + ' h3').text("").append(chartLabel);
         }
         function download_mantaghei() {
-            getExcelRainMantagheiReport(#{stnID}, true, startDate, endDate);
+            // if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
+            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
+            //     return;
+            // }
+            // if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
+            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
+            //     return;
+            // }
+
+            resetClimaTable();
+            getExcelClimaMantagheiReport(#{stnID}, '1399-04-26', '1399-04-29', sensores);
+            //getExcelClimaMantagheiReport(#{stnID}, startDate, endDate, sensores);
         }

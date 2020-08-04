@@ -210,6 +210,10 @@ exports.convert_gdate_to_jdate = function(gTime){
     let jTime = moment(gTime,'YYYY/MM/DD HH:mm:ss').format('HH:mm        jYYYY/jM/jD');
     return jTime;
 }
+exports.convert_gdate_to_jdate_2 = function(gTime){
+    let jTime = moment(gTime,'YYYY/MM/DD HH:mm:ss').format('jYYYY/jM/jD');
+    return jTime;
+}
 exports.subtract_times = function (endDate,startDate,endHour,startHour) {
     endDate = moment(endDate, 'jYYYY/jM/jD').format('MM/DD/YYYY');
     startDate = moment(startDate, 'jYYYY/jM/jD').format('MM/DD/YYYY');
@@ -220,6 +224,11 @@ exports.subtract_times = function (endDate,startDate,endHour,startHour) {
     let diff =(endTime.getTime() - startTime.getTime()) / 1000;
     diff /= 60;
     return Math.abs(Math.round(diff));
+}
+exports.convert_mongodate_to_isodate = function(mongoTime){
+    let isoTime = mongoTime.toISOString();
+    isoTime = moment(isoTime).format('YYYY-MM-DD HH:mm:ss');
+    return isoTime
 }
 exports.jNow = function (){
     let now = moment();

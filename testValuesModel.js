@@ -1,8 +1,8 @@
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+const catchAsync = require('./utils/catchAsync');
+const AppError = require('./utils/appError');
 /////
-let pool = require('../database');
-let my_date = require('../utils/my_date');
+let pool = require('./testdatabase');
+let my_date = require('./utils/my_date');
 
 /////
 let moment = require('moment-jalaali');
@@ -37,9 +37,10 @@ let sql_query_rain_mantaghei_report_values = "call rain_mantaghei_report(?,?,?,?
 let sql_query_level_amari_report_values = "call level_amari_report(?,?,?,?,?);";
 let sql_query_level_mantaghei_report_values = "call level_mantaghei_report(?,?,?,?);";
 let sql_query_clima_amari_report_values = "call clima_amari_report(?,?,?,?,?);";
+let sql_query_last_sample_time = "SELECT sample_time  FROM sample_values where client_id=? and channel_index=?  ORDER BY sample_time DESC  limit 1";
 async function getRainTotalOfmonth(client_id, channel_index_rain_total, date, returnValue, x) {
     //console.log("DATE===============");
-        //console.log(date);
+    //console.log(date);
     return new Promise(function (resolve, reject) {
         pool.query(sql_query_rain_total_of_end_of_month, [client_id, channel_index_rain_total, date[1], date[1]], function (error, rows, fields) {
             if (error) {
@@ -343,211 +344,29 @@ module.exports = {
                 resolve(returnValue)
             });
         });
+
+
+    },
+    getLastSampleTime: function (client_id,channel_index) {
+        return new Promise(function (resolve, reject) {
+            let returnValue = "";
+            pool.query(sql_query_last_sample_time, [client_id, channel_index], function (error, rows, fields) {
+                if (error) {
+                    //console.log("EEERRRORRRRR");
+                    returnValue = "";
+                } else {
+                    //console.log("rows befor reverse===");
+                    //console.log(rows);
+                    //rows.reverse();
+                    //console.log("rows after reverse=");
+                    //console.log(rows);
+                    returnValue = rows;
+                }
+                resolve(returnValue)
+            });
+        });
     }
 }
 
 
-
-
-
-
-
-// //*************************************************************************************************BBBBB
-// //*************************************************************************************************BBBBB
-// getRainTotalOfPastMonths: async (client_id, channel_index_rain_total) => { 
-//         let returnValue=[{a:0},{b:0},{c:0},{d:0},{e:0},{f:0},{g:0},{h:0},{i:0},{j:0},{k:0},{l:0}];
-//         let counter = {x:0};
-
-//         var end_of_months = my_date.get_end_of_months_in_georgian();
-//         var dates_array = [];
-//         var now = moment();
-//         var jm =now.jMonth();//  0 <= now.jMonth() =< 11
-//         jm++;
-//         for(i=0;i<=11;i++){
-//             dates_array.push(end_of_months[jm]);
-//             jm++;
-//             if(jm>11)
-//             jm=0;
-//         } 
-
-//         for(i=0;i<=11;i++){
-//             console.log("DATES_ARRAY==================");
-//             console.log(dates_array[i]);
-//         }
-
-//         var now = moment();
-//         var jm =now.jMonth();//  0 <= now.jMonth() =< 11
-//         function getRainTotalOfmonth2(client_id, channel_index_rain_total,date,returnValue,counter) {
-//             return new Promise(function (resolve, reject) {            
-//                     pool.query(sql_query_rain_total_of_end_of_month, [client_id, channel_index_rain_total ,date] , function (error, rows, fields) {
-//                         if (error) {
-//                             console.log("EEERRRORRRRR");
-//                             rainTotal = "";
-//                             resolve(rainTotal);
-//                         } else {
-//                             console.log(JSON.parse(JSON.stringify(rows))[0].value);
-//                             var rainTotal = JSON.parse(JSON.stringify(rows))[0].value;
-
-//                             var i = counter.x;
-//                             switch(i) {
-//                                 case 0:
-//                                     returnValue[0].a = rainTotal;
-//                                   break;
-//                                   case 1:
-//                                     returnValue[1].b = rainTotal;
-//                                   break;
-//                                   case 2:
-//                                     returnValue[2].c = rainTotal;
-//                                   break;
-//                                   case 3:
-//                                     returnValue[3].d = rainTotal;
-//                                   break;
-//                                   case 4:
-//                                     returnValue[4].e = rainTotal;
-//                                   break;
-//                                   case 5:
-//                                     returnValue[5].f = rainTotal;
-//                                   break;
-//                                   case 6:
-//                                     returnValue[6].g = rainTotal;
-//                                   break;
-//                                   case 7:
-//                                     returnValue[7].h = rainTotal;
-//                                   break;
-//                                   case 8:
-//                                     returnValue[8].i = rainTotal;
-//                                   break;
-//                                   case 9:
-//                                     returnValue[9].j = rainTotal;
-//                                   break;
-//                                   case 10:
-//                                     returnValue[10].k = rainTotal;
-//                                   break;
-//                                   case 11:
-//                                     returnValue[11].l = rainTotal;
-//                                   break;
-
-//                             }
-//                             i++;
-//                             counter.x = i;
-//                             resolve(returnValue);
-//                         }
-//                     });
-//             });
-//         }
-//   let result;
-//         return result = dates_array.reduce( (accumulatorPromise, date) => {
-//         return accumulatorPromise.then(() => {
-//             return getRainTotalOfmonth2(client_id,channel_index_rain_total,date,returnValue,counter);
-//             //returnValue.push=(getRainTotalOfmonth2(client_id,channel_index_rain_total,date))
-//         });
-//         }, Promise.resolve());
-//         //} );
-
-//         // result.then(e => {
-//         //     return returnValue;
-//         // });
-
-
-//         // result.then(e => {
-//         // console.log("Resolution is complete! Let's party.")
-//         // for(i=0;i<=11;i++){
-//         //     console.log("return_value===");
-//         //     console.log(returnValue[i]);
-//         // }
-//         // });  
-
-
-//     }
-
-
-// }
-// //*************************************************************************************************EEEEE
-// //*************************************************************************************************EEEEE
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////REDIUS
-
-// function methodThatReturnsAPromise(id) {
-//     return new Promise((resolve, reject) => {
-//       setTimeout(() => {
-//         console.log(`Processing ${id}`);
-//         resolve(id);
-//       }, 1000);
-//     });
-//   }
-
-//   let result = [1,2,3].reduce( (accumulatorPromise, nextID) => {
-//     return accumulatorPromise.then(() => {
-//       return methodThatReturnsAPromise(nextID);
-//     });
-//   }, Promise.resolve());
-
-//   result.then(e => {
-//     console.log("Resolution is complete! Let's party.")
-//   });
-
-// var end_of_months = my_date.get_end_of_months_in_georgian();
-// var dates_array = [];
-// var now = moment();
-// var jm =now.jMonth();//  0 <= now.jMonth() =< 11
-// jm++;
-// for(i=0;i<=11;i++){
-//     dates_array.push(end_of_months[jm]);
-//     jm++;
-//     if(jm>11)
-//         jm=0;
-// } 
-
-// for(i=0;i<=11;i++){
-//     console.log("DATES_ARRAY==================");
-//     console.log(dates_array[i]);
-// }
-
-// var now = moment();
-// var jm =now.jMonth();//  0 <= now.jMonth() =< 11
-// function getRainTotalOfmonth2(client_id, channel_index_rain_total,date) {
-//     return new Promise(function (resolve, reject) {            
-//                 pool.query(sql_query_rain_total_of_end_of_month, [client_id, channel_index_rain_total ,date] , function (error, rows, fields) {
-//                     if (error) {
-//                         console.log("EEERRRORRRRR");
-//                         rainTotal = "";
-//                         resolve(rainTotal);
-//                     } else {
-//                         console.log(JSON.parse(JSON.stringify(rows))[0].value);
-//                         var rainTotal = JSON.parse(JSON.stringify(rows))[0].value;
-//                         resolve(rainTotal);
-//                     }
-//                 });
-//     });
-//   }
-
-//   let result = dates_array.reduce( (accumulatorPromise, date) => {
-//     return accumulatorPromise.then(() => {
-//       return getRainTotalOfmonth2(101,25,date);
-//     });
-//   }, Promise.resolve());
-
-//   result.then(e => {
-//     console.log("Resolution is complete! Let's party.")
-//   });
-///////////////////////////////////////////////////////////////////////////////////////////////MAP
-// function getRainTotalOfPastMonths(client_id, channel_index_rain_total) {
-//     var now = moment();
-//     var jm =now.jMonth()+1;//  0 <= now.jMonth() =< 11
-//     var end_of_months = my_date.get_end_of_months_in_georgian();
-//     var returnValue = [];
-//     const promises = end_of_months.map(async date => {
-//       return await getRainTotalOfmonth(client_id, channel_index_rain_total,date);
-
-//     });
-//     return Promise.all(promises);
-// }
-// function my(){
-// console.log(getRainTotalOfPastMonths(101,25));
-// }
-// my();
-
-
-///////////////////////////////////////////////////////////////////////////////////////
 

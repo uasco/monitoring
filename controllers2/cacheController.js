@@ -55,11 +55,11 @@ exports.rainValuesFlatCacheMiddleWare = (req, res, next) => {
     let key = "__express__" + req.url;
     let cacheContent = rainValuesCache.getKey(key);
     if (cacheContent) {
-         console.log("*******************rainValues cached happened**********************");
+         // console.log("*******************rainValues cached happened**********************");
         res.send(cacheContent);
         return;
     } else {
-         console.log("%%%%%%%%%%%%%%%%%%%rainValues cached DID NOT happend %%%%%%%%%%%%%%%");
+         // console.log("%%%%%%%%%%%%%%%%%%%rainValues cached DID NOT happend %%%%%%%%%%%%%%%");
         res.sendResponse = res.send;
         res.send = body => {
             rainValuesCache.setKey(key, body);
@@ -78,9 +78,10 @@ exports.clearRainValuesCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         rainValuesCache.removeKey(key);
         rainValuesCache.save(true);
-        return 0;
-    } else {
-        return -1;
+        res.end();
+    }else {
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 /////load new cache :
@@ -115,9 +116,10 @@ exports.clearRainTotalsMonthsCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         rainTotalsMonthsCache.removeKey(key);
         rainTotalsMonthsCache.save(true);
-        return 0;
+        res.end();
     }else {
-        return -1;
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 /////load new cache :
@@ -157,9 +159,10 @@ exports.clearLevelValueCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         levelValueCache.removeKey(key);
         levelValueCache.save(true);
-        return 0;
+        res.end();
     }else {
-        return -1;
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 /////load new cache :
@@ -193,9 +196,10 @@ exports.clearlevelLastHoursCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         levelLastHoursCache.removeKey(key);
         levelLastHoursCache.save(true);
-        return 0;
+        res.end();
     }else {
-        return -1;
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 /////load new cache :
@@ -229,9 +233,10 @@ exports.clearClimaValuesCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         climaValuesCache.removeKey(key);
         climaValuesCache.save(true);
-        return 0;
+        res.end();
     }else {
-        return -1;
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 /////load new cache :
@@ -265,9 +270,10 @@ exports.clearClimaLastHoursCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         climaLastHoursCache.removeKey(key);
         climaLastHoursCache.save(true);
-        return 0;
+        res.end();
     }else {
-        return -1;
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 /////load new cache :
@@ -303,9 +309,10 @@ exports.clearClimaRainTotalsMonthsCacheByClientID = (req, res, next) => {
     if (cacheContent) {
         climaRainTotalsMonthsCache.removeKey(key);
         climaRainTotalsMonthsCache.save(true);
-        return 0;
+        res.end();
     }else {
-        return -1;
+        res.status(404).json({"error":"not found"});
+        return;
     }
 }
 

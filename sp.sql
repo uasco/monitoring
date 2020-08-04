@@ -13,7 +13,8 @@ BEGIN
 
 END
 --
-call detect_rain_alarm(114,24,5,1,@alarm);
+set @alarm = 0;
+call detect_rain_alarm(100, 24, 5, 0.1, @alarm);
 select @alarm;
 --
 CREATE DEFINER=`root`@`%` PROCEDURE `detect_rain_start`(in cl_id int,in ch_index int ,out result bool)
@@ -28,7 +29,8 @@ BEGIN
    end if;
 END
 --
-call detect_rain_start(114,24,@result);
+set @result = 0;
+call detect_rain_start(100, 24, @result);
 select @result;
 --
 CREATE DEFINER=`root`@`%` PROCEDURE `get_val_for_alarm`(in cl_id int,in ch_index int, in n int, out v DECIMAL(8,2))
@@ -94,8 +96,9 @@ BEGIN
     drop table yourtable;
 END
 --
-call detect_flood_stop(136,74,10,0.2,@flood_stop);
-select @flood_stop ;
+set @flood_stop = 0;
+call detect_flood_stop(136, 74, 5, 0.2, @flood_stop);
+select @flood_stop;
 --
 CREATE DEFINER=`root`@`%` PROCEDURE `amari_report`(in cl_id int,in ch_index int ,in start_time datetime,in end_time datetime,in period int)
 BEGIN
@@ -192,5 +195,76 @@ BEGIN
 END
 
 ---
-call detect_rain_start2(114,24,120,@result);select @result
+set @result = 0;
+call detect_rain_start2(114, 24, 120, @result);
+select @result;
 ---
+CREATE DEFINER=`root`@`%` PROCEDURE `detect_flood_2`(in cl_id int,in ch_index int,in n int,in h float, out flood bool,out start_flood datetime)
+BEGIN
+   DECLARE v1 , v2 decimal(8,2);
+   DECLARE t1, t2 datetime;
+   DECLARE l int;
+   create temporary table tt as select  value , sample_time from sample_values where client_id=cl_id and channel_index=ch_index order by sample_time desc limit n ;
+   set l = n;
+   loop_label:  LOOP
+   if (l <= 1) then
+   LEAVE  loop_label;
+   end if;
+
+   select value , sample_time from  (select value , sample_time from tt order by sample_time desc limit l) as alias1 order by sample_time asc limit 1 into v1 , t1;
+   set l = l-1;
+   select value , sample_time from  (select value , sample_time from tt order by sample_time desc limit l) as alias2 order by sample_time asc limit 1 into v2 , t2;
+   if (v2-v1)>h then
+      set flood = true;
+      set start_flood = t2;
+       LEAVE  loop_label;
+   else
+	  set flood = false;
+   end if;
+
+   END loop;
+
+
+  drop table tt;
+END
+---
+set @alarm = 0;
+set @start_flood = '0';
+call detect_flood_2(136, 74, 7, 0.2, @alarm, @start_flood);
+select @flood, @start_flood;
+---
+CREATE DEFINER=`root`@`%` PROCEDURE `detect_flood_stop_2`(in cl_id int,in ch_index int,in h float, in start_flood datetime , out flood_stop bool,out s_f datetime)
+BEGIN
+   DECLARE v1 , v2 decimal(8,2);
+   DECLARE t1, t2 datetime;
+   DECLARE l ,n int;
+   create temporary table tt as select  value , sample_time from sample_values where client_id=cl_id and channel_index=ch_index and sample_time >= start_flood order by sample_time asc ;
+   select count(*) from tt into n;
+   set l = n;
+   loop_label:  LOOP
+   if (l <= 1) then
+   LEAVE  loop_label;
+   end if;
+
+   select value , sample_time from  (select value , sample_time from tt order by sample_time desc limit n) as alias1 order by sample_time asc limit 1 into v1 , t1;
+   set l = l-1;
+   select value , sample_time from  (select value , sample_time from tt order by sample_time desc limit l) as alias2 order by sample_time asc limit 1 into v2 , t2;
+   if (v2-v1)>h then
+      set flood_stop = false;
+      set s_f = t2;
+      LEAVE  loop_label;
+   else
+	  set flood_stop = true;
+      set s_f = t1;
+   end if;
+
+   END loop;
+
+
+  drop table tt;
+END
+---
+set @flood_stop = 0;
+set @s_f = '0';
+call uasco.detect_flood_stop_2(136, 74, 0.2, '2020-08-02 07:04:00', @flood_stop, @s_f);
+select @flood_stop, @s_f;

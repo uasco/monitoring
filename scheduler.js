@@ -73,34 +73,34 @@ exports.clearRainValuesCache = () => {
             flatCache.clearCacheById('rainValuesCache','../cache/');
             cacheController.clearRainValuesCache();
             logger.info('clearRainValuesCache', { message: `time : ${new Date()}` });
-            // let rain_stations_names_and_ids;
-            // axios.get(url + '/api/stations/rain')
-            //     .then(response => {
-            //         if (response.data.data.length) {
-            //             rain_stations_names_and_ids = response.data.data;
-            //             rain_stations_names_and_ids.map(el => {
-            //                 axios.get(url + '/api/values/rain/' + el.id + '/' + 'r')
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
-            // let clima_rain_stations_names_and_ids;
-            // axios.get(url + '/api/stations/clima')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             clima_rain_stations_names_and_ids = response.data.data;
-            //             clima_rain_stations_names_and_ids.map(el => {
-            //                 axios.get(url + '/api/values/rain/' + el.id + '/' + 'c')
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let rain_stations_names_and_ids;
+            axios.get(url + '/api/stations/rain')
+                .then(response => {
+                    if (response.data.data.length) {
+                        rain_stations_names_and_ids = response.data.data;
+                        rain_stations_names_and_ids.map(el => {
+                            axios.get(url + '/api/values/rain/' + el.id + '/' + 'r')
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            let clima_rain_stations_names_and_ids;
+            axios.get(url + '/api/stations/clima')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        clima_rain_stations_names_and_ids = response.data.data;
+                        clima_rain_stations_names_and_ids.map(el => {
+                            axios.get(url + '/api/values/rain/' + el.id + '/' + 'c')
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
             after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+clearRainCachePeriodInMinutes);
             this.setTime(new CronTime(after50MinutesFromNow));
@@ -134,34 +134,34 @@ exports.clearRainTotalsMonthsCache = () => {
             logger.info('clearRainTotalsMonthsCache', { message: `time : ${new Date()}` });
 
 
-            // let rain_stations_names_and_ids;
-            // axios.get(url + '/api/stations/rain')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             rain_stations_names_and_ids = response.data.data;
-            //             rain_stations_names_and_ids.map(el => {
-            //                 axios.get(url + '/api/values/raintotalsmonths/' + el.id + '/' + 'r')
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
-            // let clima_rain_stations_names_and_ids;
-            // axios.get(url + '/api/stations/clima')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             clima_rain_stations_names_and_ids = response.data.data;
-            //             clima_rain_stations_names_and_ids.map(el => {
-            //                 axios.get(url + '/api/values/raintotalsmonths/' + el.id + '/' + 'c')
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let rain_stations_names_and_ids;
+            axios.get(url + '/api/stations/rain')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        rain_stations_names_and_ids = response.data.data;
+                        rain_stations_names_and_ids.map(el => {
+                            axios.get(url + '/api/values/raintotalsmonths/' + el.id + '/' + 'r')
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            let clima_rain_stations_names_and_ids;
+            axios.get(url + '/api/stations/clima')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        clima_rain_stations_names_and_ids = response.data.data;
+                        clima_rain_stations_names_and_ids.map(el => {
+                            axios.get(url + '/api/values/raintotalsmonths/' + el.id + '/' + 'c')
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
             start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
             this.setTime(new CronTime(start_of_next_month));
@@ -186,20 +186,20 @@ exports.clearLevelValueCache = () => {
             cacheController.clearLevelValueCache();
             logger.info('clearLevelValueCache', { message: `time : ${new Date()}` });
 
-            // let level_stations_names_and_ids;
-            // axios.get(url + '/api/stations/level')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             level_stations_names_and_ids = response.data.data;
-            //             level_stations_names_and_ids.map(el => {
-            //                 axios.get(url + '/api/values/level/' + el.id)
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let level_stations_names_and_ids;
+            axios.get(url + '/api/stations/level')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        level_stations_names_and_ids = response.data.data;
+                        level_stations_names_and_ids.map(el => {
+                            axios.get(url + '/api/values/level/' + el.id)
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
 
             after5HoursFromNow.setHours(after5HoursFromNow.getHours()+clearLevelCachePeriodInHours);
@@ -231,20 +231,20 @@ exports.clearLevelLastHoursCache = () => {
             logger.info('clearLevelLastHoursCache', { message: `time : ${new Date()}` });
 
 
-            // let level_stations_names_and_ids;
-            // axios.get(url + '/api/stations/level')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             level_stations_names_and_ids = response.data.data;
-            //             level_stations_names_and_ids.map(el => {
-            //                 axios.get(url + '/api/values/levellasthours/' + el.id)
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let level_stations_names_and_ids;
+            axios.get(url + '/api/stations/level')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        level_stations_names_and_ids = response.data.data;
+                        level_stations_names_and_ids.map(el => {
+                            axios.get(url + '/api/values/levellasthours/' + el.id)
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
 
 
@@ -278,24 +278,24 @@ exports.clearClimaValuesCache = () => {
             logger.info('clearClimaValuesCache', { message: `time : ${new Date()}` });
 
 
-            // let clima_stations_names_and_ids;
-            // const sensores = ['TMP', 'HUM', 'PRS', 'WSP', 'WDR', 'EVP', 'RAD', 'RAINC'];
-            //
-            //     axios.get(url + '/api/stations/clima')
-            //         .then(response => {
-            //             if (response.data.data.length > 0) {
-            //                 clima_stations_names_and_ids = response.data.data;
-            //                 clima_stations_names_and_ids.map(el => {
-            //                     sensores.map(sensor => {
-            //                         axios.get(url + '/api/values/clima/' + sensor.toLowerCase() + '/' + el.id)
-            //                     })
-            //                 });
-            //
-            //             }
-            //         })
-            //         .catch(error => {
-            //             console.log(error);
-            //         });
+            let clima_stations_names_and_ids;
+            const sensores = ['TMP', 'HUM', 'PRS', 'WSP', 'WDR', 'EVP', 'RAD', 'RAINC'];
+
+                axios.get(url + '/api/stations/clima')
+                    .then(response => {
+                        if (response.data.data.length > 0) {
+                            clima_stations_names_and_ids = response.data.data;
+                            clima_stations_names_and_ids.map(el => {
+                                sensores.map(sensor => {
+                                    axios.get(url + '/api/values/clima/' + sensor.toLowerCase() + '/' + el.id)
+                                })
+                            });
+
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
 
             after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+clearClimaCachePeriodInMinutes);
             this.setTime(new CronTime(after50MinutesFromNow));
@@ -329,24 +329,24 @@ exports.clearClimaLastHoursCache = () => {
             cacheController.clearClimaLastHoursCache();
             logger.info('clearClimaLastHoursCache', { message: `time : ${new Date()}` });
 
-            // let clima_stations_names_and_ids;
-            // const sensores = ['TMP', 'HUM', 'PRS', 'WSP', 'WDR', 'EVP', 'RAD'];
-            //
-            // axios.get(url + '/api/stations/clima')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             clima_stations_names_and_ids = response.data.data;
-            //             clima_stations_names_and_ids.map(el => {
-            //                 sensores.map(sensor => {
-            //                         axios.get(url + '/api/values/climalasthours/' + sensor.toLowerCase() + '/' + el.id);
-            //                 })
-            //             });
-            //
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let clima_stations_names_and_ids;
+            const sensores = ['TMP', 'HUM', 'PRS', 'WSP', 'WDR', 'EVP', 'RAD'];
+
+            axios.get(url + '/api/stations/clima')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        clima_stations_names_and_ids = response.data.data;
+                        clima_stations_names_and_ids.map(el => {
+                            sensores.map(sensor => {
+                                    axios.get(url + '/api/values/climalasthours/' + sensor.toLowerCase() + '/' + el.id);
+                            })
+                        });
+
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
 
             after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+clearClimaCachePeriodInMinutes);
@@ -380,19 +380,19 @@ exports.clearClimaRainTotalsMonthsCache = () => {
             cacheController.clearClimaRainTotalsMonthsCache();
             logger.info('clearClimaRainTotalsMonthsCache', { message: `time : ${new Date()}` });
 
-            // let clima_stations_names_and_ids;
-            // axios.get(url + '/api/stations/clima')
-            //     .then(response => {
-            //         if (response.data.data.length > 0) {
-            //             clima_stations_names_and_ids = response.data.data;
-            //             clima_stations_names_and_ids.map(el => {
-            //                         axios.get(url + '/api/values/climaraintotalsmonths/' + 'rainc' + '/' + el.id);
-            //             });
-            //         }
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //     });
+            let clima_stations_names_and_ids;
+            axios.get(url + '/api/stations/clima')
+                .then(response => {
+                    if (response.data.data.length > 0) {
+                        clima_stations_names_and_ids = response.data.data;
+                        clima_stations_names_and_ids.map(el => {
+                                    axios.get(url + '/api/values/climaraintotalsmonths/' + 'rainc' + '/' + el.id);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                });
 
             this.setTime(new CronTime(new Date(my_date.get_start_of_next_month_in_georgian())));
             this.start();

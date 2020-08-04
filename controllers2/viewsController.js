@@ -133,7 +133,7 @@ exports.getOverView = catchAsync(async (req, res, next) => {
 
 
         rStations_temp2 = JSON.stringify(rStations_temp2);
-        console.log(`rStations_temp2 >>>>> ${rStations_temp2}`);
+        // console.log(`rStations_temp2 >>>>> ${rStations_temp2}`);
         rStations_temp2 = JSON.parse(rStations_temp2);
 
         if (rStations_temp2.length > 8) {
@@ -145,7 +145,7 @@ exports.getOverView = catchAsync(async (req, res, next) => {
         }
         pageTypeArr[0] = 1;
 
-        console.log(`rStations >>>>> ${rStations}`);
+        // console.log(`rStations >>>>> ${rStations}`);
     }
     if (lStns) {
         lStations_temp = await Station.getStationsNamesAndIDs('level');
@@ -179,9 +179,9 @@ exports.getOverView = catchAsync(async (req, res, next) => {
     else
         slideIndex = global.si;
 
-    console.log(`slideIndex ============>>>>>>>>>   ${slideIndex}`);
+    // console.log(`slideIndex ============>>>>>>>>>   ${slideIndex}`);
     rStations = JSON.stringify(rStations);
-    console.log(`rstations :=> ${rStations}`);
+    // console.log(`rstations :=> ${rStations}`);
     rStations = JSON.parse(rStations);
 
 
@@ -218,10 +218,10 @@ exports.getDetail = catchAsync(async (req, res, next) => {
         case 'clima6': pageType = pageType + '6';
         case 'clima7': pageType = pageType + '7';
     }
-    console.log(`stnID === ${stnID}`);
-    console.log(`sensor === ${sensor}`);
-    console.log(`position === ${position}`);
-    console.log(`subtype === ${subtype}`);
+    // console.log(`stnID === ${stnID}`);
+    // console.log(`sensor === ${sensor}`);
+    // console.log(`position === ${position}`);
+    // console.log(`subtype === ${subtype}`);
     res.status(200).render('detail', {
         pretty: true,
         pageType: pageType,//'detail',

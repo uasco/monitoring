@@ -1,4 +1,5 @@
 function myFunction(x) {
+    let hiColor = 'rgb(252,51,255)';
     var defaultFont = "Yekan";
     if (x.matches) { // If media query matches
         // document.body.style.backgroundColor = "yellow";
@@ -12,8 +13,8 @@ function myFunction(x) {
 
         $('[class="trial"]').css('font-size', 'large').css('font-family', defaultFont).css('align', 'right');
         $('[class="card-title"]').css('font-family', defaultFont);
-        $('[class="value"]').css('color', 'rgba(243, 51, 255)').css('font-size', '4.3vw');
-        $('[class="unit"]').css('color', 'rgba(243, 51, 255)').css('font-size', '3.3vw');
+        $('[class="value"]').css('font-size', '4.3vw');
+        $('[class="unit"]').css('font-size', '3.3vw');
         $('[class="mytitle"]').css('z-index', '21').css('text-align', 'center').css('font-size', '3.8vw').css('position', 'relative').css('top', '-3.5vh').css('left', '0.8vh').css('color', 'red').css('height', '8px').css('font-family', defaultFont);
         elms = document.querySelectorAll("#date_of_last_recieved_data_label")
         elms.forEach(elm => {
@@ -22,7 +23,6 @@ function myFunction(x) {
         elms = document.querySelectorAll("#date_of_last_recieved_data_value");
         elms.forEach(elm => {
             elm.style.fontSize = "3.5vw";
-            elm.style.color = "rgba(243, 51, 255)";
         })
         $('[class="chart-area"]').css('height', '28vh').css('width', '100%')
         $('div.ad > img.ad').css('height', '30vh').css('width', '95vw')
@@ -43,8 +43,8 @@ function myFunction(x) {
 
         $('[class="trial"]').css('font-size', 'large').css('font-family', defaultFont).css('align', 'right');
         $('[class="card-title"]').css('font-family', defaultFont);
-        $('[class="value"]').css('color', 'rgba(243, 51, 255)').css('font-size', '1.3vw');
-        $('[class="unit"]').css('color', 'rgba(243, 51, 255)').css('font-size', '1vw');
+        $('[class="value"]').css('font-size', '1.3vw');
+        $('[class="unit"]').css('font-size', '1vw');
         $('[class="mytitle"]').css('z-index', '21').css('text-align', 'center').css('font-size', '1.8vw').css('position', 'relative').css('top', '-5.5vh').css('left', '8.5vh').css('color', 'red').css('height', '0px').css('font-family', defaultFont);
         elms = document.querySelectorAll("#date_of_last_recieved_data_label")
         elms.forEach(elm => {
@@ -53,15 +53,12 @@ function myFunction(x) {
         elms = document.querySelectorAll("#date_of_last_recieved_data_value");
         elms.forEach(elm => {
             elm.style.fontSize = "1.1vw";
-            elm.style.color = "rgba(243, 51, 255)";
         })
         $('[class="chart-area"]').css('height', '20vh').css('width', '100%')
         $('div.ad > img.ad').css('height', '90vh').css('width', '90vw')
 
         $('[class="fixed-plugin"]').css('top', '94vh').css('right', '18px').css('width', '45px')
         $('[class="control-box"]').css('top', '94vh').css('right', '64px').css('width', '130px')
-        // $('#mapid').css('width','87vw').css('height','92vh')
-        //$('#mapid').css('width','82%').css('height','90%')
     }
 }
 

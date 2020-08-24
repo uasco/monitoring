@@ -7,6 +7,8 @@ const AppError = require('../utils/appError');
 const Station = require('../models2/stationModel');
 
 const Stn = require('../models/stnModel');
+
+const statusController = require('../controllers2/statusController');
 exports.createStns = catchAsync( async (req, res, next) =>{
     // console.log("OKKKKKKKKKKKKKKKKKKKKKKKKKKKK111111111111");
     const stations = await Station.getStationsNamesAndIDs('all');
@@ -80,6 +82,7 @@ function pruneArray(stations,stns) {
 exports.getOverView = catchAsync(async (req, res, next) => {
 
     //console.log(`req.body=====================================${JSON.stringify(req.body)} `);
+    // console.log(`getOverView===============================`);
     let pageTypeArr = [0,0,0];
     let data = req.body;// =  {"rstations":["101","102","103"],"rcstations":["93","104"],"lstations":["98","99","100"],"cstations":["84","93","104"]}
     // console.log(`data=====================================${JSON.stringify(data)} `);
@@ -222,6 +225,8 @@ exports.getDetail = catchAsync(async (req, res, next) => {
     // console.log(`sensor === ${sensor}`);
     // console.log(`position === ${position}`);
     // console.log(`subtype === ${subtype}`);
+
+    statusController.setStationLastTimeCheck(sensor,stnID,undefined)
     res.status(200).render('detail', {
         pretty: true,
         pageType: pageType,//'detail',

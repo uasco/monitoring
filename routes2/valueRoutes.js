@@ -34,6 +34,13 @@ router
     authController.restrictTo('admin', 'lead-guide')
   );
 router
+    .route('/rainstartrainvalues/:id/:subtype')
+    .get(valuesController.getRainStartRainValues)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
+router
     .route('/rainamarireport/:id/:c/:sd/:ed/:sh/:eh/:p')
     //.get(valuesController.getRainTotalsOfPastMonths)//without cache
     .get(valuesController.getRainAmariReport)
@@ -136,7 +143,7 @@ router
 router.post('/climaamarireport/', valuesController.getClimaAmariReport);
 router.post('/excelclimaamarireport/', valuesController.getExcelClimaAmariReport);
 router.post('/climamantagheireport/', valuesController.getClimaMantagheiReport);
-router.post('/excelclimamantagheireport/', valuesController.getEXcelClimaMantagheiReport);
+router.post('/excelclimamantagheireport/', valuesController.getExcelClimaMantagheiReport);
 
 //////////////////////////////////////////////////////////////////E
 

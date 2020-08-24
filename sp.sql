@@ -268,3 +268,346 @@ set @flood_stop = 0;
 set @s_f = '0';
 call uasco.detect_flood_stop_2(136, 74, 0.2, '2020-08-02 07:04:00', @flood_stop, @s_f);
 select @flood_stop, @s_f;
+---
+CREATE DEFINER=`root`@`%` PROCEDURE `clima_mantaghei_report`(in cl_id int,in sensores_indexes varchar(255) ,in start_time datetime,in end_time datetime)
+BEGIN
+ DECLARE evp_a int;
+ DECLARE rainc_t int;
+ DECLARE tmp_l int;
+ DECLARE tmp_n int;
+ DECLARE tmp_x int;
+ DECLARE hum_l int;
+ DECLARE evp_a_6_30_val decimal(8,2);
+ DECLARE evp_a_18_30_val decimal(8,2);
+ DECLARE rainc_t_6_30_val decimal(8,2);
+ DECLARE rainc_t_18_30_val decimal(8,2);
+ DECLARE tmp_n_6_30_val decimal(8,2);
+ DECLARE tmp_x_18_30_val decimal(8,2);
+ DECLARE tmp_l_6_30_val decimal(8,2);
+ DECLARE tmp_l_12_30_val decimal(8,2);
+ DECLARE tmp_l_18_30_val decimal(8,2);
+ DECLARE hum_l_6_30_val decimal(8,2);
+ DECLARE hum_l_12_30_val decimal(8,2);
+ DECLARE hum_l_18_30_val decimal(8,2);
+ DECLARE t_val_1 decimal(8,2);
+ DECLARE t_val_2 decimal(8,2);
+ DECLARE t_val_3 decimal(8,2);
+ DECLARE t_val_4 decimal(8,2);
+ set start_time = DATE_SUB(start_time, INTERVAL 1 day);
+ SELECT JSON_EXTRACT(sensores_indexes, '$.evp_a') into evp_a;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.rainc_t') into rainc_t;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp_l') into tmp_l;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp_n') into tmp_n;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp_x') into tmp_x;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.hum_l') into hum_l;
+ create temporary table tt as select value, sample_time , channel_index from sample_values where client_id=cl_id and channel_index in (evp_a,rainc_t,tmp_l,tmp_n,tmp_x,hum_l) and  sample_time between start_time  and end_time ;
+ create temporary table yourtable (evp_a_6_30 decimal(8,2),evp_a_18_30 decimal(8,2),rainc_t_6_30 decimal(8,2),rainc_t_18_30 decimal(8,2),tmp_n_6_30 decimal(8,2),tmp_x_18_30 decimal(8,2),tmp_l_6_30 decimal(8,2),hum_l_6_30 decimal(8,2),tmp_l_12_30 decimal(8,2),hum_l_12_30 decimal(8,2),tmp_l_18_30 decimal(8,2),hum_l_18_30 decimal(8,2),sample_time datetime);
+
+ loop_label:  LOOP
+ if (start_time >= end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT AVG(value)  FROM tt  where  sample_time between DATE_ADD(start_time, INTERVAL 1110 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and channel_index = evp_a  into evp_a_6_30_val;
+ SELECT AVG(value)  FROM tt  where  sample_time between DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) and channel_index = evp_a  into evp_a_18_30_val;
+
+ SELECT value  FROM tt  where  sample_time >=  DATE_ADD(start_time, INTERVAL 1110 minute) and channel_index = rainc_t ORDER BY sample_time DESC limit 1  into t_val_1;
+ SELECT value  FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and channel_index = rainc_t ORDER BY sample_time DESC limit 1  into t_val_2;
+ SELECT value  FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) and channel_index = rainc_t ORDER BY sample_time DESC limit 1  into t_val_3;
+	set rainc_t_6_30_val=t_val_2 - t_val_1;
+    set rainc_t_18_30_val=t_val_3 - t_val_2;
+
+  SELECT MIN(value) FROM tt  where  sample_time between DATE_ADD(start_time, INTERVAL 390 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and channel_index = tmp_n into tmp_n_6_30_val;
+  SELECT MAX(value) FROM tt  where  sample_time between DATE_ADD(start_time, INTERVAL 1110 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) and channel_index = tmp_x into tmp_x_18_30_val;
+
+  SELECT value FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and channel_index = tmp_l ORDER BY sample_time DESC limit 1  into tmp_l_6_30_val;
+  SELECT value FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and channel_index = hum_l ORDER BY sample_time DESC limit 1  into hum_l_6_30_val;
+  SELECT value FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 750 minute) and channel_index = tmp_l ORDER BY sample_time DESC limit 1  into tmp_l_12_30_val;
+  SELECT value FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 750 minute) and channel_index = hum_l ORDER BY sample_time DESC limit 1  into hum_l_12_30_val;
+  SELECT value FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) and channel_index = tmp_l ORDER BY sample_time DESC limit 1  into tmp_l_18_30_val;
+  SELECT value FROM tt  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) and channel_index = hum_l ORDER BY sample_time DESC limit 1  into hum_l_18_30_val;
+
+
+
+ insert into yourtable(evp_a_6_30,evp_a_18_30,rainc_t_6_30,rainc_t_18_30,tmp_n_6_30,tmp_x_18_30,tmp_l_6_30,hum_l_6_30,tmp_l_12_30 ,hum_l_12_30 ,tmp_l_18_30 ,hum_l_18_30 ,sample_time) values (evp_a_6_30_val,evp_a_18_30_val,rainc_t_6_30_val,rainc_t_18_30_val,tmp_n_6_30_val,tmp_x_18_30_val,tmp_l_6_30_val,hum_l_6_30_val,tmp_l_12_30_val,hum_l_12_30_val,tmp_l_18_30_val,hum_l_18_30_val, DATE_ADD(start_time, INTERVAL 1 day));
+ set start_time = DATE_ADD(start_time, INTERVAL 1 DAY);
+ END loop;
+  select * from yourtable;
+ drop table yourtable;
+ drop table tt;
+END
+---
+CREATE DEFINER=`root`@`%` PROCEDURE `clima_mantaghei_report`(in cl_id int,in sensores_indexes varchar(255) ,in start_time datetime,in end_time datetime)
+BEGIN
+ DECLARE evp_a int;
+ DECLARE rainc_t int;
+ DECLARE tmp_l int;
+ DECLARE tmp_n int;
+ DECLARE tmp_x int;
+ DECLARE hum_l int;
+ DECLARE evp_a_6_30_val decimal(8,2);
+ DECLARE evp_a_18_30_val decimal(8,2);
+ DECLARE rainc_t_6_30_val decimal(8,2);
+ DECLARE rainc_t_18_30_val decimal(8,2);
+ DECLARE tmp_n_6_30_val decimal(8,2);
+ DECLARE tmp_x_18_30_val decimal(8,2);
+ DECLARE tmp_l_6_30_val decimal(8,2);
+ DECLARE tmp_l_12_30_val decimal(8,2);
+ DECLARE tmp_l_18_30_val decimal(8,2);
+ DECLARE hum_l_6_30_val decimal(8,2);
+ DECLARE hum_l_12_30_val decimal(8,2);
+ DECLARE hum_l_18_30_val decimal(8,2);
+ DECLARE t_val_1 decimal(8,2);
+ DECLARE t_val_2 decimal(8,2);
+ DECLARE t_val_3 decimal(8,2);
+ DECLARE t_val_4 decimal(8,2);
+ set start_time = DATE_SUB(start_time, INTERVAL 1 day);
+ SELECT JSON_EXTRACT(sensores_indexes, '$.evp_a') into evp_a;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.rainc_t') into rainc_t;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp_l') into tmp_l;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp_n') into tmp_n;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp_x') into tmp_x;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.hum_l') into hum_l;
+ create temporary table tt as select value, sample_time , channel_index from sample_values where client_id=cl_id and channel_index in (evp_a,rainc_t,tmp_l,tmp_n,tmp_x,hum_l) and  sample_time between start_time  and end_time ;
+ create temporary table tt_evp_a as select value, sample_time , channel_index from tt where channel_index =evp_a and  sample_time between start_time  and end_time ;
+ create temporary table tt_rainc_t as select value, sample_time , channel_index from tt where channel_index =rainc_t and  sample_time between start_time  and end_time ;
+ create temporary table tt_tmp_l as select value, sample_time , channel_index from tt where channel_index =tmp_l and  sample_time between start_time  and end_time ;
+ create temporary table tt_tmp_n as select value, sample_time , channel_index from tt where channel_index =tmp_n and  sample_time between start_time  and end_time ;
+ create temporary table tt_tmp_x as select value, sample_time , channel_index from tt where channel_index =tmp_x and  sample_time between start_time  and end_time ;
+ create temporary table tt_hum_l as select value, sample_time , channel_index from tt where channel_index =hum_l and  sample_time between start_time  and end_time ;
+ create temporary table yourtable (evp_a_6_30 decimal(8,2),evp_a_18_30 decimal(8,2),rainc_t_6_30 decimal(8,2),rainc_t_18_30 decimal(8,2),tmp_n_6_30 decimal(8,2),tmp_x_18_30 decimal(8,2),tmp_l_6_30 decimal(8,2),hum_l_6_30 decimal(8,2),tmp_l_12_30 decimal(8,2),hum_l_12_30 decimal(8,2),tmp_l_18_30 decimal(8,2),hum_l_18_30 decimal(8,2),sample_time datetime);
+
+ loop_label:  LOOP
+ if (start_time >= end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT AVG(value)  FROM tt_evp_a  where  sample_time between DATE_ADD(start_time, INTERVAL 1110 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) into evp_a_6_30_val;
+ SELECT AVG(value)  FROM tt_evp_a  where  sample_time between DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) and channel_index = evp_a  into evp_a_18_30_val;
+
+ SELECT value  FROM tt_rainc_t  where  sample_time >=  DATE_ADD(start_time, INTERVAL 1110 minute)  ORDER BY sample_time DESC limit 1  into t_val_1;
+ SELECT value  FROM tt_rainc_t  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute)  ORDER BY sample_time DESC limit 1  into t_val_2;
+ SELECT value  FROM tt_rainc_t  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute)  ORDER BY sample_time DESC limit 1  into t_val_3;
+	set rainc_t_6_30_val=t_val_2 - t_val_1;
+    set rainc_t_18_30_val=t_val_3 - t_val_2;
+
+  SELECT MIN(value) FROM tt_tmp_n  where  sample_time between DATE_ADD(start_time, INTERVAL 390 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute) into tmp_n_6_30_val;
+  SELECT MAX(value) FROM tt_tmp_x  where  sample_time between DATE_ADD(start_time, INTERVAL 1110 minute) and DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) into tmp_x_18_30_val;
+
+  SELECT value FROM tt_tmp_l  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute)  ORDER BY sample_time DESC limit 1  into tmp_l_6_30_val;
+  SELECT value FROM tt_hum_l  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 390 minute)  ORDER BY sample_time DESC limit 1  into hum_l_6_30_val;
+  SELECT value FROM tt_tmp_l  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 750 minute)  ORDER BY sample_time DESC limit 1  into tmp_l_12_30_val;
+  SELECT value FROM tt_hum_l  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 750 minute)  ORDER BY sample_time DESC limit 1  into hum_l_12_30_val;
+  SELECT value FROM tt_tmp_l  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) ORDER BY sample_time DESC limit 1  into tmp_l_18_30_val;
+  SELECT value FROM tt_hum_l  where  sample_time >= DATE_ADD((DATE_ADD(start_time, INTERVAL 1 day)), INTERVAL 1110 minute) ORDER BY sample_time DESC limit 1  into hum_l_18_30_val;
+
+
+
+ insert into yourtable(evp_a_6_30,evp_a_18_30,rainc_t_6_30,rainc_t_18_30,tmp_n_6_30,tmp_x_18_30,tmp_l_6_30,hum_l_6_30,tmp_l_12_30 ,hum_l_12_30 ,tmp_l_18_30 ,hum_l_18_30 ,sample_time) values (evp_a_6_30_val,evp_a_18_30_val,rainc_t_6_30_val,rainc_t_18_30_val,tmp_n_6_30_val,tmp_x_18_30_val,tmp_l_6_30_val,hum_l_6_30_val,tmp_l_12_30_val,hum_l_12_30_val,tmp_l_18_30_val,hum_l_18_30_val, DATE_ADD(start_time, INTERVAL 1 day));
+ set start_time = DATE_ADD(start_time, INTERVAL 1 DAY);
+ END loop;
+  select * from yourtable;
+ drop table yourtable;
+ drop table tt;
+ drop table tt_evp_a;
+ drop table tt_rainc_t;
+ drop table tt_tmp_n;
+ drop table tt_tmp_x;
+ drop table tt_tmp_l;
+ drop table tt_hum_l;
+END
+---
+CREATE DEFINER=`root`@`%` PROCEDURE `clima_amari_report`(in cl_id int,in sensores_indexes varchar(255) ,in start_time datetime,in end_time datetime,in period int)
+BEGIN
+ DECLARE tmp int;
+ DECLARE wsp int;
+ DECLARE hum int;
+ DECLARE evp int;
+ DECLARE wdr int;
+ DECLARE rad int;
+ DECLARE prs int;
+ DECLARE t_value float;
+ DECLARE t_sample_time datetime;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp') into tmp;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.wsp') into wsp;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.hum') into hum;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.evp') into evp;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.wdr') into wdr;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.rad') into rad;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.prs') into prs;
+ create temporary table tt as select value, sample_time , channel_index from sample_values where client_id=cl_id and channel_index in (tmp,wsp,hum,evp,wdr,rad,prs) and  sample_time between start_time  and end_time ;
+ create temporary table yourtable (sensor varchar(255), value float,sample_time datetime);
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = tmp ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('tmp',t_value, t_sample_time);
+ end if;
+   SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = wsp ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('wsp',t_value, t_sample_time);
+ end if;
+  SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = hum ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('hum',t_value, t_sample_time);
+ end if;
+  SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = evp ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('evp',t_value, t_sample_time);
+ end if;
+  SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = wdr ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('wdr',t_value, t_sample_time);
+ end if;
+  SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = rad ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('rad',t_value, t_sample_time);
+ end if;
+  SELECT value , sample_time FROM tt  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) and channel_index = prs ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('prs',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+
+ select * from yourtable;
+ -- select sensores_indexes;
+ drop table yourtable;
+ drop table tt;
+END
+----
+CREATE DEFINER=`root`@`%` PROCEDURE `clima_amari_report`(in cl_id int,in sensores_indexes varchar(255) ,in start_time datetime,in end_time datetime,in period int)
+BEGIN
+ DECLARE tmp int;
+ DECLARE wsp int;
+ DECLARE hum int;
+ DECLARE evp int;
+ DECLARE wdr int;
+ DECLARE rad int;
+ DECLARE prs int;
+ DECLARE t_value float;
+ DECLARE t_sample_time datetime;
+ DECLARE base_start_time datetime;
+ set base_start_time = start_time;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.tmp') into tmp;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.wsp') into wsp;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.hum') into hum;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.evp') into evp;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.wdr') into wdr;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.rad') into rad;
+ SELECT JSON_EXTRACT(sensores_indexes, '$.prs') into prs;
+ create temporary table tt as select value, sample_time , channel_index from sample_values where client_id=cl_id and channel_index in (tmp,wsp,hum,evp,wdr,rad,prs) and  sample_time between start_time  and end_time ;
+ create temporary table tt_tmp as select value, sample_time , channel_index from tt where channel_index =tmp and  sample_time between start_time  and end_time ;
+ create temporary table tt_wsp as select value, sample_time , channel_index from tt where channel_index =wsp and  sample_time between start_time  and end_time ;
+ create temporary table tt_hum as select value, sample_time , channel_index from tt where channel_index =hum and  sample_time between start_time  and end_time ;
+ create temporary table tt_evp as select value, sample_time , channel_index from tt where channel_index =evp and  sample_time between start_time  and end_time ;
+ create temporary table tt_wdr as select value, sample_time , channel_index from tt where channel_index =wdr and  sample_time between start_time  and end_time ;
+ create temporary table tt_rad as select value, sample_time , channel_index from tt where channel_index =rad and  sample_time between start_time  and end_time ;
+ create temporary table tt_prs as select value, sample_time , channel_index from tt where channel_index =prs and  sample_time between start_time  and end_time ;
+
+ create temporary table yourtable (sensor varchar(255), value float,sample_time datetime);
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT value , sample_time FROM tt_tmp  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE)  ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('tmp',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ set start_time = base_start_time;
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT value , sample_time FROM tt_wsp  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE) ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('wsp',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ set start_time = base_start_time;
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT value , sample_time FROM tt_hum  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE)  ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+ if FOUND_ROWS() > 0 then
+    insert into yourtable(sensor,value,sample_time) values ('hum',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ set start_time = base_start_time;
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+ SELECT value , sample_time FROM tt_evp  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE)  ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('evp',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ set start_time = base_start_time;
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+  SELECT value , sample_time FROM tt_wdr  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE)  ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('wdr',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ set start_time = base_start_time;
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+  SELECT value , sample_time FROM tt_rad  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE)  ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('rad',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ set start_time = base_start_time;
+ loop_label:  LOOP
+ if (start_time > end_time) then
+ LEAVE  loop_label;
+ end if;
+  SELECT value , sample_time FROM tt_prs  where  sample_time between start_time and DATE_ADD(start_time, INTERVAL period MINUTE)  ORDER BY sample_time DESC limit 1  into t_value,t_sample_time;
+  if FOUND_ROWS() > 0 then
+	insert into yourtable(sensor,value,sample_time) values ('prs',t_value, t_sample_time);
+ end if;
+ set start_time = DATE_ADD(start_time, INTERVAL period MINUTE);
+ END loop;
+ select * from yourtable;
+ drop table yourtable;
+ drop table tt;
+ drop table tt_tmp;
+ drop table tt_wsp;
+ drop table tt_hum;
+ drop table tt_evp;
+ drop table tt_wdr;
+ drop table tt_rad;
+ drop table tt_prs;
+END
+---
+CREATE DEFINER=`root`@`%` PROCEDURE `detect_rain_start2`(in cl_id int,in ch_index int ,in rain_start_height float,in difftime int,out result bool,out rain_start_time datetime ,out last_sample_time datetime)
+BEGIN
+	declare  last_val,pre_last_val float;
+    declare last_time, pre_last_time datetime;
+    select value , sample_time from sample_values where client_id=cl_id and channel_index=ch_index order by sample_time desc limit 1 into last_val , last_time;
+    set pre_last_time = DATE_SUB(last_time, INTERVAL difftime MINUTE);
+    select value , sample_time from sample_values where client_id=cl_id and channel_index=ch_index and sample_time <= pre_last_time order by sample_time desc limit 1 into pre_last_val , pre_last_time;
+    create temporary table tt as select value, sample_time from sample_values where client_id=cl_id and channel_index=ch_index and  sample_time between pre_last_time  and last_time order by sample_time asc;
+    SELECT sample_time  FROM tt where value > pre_last_val  group by value order by sample_time asc limit 1 into rain_start_time;
+    if (last_val-pre_last_val)>=rain_start_height then
+       set result = true;
+	 else
+	   set result = false;
+    end if;
+    set last_sample_time = last_time;
+    drop table tt;
+END

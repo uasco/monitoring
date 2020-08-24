@@ -143,7 +143,7 @@ gradientLineChartConfiguration = {
   }
 };
 
-function drawBarChart(chart_id, months, values, label) {
+function drawSmallBarChart(chart_id, months, values, label) {
 
   var ctx = document.getElementById(chart_id).getContext("2d");
 
@@ -238,7 +238,7 @@ function drawBarChart(chart_id, months, values, label) {
         }
   });
 }
-function drawLineChart(chart_id, months, values , sensor, ) {
+function drawSmallLineChart(chart_id, months, values , label ) {
 
   var ctx = document.getElementById(chart_id).getContext("2d");
 
@@ -258,7 +258,7 @@ function drawLineChart(chart_id, months, values , sensor, ) {
       // labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد' , 'شهریور'],
       labels: months,
       datasets: [{
-        label: sensor,
+        label: label,
         fill: true,
         backgroundColor: gradientStroke,
         hoverBackgroundColor: gradientStroke,
@@ -274,7 +274,7 @@ function drawLineChart(chart_id, months, values , sensor, ) {
     options: gradientLineChartConfiguration
   });
 }
-function drawBigBarChart(chart_id, months, values, label) {
+function drawLargeBarChart(chart_id, months, values, label) {
 
   var ctx = document.getElementById(chart_id).getContext("2d");
 
@@ -369,7 +369,7 @@ function drawBigBarChart(chart_id, months, values, label) {
         }
   });
 }
-function drawBigLineChart(chart_id, months, values , sensor) {
+function drawLargeLineChart(chart_id, months, values , sensor) {
 
   var ctx = document.getElementById(chart_id).getContext("2d");
 
@@ -463,7 +463,7 @@ function drawBigLineChart(chart_id, months, values , sensor) {
         }
   });
 }
-// function drawBigMultiLineClimaChart(chart_id, labels, values , label , sensor) {
+// function drawLargeMultiLineClimaChart(chart_id, labels, values , label , sensor) {
 //   console.log(`chart id ::: ${chart_id}`);
 //   console.log(`tmp_values ::: ${values[0]}`);
 //
@@ -583,7 +583,7 @@ function drawBigLineChart(chart_id, months, values , sensor) {
 //   let myChart = new Chart(ctx, config);
 //
 // }
-function drawBigMultiLineClimaChart(chart_id, labels, values , label) {
+function drawLargeMultiLineClimaChart(chart_id, labels, values , label) {
   let tmp_labels = labels[0];
   let tmp_values = values[0];
   let wsp_labels = labels[1];
@@ -909,10 +909,8 @@ function drawBigMultiLineClimaChart(chart_id, labels, values , label) {
       }
     }
   });
-
-
 }
-function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) {
+function drawLargeMultiLineClimaChart2(chart_id, labels, values , label , sensor) {
 
 
   let chart_labels = [];
@@ -933,7 +931,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
   let prs_labels = labels[6];
   let prs_values = values[6];
 
-
+  let default_sensor = 'مقدار';
   $("[id*='-lb']").hide();
 
   if(prs_labels.length >0){
@@ -942,6 +940,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#prs-lb").show();
     $("#prs-lb").addClass('active');
+    default_sensor = 'فشار هوا';
   }
   if(rad_labels.length >0){
     chart_data = rad_values;
@@ -949,6 +948,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#rad-lb").show();
     $("#rad-lb").addClass('active');
+    default_sensor = 'تشعشع';
   }
   if(wdr_labels.length >0){
     chart_data = wdr_values;
@@ -956,6 +956,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#wdr-lb").show();
     $("#wdr-lb").addClass('active');
+    default_sensor = 'جهت باد';
   }
   if(evp_labels.length >0){
     chart_data = evp_values;
@@ -963,6 +964,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#evp-lb").show();
     $("#evp-lb").addClass('active');
+    default_sensor = 'تبخیر';
   }
   if(hum_labels.length >0){
     chart_data = hum_values;
@@ -970,6 +972,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#hum-lb").show();
     $("#hum-lb").addClass('active');
+    default_sensor = 'رطوبت';
   }
   if(wsp_labels.length >0){
     chart_data = wsp_values;
@@ -977,6 +980,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#wsp-lb").show();
     $("#wsp-lb").addClass('active');
+    default_sensor = 'سرعت باد';
   }
   if(tmp_labels.length >0){
     chart_data = tmp_values;
@@ -984,6 +988,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     $("[id*='-lb']").removeClass('active');
     $("#tmp-lb").show();
     $("#tmp-lb").addClass('active');
+    default_sensor = 'دما';
   }
 
 
@@ -1055,7 +1060,7 @@ function drawBigMultiLineClimaChart2(chart_id, labels, values , label , sensor) 
     data: {
       labels: chart_labels,
       datasets: [{
-        label: "My First dataset",
+        label: default_sensor,
         fill: true,
         backgroundColor: gradientStroke,
         borderColor: '#d346b1',

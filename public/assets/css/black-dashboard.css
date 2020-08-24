@@ -20044,6 +20044,36 @@ Copyright (c) 2015 Daniel Eden
 .rain {
   background: #3e4dd5;
 }
+.raining .value{
+  color: #f9fbfb;
+}
+.raining .unit{
+  color: #f9fbfb;
+}
+.shower {
+  background: #8a3ed5;
+}
+.shower .value{
+  color: #f9fbfb;
+}
+.shower .unit{
+  color: #f9fbfb;
+}
+.shower-heavy {
+  background: #d53e7d;
+}
+.shower-heavy .value{
+  color: #f9fbfb;
+}
+.shower-heavy .unit{
+  color: #f9fbfb;
+}
+.value {
+  color : #e11aba;
+}
+.unit {
+  color : #e11aba;
+}
 
 /* ///// */
 

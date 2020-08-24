@@ -110,7 +110,7 @@ async  function setStationLastTimeCheck(stnType,stnID,lastSampleTime) {
     if(stnType==='rain'){
        await Stn.findOneAndUpdate({ client_id:stnID },{$set:{last_time_check:lastSampleTime}});
     }else if(stnType==='level'){
-        console.log('inja');
+        // console.log('inja');
        await Stn.findOneAndUpdate({ client_id:stnID },{$set:{last_time_check:lastSampleTime}});
     }
 }

@@ -3,21 +3,22 @@ mixin detailCardRain(stnID,sensor,position,subtype)
         $(document).ready(function () {
             if(`#{subtype}` === 'r'){
                 getRainValuesForRainDetailCard(#{stnID});
-                checkRainStart(#{stnID}, 'false');
+                //- checkRainStart(#{stnID}, 'false');
+                setTimeout(function() { checkRainStart(#{stnID},'false'); }, 5000);
             }else if (`#{subtype}` === 'c') {
                 getClimaRainValuesForRainDetailCard(#{stnID});
-                console.log(`checkRainStart`);
-                checkRainStart(#{stnID}, 'true');
+                //- checkRainStart(#{stnID}, 'true');
+                setTimeout(function() { checkRainStart(#{stnID},'true'); }, 5000);
             }
         })
         if (`#{subtype}` === 'r') {
             var chackAlarm = setInterval(function () {
                 checkRainStart(#{stnID}, 'false');
-            }, 30000);
+            }, 180000);
         } else if (`#{subtype}` === 'c') {
             var chackAlarm = setInterval(function () {
                 checkRainStart(#{stnID}, 'true');
-            }, 30000);
+            }, 180000);
         }
     .content
         +title('ایستگاه باران سنجی ' + position)
@@ -171,7 +172,7 @@ mixin detailCardRain(stnID,sensor,position,subtype)
                             h3.card-category
                     .card-body
                         div.chart-area(id='chart-container')
-                            - chart_id = 'BigCountryChart' + stnID
+                            - chart_id = 'large-chart' + stnID
                             canvas(id= chart_id)
                 .card(id='mantaghei-table')
                     .card-header.text-right
@@ -296,7 +297,7 @@ mixin detailCardRain(stnID,sensor,position,subtype)
             return isValid;
         }
         function resetCanvas () {
-            let chID='BigCountryChart' + #{stnID};
+            let chID='large-chart' + #{stnID};
             console.log(chID);
             console.log($('#'+chID));
             $('#'+chID).remove(); // this is my <canvas> element

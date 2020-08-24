@@ -65,7 +65,7 @@ logger.info('application started', { message: `time : ${new Date()}` });
 //RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 exports.clearRainValuesCache = () => {
     let after50MinutesFromNow = new Date();
-    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+1);
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+clearRainCachePeriodInMinutes);
     //after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
     const clearRainValuesCacheJob = new CronJob(
         after50MinutesFromNow,
@@ -125,7 +125,7 @@ exports.clearRainValuesCache = () => {
 
 exports.clearRainTotalsMonthsCache = () => {
     let start_of_next_month = new Date();//(my_date.get_start_of_next_month_in_georgian());
-    start_of_next_month.setMinutes(start_of_next_month.getMinutes()+1);
+    start_of_next_month.setMinutes(start_of_next_month.getMinutes()+50);
     const clearRainTotalsMonthsCacheJob = new CronJob(
         start_of_next_month,
         function ()  {
@@ -177,7 +177,7 @@ exports.clearRainTotalsMonthsCache = () => {
 //LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 exports.clearLevelValueCache = () => {
     let after5HoursFromNow = new Date();
-    after5HoursFromNow.setMinutes(after5HoursFromNow.getMinutes()+1);
+    after5HoursFromNow.setMinutes(after5HoursFromNow.getMinutes()+5);
     //after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
     const clearLevelValueCacheJob = new CronJob(
         after5HoursFromNow,
@@ -221,7 +221,7 @@ exports.clearLevelValueCache = () => {
 }
 exports.clearLevelLastHoursCache = () => {
     let after5HoursFromNow = new Date();
-    after5HoursFromNow.setMinutes(after5HoursFromNow.getMinutes()+1);
+    after5HoursFromNow.setMinutes(after5HoursFromNow.getMinutes()+5);
     //after5HoursFromNow.setHours(after5HoursFromNow.getHours()+5);
     const clearlevelLastHoursCacheJob = new CronJob(
         after5HoursFromNow,
@@ -268,7 +268,7 @@ exports.clearLevelLastHoursCache = () => {
 //CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 exports.clearClimaValuesCache = () => {
     let after50MinutesFromNow = new Date();
-    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+1);
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+clearClimaCachePeriodInMinutes);
     //after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
     const clearClimaValuesCacheJob = new CronJob(
         after50MinutesFromNow,
@@ -320,7 +320,7 @@ exports.clearClimaValuesCache = () => {
 }
 exports.clearClimaLastHoursCache = () => {
     let after50MinutesFromNow = new Date();
-    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+1);
+    after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+7);
     //after50MinutesFromNow.setMinutes(after50MinutesFromNow.getMinutes()+50);
     const clearClimaLastHoursCacheJob = new CronJob(
         after50MinutesFromNow,

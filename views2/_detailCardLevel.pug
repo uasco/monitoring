@@ -2,8 +2,14 @@ mixin detailCardLevel(stnID,sensor,position)
     script(type='text/javascript').
         $(document).ready(function () {
             getLevelValueForDetailCard(#{stnID});
-            checkRainStart(#{stnID},'false');
+            setTimeout(function() { checkFloodStatusForDetailCard(#{stnID}); }, 5000);
         })
+        var chackAlarm = setInterval(function () {
+            checkFloodStatusForDetailCard(#{stnID});
+        }, 180000);
+        var refreshValues = setInterval(function () {
+            getLevelValueForDetailCard(#{stnID});
+        }, 1500000);
     .content
         +title('ایستگاه سطح سنجی ' + position)
         .row
@@ -141,7 +147,7 @@ mixin detailCardLevel(stnID,sensor,position)
                             h3.card-category
                     .card-body
                         div.chart-area(id='chart-container')
-                            - chart_id = 'BigCountryChart' + stnID
+                            - chart_id = 'large-chart' + stnID
                             canvas(id= chart_id)
                 .card(id='mantaghei-table')
                     .card-header.text-right
@@ -243,7 +249,7 @@ mixin detailCardLevel(stnID,sensor,position)
             return isValid;
         }
         function resetCanvas () {
-            let chID='BigCountryChart' + #{stnID};
+            let chID='large-chart' + #{stnID};
             console.log(chID);
             console.log($('#'+chID));
             $('#'+chID).remove(); // this is my <canvas> element

@@ -6,7 +6,7 @@ mixin detailCardClimar(stnID,sensor,position)
         })
         var chackAlarm = setInterval(function () {
             checkRainStartFromClima(#{stnID});
-        }, 30000);
+        }, 180000);
     .content
         +title('ایستگاه هواشناسی ' + position + ' :  سنسور باران ')
         .row
@@ -159,7 +159,7 @@ mixin detailCardClimar(stnID,sensor,position)
                             h3.card-category
                     .card-body
                         div.chart-area(id='chart-container')
-                            - chart_id = 'BIGCountryChart' + stnID
+                            - chart_id = 'large-chart' + stnID
                             canvas(id= chart_id)
                 .card(id='mantaghei-table')
                     .card-header.text-right
@@ -284,7 +284,7 @@ mixin detailCardClimar(stnID,sensor,position)
             return isValid;
         }
         function resetCanvas() {
-            let chID = 'BigCountryChart' + #{stnID};
+            let chID = 'large-chart' + #{stnID};
             console.log(chID);
             console.log($('#' + chID));
             $('#' + chID).remove(); // this is my <canvas> element
@@ -558,7 +558,7 @@ mixin detailCardClimax(stnID,sensor,position)
         +title('ایستگاه هواشناسی ' + position)
         .row
             .col-lg-12
-                .col-lg-3(style='text-align:center')
+                .col-lg-3(id='sensors-box-container' style='text-align:center')
                     .card(id='sensors-box')
                         .card-header
                             .table-full-widt.table-responsive.table-bordered
@@ -799,14 +799,14 @@ mixin detailCardClimax(stnID,sensor,position)
                         .card-header.text-right
                             h3.card-category گزارش استاندارد :
                             .row
-                .col-lg-9(id='mantaghei-report-div')
+                .col-lg-12(id='mantaghei-report-div')
                     .card(id='mantaghei-box')
                         .card-header.text-right
                             h3.card-category گزارش آب منطقه ای :
                             .row
                                 .col-lg-6.text-right
                                     .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                        .card-header(style='display:flex;justify-content:center;align-items:baseline')
                                             div
                                                 label(for='cal-mantaghei-start') تاریخ شروع :
                                             span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -815,7 +815,7 @@ mixin detailCardClimax(stnID,sensor,position)
                                                     input.pdate.form-control-lg(id='cal-mantaghei-start' type='text'  placeholder='انتخاب تاریخ شروع', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
                                 .col-lg-6.text-right
                                     .card
-                                        .card-header(style='display:flex;justify-content:flex-start;align-items:baseline')
+                                        .card-header(style='display:flex;justify-content:center;align-items:baseline')
                                             div
                                                 label(for='cal-mantaghei-end') تاریخ پایان :
                                             span &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -823,10 +823,10 @@ mixin detailCardClimax(stnID,sensor,position)
                                                 .md-form.md-outline.datepicker(darktheme='true')
                                                     input.pdate.form-control-lg(id='cal-mantaghei-end' type='text'  placeholder='انتخاب تاریخ پایان', style='color:#dadce0;font-family:Bahij;font-size:1.5rem')
                             .row(style='display:flex;flex-direction:row;justify-content: space-around')
-                                .col-lg-5
+                                .col-lg-12
                                     .card
                                         .card-header
-                                            h3.card-category(style='display:flex;justify-content: flex-start')
+                                            h3.card-category(style='display:flex;justify-content: center')
                                                 button.btn(onclick='submit_mantaghei()')
                                                     i(style='font-size:1.1rem') &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp نمایش &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                                                 button.btn(id='download-button' onclick='download_mantaghei()')
@@ -879,7 +879,7 @@ mixin detailCardClimax(stnID,sensor,position)
 
                         .card-body
                             div.chart-area.chart-big(id='chart-container')
-                                - chart_id = 'BigCountryChart' + stnID
+                                - chart_id = 'large-chart' + stnID
                                 canvas(id= chart_id)
                 .card(id='clima-mantaghei-table')
                     .card-header.text-right
@@ -902,9 +902,9 @@ mixin detailCardClimax(stnID,sensor,position)
         $("#amari-box").height($("#sensors-box").height());
         $("#sensors-box").height($("#amari-report-div").height());
 
-        $("#mantaghei-report-div").height($("#sensors-box").height());
-        $("#mantaghei-box").height($("#sensors-box").height());
-        $("#sensors-box").height($("#mantaghei-report-div").height());
+        // $("#mantaghei-report-div").height($("#sensors-box").height());
+        // $("#mantaghei-box").height($("#sensors-box").height());
+        // $("#sensors-box").height($("#mantaghei-report-div").height());
 
         function validateHhMm(inputField) {
             var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(inputField.value);
@@ -929,7 +929,7 @@ mixin detailCardClimax(stnID,sensor,position)
             return isValid;
         }
         function resetCanvas() {
-            let chID = 'BigCountryChart' + #{stnID};
+            let chID = 'large-chart' + #{stnID};
             console.log(chID);
             console.log($('#' + chID));
             $('#' + chID).remove(); // this is my <canvas> element
@@ -985,6 +985,7 @@ mixin detailCardClimax(stnID,sensor,position)
             $('#amari-report-div').show();
             $('#standard-report-div').hide();
             $('#mantaghei-report-div').hide();
+            $('#sensors-box-container').show();
         });
         $('#standard-report-input').on("change", function () {
             resetCanvas();
@@ -1011,6 +1012,7 @@ mixin detailCardClimax(stnID,sensor,position)
             $('#mantaghei-report-div').show();
             $('#amari-report-div').hide();
             $('#standard-report-div').hide();
+            $('#sensors-box-container').hide();
 
         });
 
@@ -1252,6 +1254,7 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[0];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'دما';
             data.labels = resultLabels[0];
             myChart2.update();
         });
@@ -1259,6 +1262,7 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[1];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'سرعت باد';
             data.labels = resultLabels[1];
             myChart2.update();
         });
@@ -1267,6 +1271,7 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[2];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'رطوبت';
             data.labels = resultLabels[2];
             myChart2.update();
         });
@@ -1274,6 +1279,7 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[3];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'تبخیر';
             data.labels = resultLabels[3];
             myChart2.update();
         });
@@ -1281,6 +1287,7 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[4];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'جهت باد';
             data.labels = resultLabels[4];
             myChart2.update();
         });
@@ -1288,6 +1295,7 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[5];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'تشعشع';
             data.labels = resultLabels[5];
             myChart2.update();
         });
@@ -1295,36 +1303,37 @@ mixin detailCardClimax(stnID,sensor,position)
             let chart_data = resultValues[6];
             let data = myChart2.config.data;
             data.datasets[0].data = chart_data;
+            data.datasets[0].label = 'فشار هوا';
             data.labels = resultLabels[6];
             myChart2.update();
         });
         function submit_amari() {
-            // if ((startDate == '') || ($('#cal-amari-start').val() == "")) {
-            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((endDate == '') || ($('#cal-amari-end').val() == "")) {
-            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((!startTimeIsCorrect) || ($('#start-time-input').val() == '')) {
-            //     alert('لطفا زمان شروع را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((!endTimeIsCorrect) || ($('#end-time-input').val() == '')) {
-            //     alert('لطفا زمان پایان را انتخاب کنید!');
-            //     return;
-            // }
-            // if (selectedPeriod == '') {
-            //     alert('لطفا بازه زمانی را انتخاب کنید!');
-            //     return;
-            // }
+            if ((startDate == '') || ($('#cal-amari-start').val() == "")) {
+                alert('لطفا تاریخ شروع را انتخاب کنید!');
+                return;
+            }
+            if ((endDate == '') || ($('#cal-amari-end').val() == "")) {
+                alert('لطفا تاریخ پایان را انتخاب کنید!');
+                return;
+            }
+            if ((!startTimeIsCorrect) || ($('#start-time-input').val() == '')) {
+                alert('لطفا زمان شروع را انتخاب کنید!');
+                return;
+            }
+            if ((!endTimeIsCorrect) || ($('#end-time-input').val() == '')) {
+                alert('لطفا زمان پایان را انتخاب کنید!');
+                return;
+            }
+            if (selectedPeriod == '') {
+                alert('لطفا بازه زمانی را انتخاب کنید!');
+                return;
+            }
             resetCanvas();
             resetClimaTable();
 
 
-            displayClimaAmariReport(#{stnID}, '1399-04-26', '1399-04-29', '01:02', '12:00', '60', sensores , multi_line_chart);
-            //displayClimaAmariReport(#{stnID}, startDate, endDate, startTime, endTime, selectedPeriod, sensores, multi_line_chart);
+            // displayClimaAmariReport(#{stnID}, '1399-04-26', '1399-04-29', '01:02', '12:00', '60', sensores , multi_line_chart);
+            displayClimaAmariReport(#{stnID}, startDate, endDate, startTime, endTime, selectedPeriod, sensores, multi_line_chart);
 
 
             periodLabel = periodLabels[selectedPeriod];
@@ -1339,36 +1348,36 @@ mixin detailCardClimax(stnID,sensor,position)
             $('#report-chart' + ' h3').text("").append(chartLabel);
         }
         function download_amari() {
-              getExcelClimaAmariReport(#{stnID},'1399-04-26', '1399-04-29', '01:02', '12:00', '60', sensores);
-            //getExcelClimaAmariReport(#{stnID}, startDate, endDate, startTime, endTime, selectedPeriod, sensores);
+            // getExcelClimaAmariReport(#{stnID},'1399-04-26', '1399-04-29', '01:02', '12:00', '60', sensores);
+            getExcelClimaAmariReport(#{stnID}, startDate, endDate, startTime, endTime, selectedPeriod, sensores);
         }
         function submit_mantaghei() {
-            // if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
-            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
-            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
-            //     return;
-            // }
+            if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
+                alert('لطفا تاریخ شروع را انتخاب کنید!');
+                return;
+            }
+            if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
+                alert('لطفا تاریخ پایان را انتخاب کنید!');
+                return;
+            }
 
             resetClimaTable();
-            displayClimaMantagheireport(#{stnID}, '1399-04-26', '1399-04-29', sensores);
-            //displayClimaMantagheireport(#{stnID}, startDate, endDate, sensores);
+            // displayClimaMantagheireport(#{stnID}, '1399-04-10', '1399-04-30');
+            displayClimaMantagheireport(#{stnID}, startDate, endDate);
             chartLabel = 'مقادیر درخواستی';
             $('#report-chart' + ' h3').text("").append(chartLabel);
         }
         function download_mantaghei() {
-            // if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
-            //     alert('لطفا تاریخ شروع را انتخاب کنید!');
-            //     return;
-            // }
-            // if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
-            //     alert('لطفا تاریخ پایان را انتخاب کنید!');
-            //     return;
-            // }
+            if ((startDate == '') || ($('#cal-mantaghei-start').val() == "")) {
+                alert('لطفا تاریخ شروع را انتخاب کنید!');
+                return;
+            }
+            if ((endDate == '') || ($('#cal-mantaghei-end').val() == "")) {
+                alert('لطفا تاریخ پایان را انتخاب کنید!');
+                return;
+            }
 
             resetClimaTable();
-            getExcelClimaMantagheiReport(#{stnID}, '1399-04-26', '1399-04-29', sensores);
-            //getExcelClimaMantagheiReport(#{stnID}, startDate, endDate, sensores);
+            //getExcelClimaMantagheiReport(#{stnID}, '1399-04-20', '1399-04-29');
+            getExcelClimaMantagheiReport(#{stnID}, startDate, endDate);
         }

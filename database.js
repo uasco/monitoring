@@ -1,10 +1,10 @@
 const util = require('util')
 const mysql = require('mysql')
-const mysql_database = process.env.MYSQL_DATABASE2;
-const mysql_database_name = process.env.MYSQL_DATABASE_NAME2;
-const mysql_database_user = process.env.MYSQL_DATABASE_USER2;
-const mysql_database_password = process.env.MYSQL_DATABASE_PASSWORD2;
-const mysql_database_port = process.env.MYSQL_DATABASE_PORT2;
+const mysql_database = process.env.MYSQL_DATABASE1;
+const mysql_database_name = process.env.MYSQL_DATABASE_NAME1;
+const mysql_database_user = process.env.MYSQL_DATABASE_USER1;
+const mysql_database_password = process.env.MYSQL_DATABASE_PASSWORD1;
+const mysql_database_port = process.env.MYSQL_DATABASE_PORT1;
 const pool = mysql.createPool({
   multipleStatements: true,
   connectionLimit: 10,

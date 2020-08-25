@@ -1,7 +1,7 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const pool = require('../database');
-const sql_query_rain_start_status_2 = "set @result = 0;call detect_rain_start2(?,?,?,?,@result,@rain_start_time ,@last_sample_time);select @result, @rain_start_time, @last_sample_time;";
+const sql_query_rain_start_status_2 = "set @result = 0;set @rain_start_time = '0';set @last_sample_time = '0';call detect_rain_start2(?,?,?,?,@result,@rain_start_time ,@last_sample_time);select @result, @rain_start_time, @last_sample_time;";
 const sql_query_rain_alarm_status = "set @alarm = 0;call detect_rain_alarm(?,?,?,?,@result);select @result";
 const sql_query_level_flood_start_2 = "set @flood = 0;set @flood_started_time = '0';set @last_sample_time = '0';call detect_flood_2(?, ?, ?, ?, @flood, @flood_started_time, @last_sample_time);select @flood, @flood_started_time, @last_sample_time;";
 const sql_query_level_flood_stop_2 = "set @flood_stop = 0;set @last_sample_time = '0';call uasco.detect_flood_stop_2(?, ?, ?, ?, ?,@flood_stop,@last_sample_time);select @flood_stop,@last_sample_time;";
@@ -43,12 +43,13 @@ module.exports = {
         });
     },
     getRainStartStatus2: function (client_id , channel_index_rain_total,rain_start_height , start_stop_rain_period) {
+        // console.log(`${client_id} ${channel_index_rain_total} ${rain_start_height} ${start_stop_rain_period}`);
         return new Promise(function (resolve, reject) {
             var returnValue = "";
             pool.query(sql_query_rain_start_status_2, [client_id, channel_index_rain_total,rain_start_height, start_stop_rain_period], function (error, rows, fields) {
                 if (error) {
-                    console.log(`${client_id}  EEERRRORRRRR getRainStartStatus2 `);
-                    console.log('---------------------------------------------');
+                    // console.log(`${client_id}  EEERRRORRRRR getRainStartStatus2 `);
+                    // console.log('---------------------------------------------');
                     returnValue = -1;
                 } else {
                     // console.log(rows);
@@ -125,7 +126,7 @@ module.exports = {
             pool.query(sql_query_level_flood_start_2, [client_id, channelIndexLevel,level_flood_number_of_samples,level_flood_height_diff ], function (error, rows, fields) {
                 // console.log(`salm3 ${client_id}`);
                 if (error) {
-                    console.log(`EEERRRORRRRR ${client_id}`);
+                    console.log(`EEERRRORRRRR ${client_id} LevelFloodStart2`);
                     console.log('---------------------------------------------');
                     returnValue = -1;
                 } else {
@@ -150,7 +151,8 @@ module.exports = {
             var returnValue = "";
             pool.query(sql_query_level_flood_stop_2, [client_id, channelIndexLevel,level_flood_height_diff,level_flood_stop_sample_count,flood_started_time ], function (error, rows, fields) {
                 if (error) {
-                    console.log(`${client_id}EEERRRORRRRR`);
+                    console.log(`${client_id} 
+                    EEERRRORRRRR LevelFloodStop2`);
                     console.log('---------------------------------------------');
                     returnValue = -1;
                 } else {

@@ -571,13 +571,17 @@ function checkFloodStatus(stnID){
         type: 'GET',
         dataType: 'json',
         success: (response) => {
-            // console.log('inside checkFloodStatus:');
-            // console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
+            console.log('inside checkFloodStatus:');
+            console.log(`stnid = ${stnID} => RESPONSE = ${response.data}`);
             status = response.data;
             if(status !== -1) {
                 if (status === 1) {
                     $('#' + stnID + ' i' + '#flood_status').text("");
                     $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('سیلاب');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fa-water');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-water-rise');
+
+                    $('#' + stnID).addClass('flooding');
 
                     //clear cache befor refresh here
                     try{
@@ -592,6 +596,11 @@ function checkFloodStatus(stnID){
                     // console.log('HHHAAAAPPPEEEENNNIIIINNNGGGGG');
                 } else if (status === 0) {
                     $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('بدون سیلاب');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('wi-flood');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('wi');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fal');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-water');
+                    $('#' + stnID).removeClass('flooding');
                 }
             }
         }
@@ -1498,7 +1507,7 @@ function getRainTotalOfEndOfPastMonthsForDrawingCharts(station_ID,subtype) {
             success: (response) => {
                 if (response.data) {
                     // console.log("HHHHHHHHHHHHHHHH");
-                    // console.log(response.data);
+                    // console.log(`${station_ID} response.data => ${response.data}`);
                     rain_total_of_past_months = response.data;
                     var labels = [];
                     var values = [];

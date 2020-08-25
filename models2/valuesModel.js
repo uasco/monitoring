@@ -9,7 +9,7 @@ let moment = require('moment-jalaali');
 //moment.loadPersian({usePersianDigits: true});
 
 let sql_query_rain_station_rain_values = "SELECT value,sample_time  FROM sample_values where client_id=? and (channel_index=? or channel_index=? or channel_index=?) ORDER BY sample_time DESC , channel_index DESC limit 3";
-let sql_query_rain_total_of_end_of_month = "SELECT value FROM sample_values where client_id=? and channel_index=? and DATE(sample_time) <= ? and DATE(sample_time) >= (DATE_ADD(? , INTERVAL -1 DAY)) ORDER BY sample_time DESC limit 1";
+let sql_query_rain_total_of_end_of_month = "SELECT value FROM sample_values where client_id=? and channel_index=? and DATE(sample_time) <= ? and DATE(sample_time) >= ? ORDER BY sample_time DESC limit 1";
 let sql_query_rain_start_rain_values = "SELECT value,sample_time  FROM sample_values where client_id=? and channel_index=? and sample_time >= ? ORDER BY sample_time DESC , channel_index DESC ";
 let sql_query_level_station_level_value = "SELECT value,sample_time  FROM sample_values where client_id=? and channel_index=? ORDER BY sample_time DESC  limit 1";
 let sql_query_level_station_last_hours = "SELECT value , sample_time FROM sample_values where client_id=? and channel_index=? ORDER BY sample_time DESC  limit ?";
@@ -41,11 +41,14 @@ let sql_query_clima_amari_report_values = "call clima_amari_report(?,?,?,?,?);";
 let sql_query_clima_mantaghei_report_values = "call clima_mantaghei_report(?,?,?,?);";
 async function getRainTotalOfmonth(client_id, channel_index_rain_total, date, returnValue, x) {
     //console.log("DATE===============");
-    console.log(`### ${client_id} || ${channel_index_rain_total} || ${date} `);
+
+    // console.log(`### ${client_id} || ${channel_index_rain_total} || ${date} ${x}`);
     return new Promise(function (resolve, reject) {
-        pool.query(sql_query_rain_total_of_end_of_month, [client_id, channel_index_rain_total, date[1], date[1]], function (error, rows, fields) {
+            let startOfMonth = moment(date[1],'YYYY-M-D').startOf('jMonth').format('YYYY-M-D');
+            // console.log(`${client_id} ${startOfMonth}`);
+        pool.query(sql_query_rain_total_of_end_of_month, [client_id, channel_index_rain_total, date[1], startOfMonth], function (error, rows, fields) {
             if (error) {
-                //console.log("EEERRRORRRRR");
+                // console.log(`${client_id} EEERRRORRRRR`);
                 return "";
             }
             if(rows.length) {
@@ -56,13 +59,13 @@ async function getRainTotalOfmonth(client_id, channel_index_rain_total, date, re
                 //var objx={date:rainTotal};
                 //returnValue.push(objx);
                 returnValue[x] = arr_item;
-                //console.log("NM===");
-                //console.log(x);
-                //console.log(returnValue);
-                //console.log("DATE======DATE=========");
-                //console.log(arr_item[0]);
-                //console.log(arr_item[1]);
-
+                // console.log(client_id);
+                // console.log("NM===");
+                // console.log(x);
+                // console.log(returnValue);
+                // console.log("DATE======DATE=========");
+                // console.log(arr_item[0]);
+                // console.log(arr_item[1]);
             }
             resolve(returnValue);
         });
@@ -92,13 +95,10 @@ module.exports = {
     getRainTotalsOfPastMonths: async function (client_id, channel_index_rain_total) {
         var end_of_months = my_date.get_end_of_months_in_georgian();
         var dates_array = [];
-
         var lastYearSameCurrentMonth = moment().endOf('jMonth').subtract(1, 'years').calendar();//  for making date of past year same current month
         lastYearSameCurrentMonth = moment(lastYearSameCurrentMonth, 'jYYYY/jM/jD').format('YYYY-M-D');
-
         var arr_item = new Array(0, lastYearSameCurrentMonth);
         dates_array.push(arr_item);
-
         var now = moment();
         var jm = now.jMonth();//  0 <= now.jMonth() =< 11
         jm++;
@@ -111,14 +111,8 @@ module.exports = {
             if (jm > 11)
                 jm = 0;
         }
-        //console.log("dates_array====");
-        //console.log(dates_array);
         let returnValue = [];
-
-
-
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[0], returnValue, 0);//get rain total of past year of same current month
-
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[1], returnValue, 1);
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[2], returnValue, 2);
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[3], returnValue, 3);
@@ -131,17 +125,7 @@ module.exports = {
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[10], returnValue, 10);
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[11], returnValue, 11);
         returnValue = await getRainTotalOfmonth(client_id, channel_index_rain_total, dates_array[12], returnValue, 12);
-
-
-
-        console.log(`${client_id} => ++> ${returnValue} `);
         return returnValue;
-        // const promises = dates_array.map(async date => {
-        //   return await getRainTotalOfmonth(client_id, channel_index_rain_total,date,returnValue,counter);
-        // });
-        // console.log("returnValue==========");
-        // console.log(returnValue);
-        // return Promise.all(promises);
     },
     getRainStartRainValues: async function (client_id, channel_index_rain_total,rainStartTime) {
         return new Promise(function (resolve, reject) {

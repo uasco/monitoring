@@ -20041,7 +20041,7 @@ Copyright (c) 2015 Daniel Eden
   box-shadow: 0 1px 20px 0px rgba(0, 0, 0, 0.1);
 }
 /* ///// */
-.rain {
+.raining {
   background: #3e4dd5;
 }
 .raining .value{
@@ -20066,6 +20066,15 @@ Copyright (c) 2015 Daniel Eden
   color: #f9fbfb;
 }
 .shower-heavy .unit{
+  color: #f9fbfb;
+}
+.flooding {
+  background: #d53e7d;
+}
+.flooding .value{
+  color: #f9fbfb;
+}
+.flooding .unit{
   color: #f9fbfb;
 }
 .value {

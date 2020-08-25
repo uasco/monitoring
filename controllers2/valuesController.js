@@ -1468,12 +1468,12 @@ exports.getClimaRainTotalsOfPastMonths = catchAsync(async (req, res, next) => {
   //const rainstationrainvalues = await RainStation.getRainStationRainValues(client_id,rainsensorides.rain_total);
   var climaRainTotalsOfPastMonths = undefined;
   var resultJson = undefined;
-  console.log(`values controller - getRainTotalsOfPastMonths - ${client_id}`);
-  console.log('---------------------------------------------');
+  // console.log(`values controller - getRainTotalsOfPastMonths - ${client_id}`);
+  // console.log('---------------------------------------------');
   climaRainTotalsOfPastMonths = await Values.getRainTotalsOfPastMonths(client_id, channel_indexes[sensor]['t']);
   resultJson = JSON.stringify(climaRainTotalsOfPastMonths);
-  console.log(`${client_id} : climaRainTotalsOfPastMonths : ${resultJson}`);
-  console.log('---------------------------------------------');
+  // console.log(`${client_id} : climaRainTotalsOfPastMonths : ${resultJson}`);
+  // console.log('---------------------------------------------');
   resultJson = JSON.parse(resultJson);
 
   var apiResult = {};

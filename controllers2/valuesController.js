@@ -1214,7 +1214,7 @@ exports.getExcelLevelMantagheiReport = catchAsync(async (req, res, next) => {
   worksheet.mergeCells('C4:E4');
   worksheet.getCell('C4').value = 'كد سازمان:';
   worksheet.mergeCells('F4:G4');
-  worksheet.getCell('F4').value = 'كد: 210-410';
+  worksheet.getCell('F4').value = '';
   worksheet.mergeCells('H4:L4');
   worksheet.getCell('H4').value = 'دفتر مطالعات پايه منابع آب ';
   worksheet.mergeCells('A5:L5');
@@ -1249,7 +1249,7 @@ exports.getExcelLevelMantagheiReport = catchAsync(async (req, res, next) => {
   worksheet.getCell('F10').value = '';
   worksheet.getCell('G10').value = 'کبیسه:';
   worksheet.mergeCells('H10:I10');
-  worksheet.getCell('H10').value = '96-97';
+  worksheet.getCell('H10').value = '';
   worksheet.mergeCells('J10:L10');
   worksheet.getCell('J10').value = 'سال:';
   worksheet.mergeCells('B11:B12');
@@ -1964,24 +1964,157 @@ exports.getExcelClimaMantagheiReport = catchAsync(async (req,res,next)=>{
   //     },
   // ];
   const worksheet = workbook.addWorksheet(req.body.sheetName || 'Sheet 1');
+
+  //////////////////////////////////////////////////////////B
+
+
+  worksheet.mergeCells('D2:E2');
+  worksheet.getCell('D2').value = stateName;
+
+  worksheet.mergeCells('F2:H2');
+  worksheet.getCell('F2').value = 'شرکت سهامی آب منطقه اي: ';
+
+  worksheet.mergeCells('I2:J2');
+  worksheet.getCell('I2').value = 'فرم تغییرات روزانه ';
+  worksheet.mergeCells('K2:O2');
+  worksheet.getCell('K2').value = 'سازمان مديريت منابع آب ايران   ';
+  worksheet.mergeCells('D3:E3');
+  worksheet.getCell('D3').value = stateName;
+  worksheet.mergeCells('F3:H3');
+  worksheet.getCell('F3').value = 'استان:';
+  worksheet.mergeCells('I3:J3');
+  worksheet.getCell('I3').value = '';
+  worksheet.mergeCells('K3:O3');
+  worksheet.getCell('K3').value = 'معاونت پژوهش و مطالعات پايه ';
+  worksheet.mergeCells('D4:E4');
+  worksheet.getCell('D4').value = organizationCode;
+  worksheet.mergeCells('F4:H4');
+  worksheet.getCell('F4').value = 'كد سازمان:';
+  worksheet.mergeCells('I4:J4');
+  worksheet.getCell('I4').value = '';
+  worksheet.mergeCells('K4:O4');
+  worksheet.getCell('K4').value = 'دفتر مطالعات پايه منابع آب ';
+  worksheet.mergeCells('D5:O5');
+  worksheet.getCell('D6').value = latitude;
+  worksheet.mergeCells('E6:F6');
+  worksheet.getCell('E6').value = 'عرض جغرافيائي:';
+  worksheet.getCell('G6').value = longitude;
+  worksheet.mergeCells('H6:I6');
+  worksheet.getCell('H6').value = 'طول جغرافيائي:';
+  worksheet.getCell('J6').value = stnName;
+  worksheet.getCell('K6').value = 'نام ايستگاه:';
+  worksheet.getCell('L6').value = zoneName;
+  worksheet.mergeCells('M6:O6');
+  worksheet.getCell('M6').value = 'نام حوزه آبريز:';
+  worksheet.mergeCells('D7:O7');
+  worksheet.getCell('D8').value = '  .نقطه ای U.T.M    X:';
+  worksheet.mergeCells('E8:F8');
+  worksheet.getCell('E8').value = utmX;
+  worksheet.getCell('G8').value = height;
+  worksheet.getCell('H8').value = 'ارتفاع:';
+  worksheet.getCell('J8').value = stnCode;
+  worksheet.getCell('K8').value = 'كد ايستگاه:';
+  worksheet.getCell('L8').value = riverName;
+  worksheet.mergeCells('M8:O8');
+  worksheet.getCell('M8').value = 'نام رودخانه: ';
+  worksheet.getCell('D9').value = 'Y:';
+  worksheet.mergeCells('E9:F9');
+  worksheet.getCell('E9').value = utmY;
+  worksheet.mergeCells('F10:G10');
+  worksheet.getCell('F10').value = '';//resultJson2[0]['month'];
+  worksheet.getCell('H10').value = '';
+  worksheet.getCell('I10').value = '';
+  worksheet.getCell('J10').value = 'کبیسه:';
+  worksheet.mergeCells('K10:L10');
+  worksheet.getCell('K10').value = '';
+  worksheet.mergeCells('M10:O10');
+  worksheet.getCell('M10').value = 'سال:';
+
+
+  worksheet.mergeCells('A11:A14');
+  worksheet.getCell('A11').value = 'ساعت خاتمه بارندگی';
+  worksheet.mergeCells('B11:B14');
+  worksheet.getCell('B11').value = 'ساعت شروع بارندگی';
+  worksheet.mergeCells('C11:H11');
+  worksheet.getCell('C11').value = 'درجـه حـرارت و نــــم نسبـي';
+  worksheet.mergeCells('I11:J11');
+  worksheet.getCell('I11').value = 'درجـه حـرارت';
+  worksheet.mergeCells('K11:L12');
+  worksheet.getCell('K11').value = 'مقدار بارندگي به میلیمتر';
+  worksheet.mergeCells('M11:M14');
+  worksheet.getCell('M11').value = 'ارتفاع تبخير به میلیمتر';
+  worksheet.mergeCells('N11:O12');
+  worksheet.getCell('N11').value = 'ارتفاع تبخير به میلیمتر';
+  worksheet.mergeCells('P11:P14');
+  worksheet.getCell('P11').value = 'روز';
+  worksheet.mergeCells('C12:C14');
+  worksheet.getCell('C12').value = 'نم نسبی';
+  worksheet.getCell('D12').value = '۶:۳۰';
+  worksheet.mergeCells('D13:D14');
+  worksheet.getCell('D13').value = 'خشک';
+  worksheet.mergeCells('E12:E14');
+  worksheet.getCell('E12').value = 'نم نسبی';
+  worksheet.getCell('F12').value = '۱۲:۳۰';
+  worksheet.mergeCells('F13:F14');
+  worksheet.getCell('F13').value = 'خشک';
+  worksheet.mergeCells('G12:G14');
+  worksheet.getCell('G12').value = 'نم نسبی';
+  worksheet.getCell('H12').value = '۶:۳۰';
+  worksheet.mergeCells('H13:H14');
+  worksheet.getCell('H13').value = 'خشک';
+  worksheet.getCell('I12').value = 'ماکزیمم';
+  worksheet.mergeCells('I13:I14');
+  worksheet.getCell('I13').value = '۱۸:۳۰';
+  worksheet.getCell('J12').value = 'مینیمم';
+  worksheet.mergeCells('J13:J14');
+  worksheet.getCell('J13').value = '۶:۳۰';
+  worksheet.mergeCells('K13:K14');
+  worksheet.getCell('K13').value = '۱۸:۳۰';
+  worksheet.mergeCells('L13:L14');
+  worksheet.getCell('L13').value = '۶:۳۰';
+  worksheet.mergeCells('N13:N14');
+  worksheet.getCell('N13').value = '۱۸:۳۰';
+  worksheet.mergeCells('O13:O14');
+  worksheet.getCell('O13').value = '۶:۳۰';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //////////////////////////////////////////////////////////E
   worksheet.columns = [
-    { header: 'ساعت خاتمه بارندگی', key: 'stop_rain', width: 14 },
-    { header: 'ساعت شروع بارندگی', key: 'start_rain', width: 14 },
-    { header: 'نم نسبی', key: 'hum_l_18_30', width: 10 },
-    { header: 'خشک', key: 'tmp_l_18_30', width: 10 },
-    { header: 'نم نسبی', key: 'hum_l_12_30', width: 10 },
-    { header: 'خشک', key: 'tmp_l_12_30', width: 10 },
-    { header: 'نم نسبی', key: 'hum_l_6_30', width: 10 },
-    { header: 'خشک', key: 'tmp_l_6_30', width: 10 },
-    { header: '۱۸:۳۰', key: 'tmp_x_18_30', width: 10 },
-    { header: '۶:۳۰', key: 'tmp_n_6_30', width: 10 },
-    { header: '۱۸:۳۰', key: 'rainc_t_18_30', width: 10 },
-    { header: '۶:۳۰', key: 'rainc_t_6:30', width: 10 },
-    { header: '', key: 'evp_height', width: 10 },
-    { header: '۱۸:۳۰', key: 'evp_a_18_30', width: 10 },
-    { header: '۶:۳۰', key: 'evp_a_6_30', width: 10 },
-    { header: 'روز', key: 'day', width: 10, outlineLevel: 1 },
+    { header: '', key: 'stop_rain', width: 14 },
+    { header: '', key: 'start_rain', width: 14 },
+    { header: '', key: 'hum_l_18_30', width: 10 },
+    { header: '', key: 'tmp_l_18_30', width: 10 },
+    { header: '', key: 'hum_l_12_30', width: 10 },
+    { header: '', key: 'tmp_l_12_30', width: 10 },
+    { header: '', key: 'hum_l_6_30', width: 10 },
+    { header: '', key: 'tmp_l_6_30', width: 10 },
+    { header: '', key: 'tmp_x_18_30', width: 10 },
+    { header: '', key: 'tmp_n_6_30', width: 10 },
+    { header: '', key: 'rainc_t_18_30', width: 10 },
+    { header: '', key: 'rainc_t_6_30', width: 10 },
+    { header: '', key: 'evp_height', width: 14 },
+    { header: '', key: 'evp_a_18_30', width: 10 },
+    { header: '', key: 'evp_a_6_30', width: 10 },
+    { header: '', key: 'day', width: 10, outlineLevel: 1 },
   ];
+
+  worksheet.mergeCells('I1:J1');
+  worksheet.getCell('I1').value = 'وزارت نیرو';
+
+
+
   let result_data = [];
   for(let i=0; i<values[0].length;i++){
     let item = {};
@@ -1994,7 +2127,7 @@ exports.getExcelClimaMantagheiReport = catchAsync(async (req,res,next)=>{
     if(values[1][i] != null && values[2][i] != null)
       item['evp_height']=(values[1][i]+values[2][i]).toFixed(2);
     if(values[3][i] != null)
-      item['rainc_t_6:30']=values[3][i];
+      item['rainc_t_6_30']=values[3][i];
     if(values[4][i] != null)
       item['rainc_t_18_30']=values[4][i];
     if(values[5][i] != null)
@@ -2033,10 +2166,17 @@ exports.getExcelClimaMantagheiReport = catchAsync(async (req,res,next)=>{
 
   worksheet.eachRow(function (Row, rowNum) {
     Row.eachCell(function (Cell, cellNum) {
-      Cell.alignment = {horizontal: 'center'};
-      Cell.font = { size: 8, bold: true};
+      Cell.alignment = {horizontal: 'center',vertical: 'middle',wrapText: true};
+      //Cell.alignment = {vertical: 'center'};
+      Cell.font = { size: 10, bold: true};
     })
   })
+  // row.getCell(i).border = {
+  //   top: {style:'thin'},
+  //   left: {style:'thin'},
+  //   bottom: {style:'thin'},
+  //   right: {style:'thin'}
+  // };
   const fileName = 'clima-amari-report.xlsx';
 
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

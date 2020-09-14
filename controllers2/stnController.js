@@ -23,30 +23,53 @@ exports.createNewStn = catchAsync(async (req, res, next) => {
     let resultJson = await Station.getClientID(stnCode,stnType);
     resultJson = JSON.stringify(resultJson);
     resultJson = JSON.parse(resultJson);
-    let clientID= resultJson[0]['id'];
-    console.log(`client_id ===>>> ${clientID}`);
-    console.log(`stnName ===>>> ${stnName} -- ${stnCode} -- ${zoneName} -- ${riverName} -- ${longitude} -- ${latitude} -- ${utmX} -- ${utmY} -- ${height} -- ${establishYear} -- ${stnType}`);
-    const stn = await Stn.create({
-        station_name: stnName,
-        station_code: stnCode,
-        zone_name:zoneName,
-        river_name:riverName,
-        longitude:longitude,
-        latitude:latitude,
-        utm_x:utmX,
-        utm_y:utmY,
-        height:height,
-        establish_year:establishYear,
-        station_type:stnType,
-        client_id:clientID
-    });
+    console.log(`res = ${resultJson}`);
+    if(resultJson[0] != undefined){
+        let clientID= resultJson[0]['id'];
+        // console.log(`client_id ===>>> ${clientID}`);
+        // console.log(`stnName ===>>> ${stnName} -- ${stnCode} -- ${zoneName} -- ${riverName} -- ${longitude} -- ${latitude} -- ${utmX} -- ${utmY} -- ${height} -- ${establishYear} -- ${stnType}`);
+        const stn = await Stn.create({
+            station_name: stnName,
+            station_code: stnCode,
+            zone_name:zoneName,
+            river_name:riverName,
+            longitude:longitude,
+            latitude:latitude,
+            utm_x:utmX,
+            utm_y:utmY,
+            height:height,
+            establish_year:establishYear,
+            station_type:stnType,
+            client_id:clientID
+        });
 
-    //exports.createStn = factory.createOne(Stn);
-    console.log(`stn ===>>> ${stn} `);
-    res.status(201).json({
-        status: 'success',
-        data: {
-            data: stn
-        }
+        //exports.createStn = factory.createOne(Stn);
+        // console.log(`stn ===>>> ${stn} `);
+        res.status(201).json({
+            status: 'success',
+            data: 1
+        });
+    }
+    else{
+        res.status(200).json({
+            status: 'success',
+            data: -1
+        });
+    }
+
+});
+exports.getStnProperties = catchAsync(async (req, res, next) => {
+    Stn.find({}, function(err, stns) {
+        var stnMap = {};
+
+        stns.forEach(function(stn) {
+            stnMap[stn.client_id] = stn;
+        });
+        console.log(`stnMap ===>>> ${JSON.stringify(stnMap)} `);
+        stnMap = JSON.stringify(stnMap);
+        stnMap = JSON.parse(stnMap);
+        let apiResult = {};
+        apiResult.data = stnMap;
+        res.json(apiResult);
     });
 });

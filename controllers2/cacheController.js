@@ -92,11 +92,11 @@ exports.rainTotalsMonthsFlatCacheMiddleWare = (req, res, next) => {
     let key = "__express__" + req.url;
     let cacheContent = rainTotalsMonthsCache.getKey(key);
     if (cacheContent) {
-        // console.log("*******************rainTotalsMonths cached happened**********************");
+        // console.log(`${key}*******************rainTotalsMonths cached happened**********************`);
         res.send(cacheContent);
         return;
     } else {
-        // console.log("%%%%%%%%%%%%%%%%%%%rainTotalsMonths cached DID NOT happend %%%%%%%%%%%%%%%");
+        // console.log(`${key}%%%%%%%%%%%%%%%%%%%rainTotalsMonths cached DID NOT happend %%%%%%%%%%%%%%%`);
         res.sendResponse = res.send;
         res.send = body => {
             rainTotalsMonthsCache.setKey(key, body);

@@ -10,7 +10,8 @@ let moment = require('moment-jalaali');
 
 let sql_query_rain_station_rain_values = "SELECT value,sample_time  FROM sample_values where client_id=? and (channel_index=? or channel_index=? or channel_index=?) ORDER BY sample_time DESC , channel_index DESC limit 3";
 let sql_query_rain_total_of_end_of_month = "SELECT value FROM sample_values where client_id=? and channel_index=? and DATE(sample_time) <= ? and DATE(sample_time) >= ? ORDER BY sample_time DESC limit 1";
-let sql_query_rain_start_rain_values = "SELECT value,sample_time  FROM sample_values where client_id=? and channel_index=? and sample_time >= ? ORDER BY sample_time DESC , channel_index DESC ";
+//let sql_query_rain_start_rain_values = "SELECT value,sample_time  FROM sample_values where client_id=? and channel_index=? and sample_time >= ? ORDER BY sample_time DESC";
+let sql_query_rain_start_rain_values = "SELECT value,sample_time  FROM sample_values where client_id=? and channel_index=? and sample_time >= (select sample_time from sample_values where client_id=? and channel_index=? and sample_time < ? order by sample_time desc limit 1) GROUP BY sample_time ORDER BY sample_time DESC";
 let sql_query_level_station_level_value = "SELECT value,sample_time  FROM sample_values where client_id=? and channel_index=? ORDER BY sample_time DESC  limit 1";
 let sql_query_level_station_last_hours = "SELECT value , sample_time FROM sample_values where client_id=? and channel_index=? ORDER BY sample_time DESC  limit ?";
 // var sql_query_level_station_last_hours = "SELECT value , sample_time FROM sample_values where client_id=? and channel_index=? and sample_time >= ? and sample_time <= ? ORDER BY sample_time DESC , , sample_ordinal_num ASC";
@@ -130,7 +131,8 @@ module.exports = {
     getRainStartRainValues: async function (client_id, channel_index_rain_total,rainStartTime) {
         return new Promise(function (resolve, reject) {
             var returnValue = "";
-            pool.query(sql_query_rain_start_rain_values, [client_id, channel_index_rain_total,rainStartTime], function (error, rows, fields) {
+            //pool.query(sql_query_rain_start_rain_values, [client_id, channel_index_rain_total,rainStartTime], function (error, rows, fields) {
+            pool.query(sql_query_rain_start_rain_values, [client_id, channel_index_rain_total,client_id, channel_index_rain_total,rainStartTime], function (error, rows, fields) {
                 if (error) {
                     //console.log("EEERRRORRRRR");
                     returnValue = "";
@@ -332,10 +334,10 @@ module.exports = {
             let returnValue = "";
             let gStartTime = moment(startTime, 'jYYYY-jM-jD jHH:jmm').format('YYYY-MM-DD HH:mm');
             let gEndTime = moment(endTime, 'jYYYY-jM-jD jHH:jmm').format('YYYY-MM-DD HH:mm');
-            console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
-            console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
-            console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
-            console.log(`$$$$$$$$$$$$$$$$ sensors_indexes: ${sensors_indexes}`);
+            // console.log(`$$$$$$$$$$$$$$$$ startTime: ${gStartTime}`);
+            // console.log(`%%%%%%%%%%%%%%%% endTime: ${gEndTime}`);
+            // console.log(`$$$$$$$$$$$$$$$$ client_ID: ${client_id}`);
+            // console.log(`$$$$$$$$$$$$$$$$ sensors_indexes: ${sensors_indexes}`);
             pool.query(sql_query_clima_amari_report_values, [client_id, sensors_indexes,gStartTime,gEndTime,period], function (error, rows, fields) {
                 if (error) {
                     // console.log("EEERRRORRRRR");

@@ -2,9 +2,9 @@ mixin raincard(stn)
     script.
         $(document).ready(function () {
             if (`#{stn.subtype}` === 'r')
-                setTimeout(function() { checkRainStart(`#{stn.id}`,'false'); }, 5000);
+                setTimeout(function() { checkRainStart(`#{stn.id}`,'false'); }, 2000);
             else if (`#{stn.subtype}` === 'c'){
-                setTimeout(function() { checkRainStart(`#{stn.id}`,'true'); }, 5000);
+                setTimeout(function() { checkRainStart(`#{stn.id}`,'true'); }, 4000);
             }
         })
 
@@ -15,7 +15,7 @@ mixin raincard(stn)
         }else if (`#{stn.subtype}` === 'c') {
             var chackAlarm = setInterval(function () {
                 checkRainStart(`#{stn.id}`, 'true');
-            }, 180000);//180000
+            }, 190000);//180000
         }
 
         // var refreshValues = setInterval(function () {
@@ -85,7 +85,9 @@ mixin levelcard(stn)
         div.card.card-chart(id= i )
             script.
                 $(document).ready(function () {
-                    setTimeout(function() { checkFloodStatus(`#{stn.id}`);}, 5000);
+
+
+                    setTimeout(function() { getLevelOfLastHoursForDrawingCharts(`#{stn.id}`);getLevelValue(`#{stn.id}`);checkFloodStatus(`#{stn.id}`);}, 6000);
                 })
                 var chackAlarm = setInterval(function () {
                     checkFloodStatus(`#{stn.id}`);
@@ -129,13 +131,13 @@ mixin climacard(stn , sensor)
             div.card.card-chart(id= i )
                 script.
                     $(document).ready(function () {
-                        setTimeout(function() { checkRainStartFromClima(`#{stn.id}`); }, 5000);
+                        setTimeout(function() { checkRainStartFromClima(`#{stn.id}`); }, 6000);
                     })
                     // setTimeout(() =>
                     //     checkRainStart(`#{stn.id}`),1);
                     var chackAlarm = setInterval(function () {
                         checkRainStartFromClima(`#{stn.id}`);
-                    }, 180000);
+                    }, 190000);
                     // var s = ['RAINC', 'mm'];
                     // var refreshValues = setInterval(function () {
                     //     getClimaValues(`#{stn.id}`, 'RAINC' , 'mm');//- getClimaValues(id, sensor, fa_unit)
@@ -188,7 +190,19 @@ mixin climacard(stn , sensor)
                         - chart_id = 'small-chart' + stn.id + sensor[0]
                         canvas(id= chart_id)
         else
-            div.card.card-chart
+            - i = stn.id + sensor[0]
+            div.card.card-chart(id= i )
+                script.
+                    $(document).ready(function () {
+                        setTimeout(function () {
+                            getClimaValues(`#{stn.id}`, `#{sensor[0]}`, `#{sensor[2]}`);
+                            getClimaLastHoursForDrawingCharts(`#{stn.id}`, `#{sensor[0]}`);
+                        }, 3000);
+                    })
+                    var refreshValues = setInterval(function () {
+                        getClimaValues(`#{stn.id}`, `#{sensor[0]}`, `#{sensor[2]}`);//- getClimaValues(id, sensor, fa_unit)
+                        getClimaLastHoursForDrawingCharts(`#{stn.id}`, `#{sensor[0]}`); //- getClimaLastHoursForDrawingCharts(station_ID, sensor)
+                    }, 1500000);
                 div.card-header.clima(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'climax' + '"' +')' style='cursor: pointer;')
                     if(sensor[0] === 'TMP')
                         i.far.fa-temperature-low.fa-fw.fa-pull-left.fa-3x
@@ -205,8 +219,7 @@ mixin climacard(stn , sensor)
                     if(sensor[0] === 'PRS')
                         i.wi.wi-barometer(style={display:'inline-block' ,'font-size':'3em', float:'left' ,'margin-right':'.3em'})
                     h3.card-category  #{sensor[1]}
-                    - i = stn.id + sensor[0]
-                    h4.card-title(id= i )
+                    h4.card-title
                         //- i.tim-icons.icon-bell-55.text-primary
                         i.far.fa-bell.fa-fw
                         - i = sensor[0] + '_alarm'

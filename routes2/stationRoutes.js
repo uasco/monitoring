@@ -14,8 +14,8 @@ const router = express.Router();
 //////////////////////////////////////////////////////////////////B
 router
   .route('/rain')
-  //.get(stationController.getStationsNamesAndIDs)//without cache
-  .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
+  .get(stationController.getStationsNamesAndIDs)//without cache
+  // .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
@@ -23,8 +23,8 @@ router
 
 router
   .route('/level')
-  //.get(stationController.getStationsNamesAndIDs)//without cache
-  .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
+  .get(stationController.getStationsNamesAndIDs)//without cache
+  // .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
@@ -32,12 +32,20 @@ router
 
 router
   .route('/clima')
-  //.get(stationController.getStationsNamesAndIDs)//without cache
-  .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
+  .get( stationController.getStationsNamesAndIDs)//without cache
+  // .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide')
   );
+router
+    .route('/all')
+    .get(stationController.getStationsNamesAndIDs)//without cache
+    // .get(cacheController.stationsFlatCacheMiddleWare, stationController.getStationsNamesAndIDs)
+    .post(
+        authController.protect,
+        authController.restrictTo('admin', 'lead-guide')
+    );
 router
     .route('/installdate/:id')
     //.get(valuesController.getRainStationRainValues)//without cache

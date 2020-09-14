@@ -167,7 +167,6 @@ setTimeout(function() {
   scheduler.clearClimaRainTotalsMonthsCache();
 }, 30000);
 
-
 require('events').EventEmitter.defaultMaxListeners = 60;
 
 module.exports = app;

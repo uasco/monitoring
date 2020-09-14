@@ -256,6 +256,7 @@ mixin settingsCard()
         function  submit_create_new_station() {
             stnName = $('#station-name-input').val();
             stnCode = $('#station-code-input').val();
+            stnCode = stnCode.toString();
             zoneName = $('#zone-name-input').val();
             riverName = $('#river-name-input').val();
             longitude = $('#longitude-input').val();

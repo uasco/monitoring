@@ -37,7 +37,7 @@ const job3 = new CronJob('00 00 00 * * *', function() {
 
 
 const clearRainCachePeriodInMinutes = 25;
-const clearLevelCachePeriodInHours=5;
+const clearLevelCachePeriodInHours=2;
 const clearClimaCachePeriodInMinutes=25;
 
 logger.info('application started', { message: `time : ${new Date()}` });
@@ -372,7 +372,9 @@ exports.clearClimaLastHoursCache = () => {
 }
 
 exports.clearClimaRainTotalsMonthsCache = () => {
-    let start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
+    let start_of_next_month = new Date();
+    start_of_next_month.setMinutes(start_of_next_month.getMinutes()+50);
+    // let start_of_next_month = new Date(my_date.get_start_of_next_month_in_georgian());
     const clearClimaRainTotalsMonthsCacheJob = new CronJob(
         start_of_next_month,
         function ()  {

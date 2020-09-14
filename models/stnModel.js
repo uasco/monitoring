@@ -10,7 +10,6 @@ const stnSchema = new mongoose.Schema(
             type: String,
             trim: true
         },
-
         organization_code: {
             type: String,
             trim: true
@@ -94,7 +93,8 @@ const stnSchema = new mongoose.Schema(
             type: Date
         },
         last_time_check:{
-            type: Date
+            type: Date,
+            default: Date.now
         },
     },
     {

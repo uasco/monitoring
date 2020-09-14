@@ -173,8 +173,8 @@ exports.getOverView = catchAsync(async (req, res, next) => {
     ////////////////////////////////////////////////
     let pageType = 'ov' + pageTypeArr[0].toString() + pageTypeArr[1].toString() + pageTypeArr[2].toString();
     // console.log(`pageType********************= ${pageType}`);
-    const sensores = [['TMP', 'دما'], ['HUM', 'رطوبت'], ['PRS', 'فشار'], ['WSP', 'سرعت باد'],
-        ['WDR', 'جهت باد'], ['EVP', 'تبخیر'], ['RAD', 'تشعشع'], ['RAINC', 'بارانسنج']];
+    const sensores = [['TMP', 'دما' ,'c'], ['HUM', 'رطوبت', '%'], ['PRS', 'فشار' , 'mb'], ['WSP', 'سرعت باد' , 'm/s'],
+        ['WDR', 'جهت باد' , 'deg'], ['EVP', 'تبخیر' , 'mm'], ['RAD', 'تشعشع', 'w/m2'], ['RAINC', 'بارانسنج', 'mm']];
     //console.log(`global.si ======================>>>>>>>>>>>>>>>>>> ${global.si}`);
     let slideIndex;
     if(global.si == undefined)

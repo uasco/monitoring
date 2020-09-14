@@ -9,11 +9,11 @@ div.content
         /*    cursor: pointer;*/
         /*}*/
 
-        /*.mapboxgl-popup {*/
-        /*    max-width: 800px;*/
-        /*    font: 24px/30px 'Yekan', Arial, Helvetica, sans-serif;*/
-        /*    text-align: right;*/
-        /*}*/
+        .mapboxgl-popup {
+            max-width: 800px;
+            font: 24px/30px 'Yekan', Arial, Helvetica, sans-serif;
+            text-align: right;
+        }
 
         .mapboxgl-popup p {
             color: rgba(0, 0, 0, 0.8);
@@ -88,251 +88,271 @@ div.content
                         | 100,000
 
                 script.
+
+                    // let features = [
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنجی بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷-</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '101',
+                    //             'sensor': 'rain',
+                    //             'position': 'بن کوه',
+                    //             //'client_id':
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [52.41179920638, 35.304329583645]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنجی ابراهیم آباد</strong><p>کد ایستگاه : ۹۰۷-۴۷-</p><p>محدوده : میامی</p><p>رودخانه خيج</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۳۸۵۶۷۸</p><p>utmy : ۴۰۳۰۸۶۲</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '141',
+                    //             'sensor': 'rain',
+                    //             'position': 'ابراهیم آباد'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [55.724852425923, 36.41614589227]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه هواشناسی تصفیه خانه</strong><p>کد ایستگاه : ۰۲۴-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۸۴</p><p>utmx : ۶۲۵۲۷۸</p><p>utmy : ۳۹۰۲۷۶۰</p>',
+                    //             'icon': 'marker3',
+                    //             'id': '84',
+                    //             'sensor': 'clima',
+                    //             'position': 'تصفیه خانه'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [52.307212862161, 35.260126343602]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه سطح سنج لبرود</strong><p>کد ایستگاه : ۰۲۹-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علی</p><p>سال تاسیس : ۱۳۶۰</p><p>utmx : ۲۴۹۷۷۸</p><p>utmy : ۴۰۱۳۳۳۲</p>',
+                    //             'icon': 'marker2',
+                    //             'id': '99',
+                    //             'sensor': 'level',
+                    //             'position': 'لبرود'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.215829045955, 36.232503404624]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج آستانه</strong><p>کد ایستگاه : ۰۲۵-۴۷</p><p>محدوده : دامغان</p><p>رودخانه سلطان ميدان</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۳۹۳۹۷</p><p>utmy : ۴۰۱۷۶۸۰</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '128',
+                    //             'sensor': 'rain',
+                    //             'position': 'آستانه'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.099004459429, 36.268910176222]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج مجن دوراهي</strong><p>کد ایستگاه : ۰۳۳-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۸۹۴۹۸</p><p>utmy : ۴۰۳۹۳۱۲</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '103',
+                    //             'sensor': 'rain',
+                    //             'position': 'مجن دوراهي'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.680393699234, 36.505994145582]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج بسطام</strong><p>کد ایستگاه ۰۴۴-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۳۱۹۲۴۰</p><p>utmy : ۴۰۳۷۹۱۰</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '152',
+                    //             'sensor': 'rain',
+                    //             'position': 'بسطام'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.982497611023, 36.469436870006]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج بیارجمند</strong><p>کد ایستگاه : ۹۲۶-۴۷</p><p>محدوده : بيارجمند</p><p>رودخانه كالشور</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۳۹۱۸۹۱</p><p>utmy : ۳۹۹۳۸۸۳</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '134',
+                    //             'sensor': 'rain',
+                    //             'position': 'بیارجمند'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [55.799249078673, 36.083552852237]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج خيراباد سمنان</strong><p>کد ایستگاه : ۰۳۸-۴۷</p><p>محدوده : سمنان</p><p>رودخانه گلرودبار</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۷۱۹۳۸۱</p><p>utmy : ۳۹۳۵۶۰۴</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '102',
+                    //             'sensor': 'rain',
+                    //             'position': 'خیرآباد'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [53.419897976221, 35.539823938367]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج ده صوفيان</strong><p>کد ایستگاه : ۸۶۷-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۷۲</p><p>utmx : ۷۱۶۴۱۹</p><p>utmy : ۳۹۶۶۳۱۴</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '150',
+                    //             'sensor': 'rain',
+                    //             'position': 'ده صوفیان'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [53.39550982055, 35.817127622356]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه سطح سنج بند انحرافي</strong><p>کد ایستگاه : ۰۳۱-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۲۸۹۴۳۸</p><p>utmy : ۴۰۳۹۳۲۶</p>',
+                    //             'icon': 'marker2',
+                    //             'id': '136',
+                    //             'sensor': 'level',
+                    //             'position': 'بند انحرافي'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.639161916469, 36.481666828162]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه سطح سنج شهمیرزاد</strong><p>کد ایستگاه : ۹۹۲-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۸۷</p><p>utmx : ۷۰۹۳۸۵</p><p>utmy : ۳۹۶۱۳۴۰</p>',
+                    //             'icon': 'marker2',
+                    //             'id': '157',
+                    //             'sensor': 'level',
+                    //             'position': 'شهمیرزاد'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [53.316407893155, 35.773843664332]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه سطح سنج بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
+                    //             'icon': 'marker2',
+                    //             'id': '98',
+                    //             'sensor': 'level',
+                    //             'position': 'بن کون'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [52.470005031003, 35.312998408637]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج طرود</strong><p>کد ایستگاه : ۱۱۰-۴۷</p><p>محدوده : طرود</p><p>رودخانه لب شورآب</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۳۱۸۶۱۹</p><p>utmy : ۳۹۲۲۱۴۶</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '143',
+                    //             'sensor': 'rain',
+                    //             'position': 'طرود'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [55.002016442078, 35.426233495744]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong> ایستگاه بارانسنج زرتشت </strong><p>کد ایستگاه : ۱۱۰-۴۷</p><p>محدوده : طرود</p><p>رودخانه لب شورآب</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۳۱۸۶۱۹</p><p>utmy : ۳۹۲۲۱۴۶</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '159',
+                    //             'sensor': 'rain',
+                    //             'position': 'زرتشت'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [55.902016442078, 35.526233495744]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه هواشناسی دانشگاه آزاد دامغان</strong><p>کد ایستگاه : ۳۰۱-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علي</p><p>سال تاسیس : ۱۳۷۰</p><p>utmx : ۲۵۸۱۶۵</p><p>utmy : ۴۰۰۵۹۸۰</p>',
+                    //             'icon': 'marker3',
+                    //             'id': '93',
+                    //             'sensor': 'clima',
+                    //             'position': 'دانشگاه آزاد دامغان'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.311321944611, 36.168428285371]
+                    //         }
+                    //     },
+                    //     {
+                    //         'type': 'Feature',
+                    //         'properties': {
+                    //             'description':
+                    //                 '<strong>ایستگاه بارانسنج چهارده دامغان</strong><p>کد ایستگاه : ۲۱۶-۴۷</p><p>محدوده : دامغان</p><p>رودخانه دامغانرود</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۵۰۷۲۷</p><p>utmy : ۴۰۳۳۶۷۵</p>',
+                    //             'icon': 'marker1',
+                    //             'id': '153',
+                    //             'sensor': 'rain',
+                    //             'position': 'چهارده دامغان'
+                    //         },
+                    //         'geometry': {
+                    //             'type': 'Point',
+                    //             'coordinates': [54.219873006146, 36.415934010431]
+                    //         }
+                    //     }];
+                    // let stns = {
+                    //     'type': 'FeatureCollection',
+                    //     'features': features
+                    // };
                     let stns = {
                         'type': 'FeatureCollection',
-                        'features': [
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنجی بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷-</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
-                                    'icon': 'marker1',
-                                    'id': '101',
-                                    'sensor': 'rain',
-                                    'position': 'بن کوه',
-                                    //'client_id':
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [52.41179920638, 35.304329583645]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنجی ابراهیم آباد</strong><p>کد ایستگاه : ۹۰۷-۴۷-</p><p>محدوده : میامی</p><p>رودخانه خيج</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۳۸۵۶۷۸</p><p>utmy : ۴۰۳۰۸۶۲</p>',
-                                    'icon': 'marker1',
-                                    'id': '141',
-                                    'sensor': 'rain',
-                                    'position': 'ابراهیم آباد'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [55.724852425923, 36.41614589227]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه هواشناسی تصفیه خانه</strong><p>کد ایستگاه : ۰۲۴-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۸۴</p><p>utmx : ۶۲۵۲۷۸</p><p>utmy : ۳۹۰۲۷۶۰</p>',
-                                    'icon': 'marker3',
-                                    'id': '84',
-                                    'sensor': 'clima',
-                                    'position': 'تصفیه خانه'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [52.307212862161, 35.260126343602]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه سطح سنج لبرود</strong><p>کد ایستگاه : ۰۲۹-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علی</p><p>سال تاسیس : ۱۳۶۰</p><p>utmx : ۲۴۹۷۷۸</p><p>utmy : ۴۰۱۳۳۳۲</p>',
-                                    'icon': 'marker2',
-                                    'id': '99',
-                                    'sensor': 'level',
-                                    'position': 'لبرود'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.215829045955, 36.232503404624]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج آستانه</strong><p>کد ایستگاه : ۰۲۵-۴۷</p><p>محدوده : دامغان</p><p>رودخانه سلطان ميدان</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۳۹۳۹۷</p><p>utmy : ۴۰۱۷۶۸۰</p>',
-                                    'icon': 'marker1',
-                                    'id': '128',
-                                    'sensor': 'rain',
-                                    'position': 'آستانه'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.099004459429, 36.268910176222]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج مجن دوراهي</strong><p>کد ایستگاه : ۰۳۳-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۸۹۴۹۸</p><p>utmy : ۴۰۳۹۳۱۲</p>',
-                                    'icon': 'marker1',
-                                    'id': '103',
-                                    'sensor': 'rain',
-                                    'position': 'مجن دوراهي'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.680393699234, 36.505994145582]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج بسطام</strong><p>کد ایستگاه ۰۴۴-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۳۱۹۲۴۰</p><p>utmy : ۴۰۳۷۹۱۰</p>',
-                                    'icon': 'marker1',
-                                    'id': '152',
-                                    'sensor': 'rain',
-                                    'position': 'بسطام'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.982497611023, 36.469436870006]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج بیارجمند</strong><p>کد ایستگاه : ۹۲۶-۴۷</p><p>محدوده : بيارجمند</p><p>رودخانه كالشور</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۳۹۱۸۹۱</p><p>utmy : ۳۹۹۳۸۸۳</p>',
-                                    'icon': 'marker1',
-                                    'id': '134',
-                                    'sensor': 'rain',
-                                    'position': 'بیارجمند'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [55.799249078673, 36.083552852237]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج خيراباد سمنان</strong><p>کد ایستگاه : ۰۳۸-۴۷</p><p>محدوده : سمنان</p><p>رودخانه گلرودبار</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۷۱۹۳۸۱</p><p>utmy : ۳۹۳۵۶۰۴</p>',
-                                    'icon': 'marker1',
-                                    'id': '102',
-                                    'sensor': 'rain',
-                                    'position': 'خیرآباد'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [53.419897976221, 35.539823938367]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج ده صوفيان</strong><p>کد ایستگاه : ۸۶۷-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۷۲</p><p>utmx : ۷۱۶۴۱۹</p><p>utmy : ۳۹۶۶۳۱۴</p>',
-                                    'icon': 'marker1',
-                                    'id': '150',
-                                    'sensor': 'rain',
-                                    'position': 'ده صوفیان'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [53.39550982055, 35.817127622356]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه سطح سنج بند انحرافي</strong><p>کد ایستگاه : ۰۳۱-۴۷</p><p>محدوده : بسطام</p><p>رودخانه مجن</p><p>سال تاسیس : ۱۳۵۱</p><p>utmx : ۲۸۹۴۳۸</p><p>utmy : ۴۰۳۹۳۲۶</p>',
-                                    'icon': 'marker2',
-                                    'id': '136',
-                                    'sensor': 'level',
-                                    'position': 'بند انحرافي'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.639161916469, 36.481666828162]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه سطح سنج شهمیرزاد</strong><p>کد ایستگاه : ۹۹۲-۴۷</p><p>محدوده : سمنان</p><p>رودخانه شهميرزاد</p><p>سال تاسیس : ۱۳۸۷</p><p>utmx : ۷۰۹۳۸۵</p><p>utmy : ۳۹۶۱۳۴۰</p>',
-                                    'icon': 'marker2',
-                                    'id': '157',
-                                    'sensor': 'level',
-                                    'position': 'شهمیرزاد'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [53.316407893155, 35.773843664332]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه سطح سنج بن کوه</strong><p>کد ایستگاه : ۰۱۵-۴۷</p><p>محدوده : گرمسار</p><p>رودخانه حبله رود</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۶۳۰۱۷۳</p><p>utmy : ۳۹۰۷۷۳۳</p>',
-                                    'icon': 'marker2',
-                                    'id': '98',
-                                    'sensor': 'level',
-                                    'position': 'بن کون'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [52.470005031003, 35.312998408637]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج طرود</strong><p>کد ایستگاه : ۱۱۰-۴۷</p><p>محدوده : طرود</p><p>رودخانه لب شورآب</p><p>سال تاسیس : ۱۳۵۲</p><p>utmx : ۳۱۸۶۱۹</p><p>utmy : ۳۹۲۲۱۴۶</p>',
-                                    'icon': 'marker1',
-                                    'id': '143',
-                                    'sensor': 'rain',
-                                    'position': 'طرود'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [55.002016442078, 35.426233495744]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه هواشناسی دانشگاه آزاد دامغان</strong><p>کد ایستگاه : ۳۰۱-۴۷</p><p>محدوده : دامغان</p><p>رودخانه چشمه علي</p><p>سال تاسیس : ۱۳۷۰</p><p>utmx : ۲۵۸۱۶۵</p><p>utmy : ۴۰۰۵۹۸۰</p>',
-                                    'icon': 'marker3',
-                                    'id': '93',
-                                    'sensor': 'clima',
-                                    'position': 'دانشگاه آزاد دامغان'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.311321944611, 36.168428285371]
-                                }
-                            },
-                            {
-                                'type': 'Feature',
-                                'properties': {
-                                    'description':
-                                        '<strong>ایستگاه بارانسنج چهارده دامغان</strong><p>کد ایستگاه : ۲۱۶-۴۷</p><p>محدوده : دامغان</p><p>رودخانه دامغانرود</p><p>سال تاسیس : ۱۳۶۲</p><p>utmx : ۲۵۰۷۲۷</p><p>utmy : ۴۰۳۳۶۷۵</p>',
-                                    'icon': 'marker1',
-                                    'id': '153',
-                                    'sensor': 'rain',
-                                    'position': 'چهارده دامغان'
-                                },
-                                'geometry': {
-                                    'type': 'Point',
-                                    'coordinates': [54.219873006146, 36.415934010431]
-                                }
-                            }
-                        ]
+                        'features': undefined
                     };
                     let size = 200;
                     let pulsingDot1 = {
@@ -1451,27 +1471,148 @@ div.content
                                 ]
                             }
                         });
-                        mymap.addSource('stations', {
-                            'type': 'geojson',
-                            'data': stns
-                        });
-                        // Add a layer showing the places.
-                        mymap.addLayer({
-                            'id': 'stations',
-                            'type': 'symbol',
-                            'source': 'stations',
-                            'minzoom': zoomDegreeOnZoomMap -1 ,
-                            'layout': {
-                                'icon-image': '{icon}',
-                                //'icon-ignore-placement':true,
-                                'icon-allow-overlap': true,
-                                'text-allow-overlap':true,
-                                'text-field': ['get', 'position'],
-                                //'text-font': ['Yekan'],
-                                'text-offset': [0, 0.5],
-                                'text-anchor': 'top'
+                        ////////////////////////////////////////////////////////////////////B
+
+                        let stns2 = undefined;
+                        let features = [];
+                        let url = undefined;
+                        url = 'api/stns/properties'
+                        $.ajax({
+                            url: url,
+                            type: 'GET',
+                            dataType: 'json',
+                            success: (response) => {
+                                // console.log(`stns3 ===>>> ${response.data.length} `);
+                                // if (response.data.length > 0) {
+                                stns2 = response.data;
+                                stns2 = JSON.stringify(stns2);
+                                stns2 = JSON.parse(stns2);
+                                // console.log(`stns2 ===>>> ${JSON.stringify(stns2)} `);
+                                // }
+                                let stations = undefined;
+                                url = '/api/stations/all';
+                                $.ajax({
+                                    url: url,
+                                    type: 'GET',
+                                    dataType: 'json',
+                                    success: (response) => {
+                                        if (response.data.length > 0) {
+                                            stations = response.data;
+                                            stations.map(el => {
+                                                // console.log(`stn===>>> ${el.id}  `);
+                                                let id = parseInt(el.id);
+                                                // console.log(`stations ===>>> ${id}  ${JSON.stringify(stns2[id])}`);
+                                                let stn = JSON.stringify(stns2[id]);
+                                                // let stn = stns2[id];
+                                                // console.log(`stn===>>> ${stn}  ${id} `);
+                                                if (stn != undefined) {
+                                                    stn = JSON.parse(stn);
+                                                    let stnName = stn.station_name;
+                                                    let stnCode = lntpn(stn.station_code);
+                                                    // let stnCode = stn.station_code;
+                                                    let stnZone = stn.zone_name;
+                                                    let stnRiver = stn.river_name;
+                                                    let stnEstablishYear = lntpn(JSON.stringify(stn.establish_year));
+                                                    let stnUTMX = lntpn(JSON.stringify(stn.utm_x));
+                                                    let stnUTMY = lntpn(JSON.stringify(stn.utm_y));
+                                                    let stnLongtitude = stn.longitude;
+                                                    let stnLatitude = stn.latitude;
+                                                    console.log(`stnCode===>>> ${stnCode}    ${id} `);
+                                                    let featurItem = {
+                                                        'type': 'Feature',
+                                                        'properties': {
+                                                            'description': '',
+                                                            'icon': '',
+                                                            'id': '',
+                                                            'sensor': '',
+                                                            'position': ''
+                                                        },
+                                                        'geometry': {
+                                                            'type': 'Point',
+                                                            'coordinates': []
+                                                        }
+                                                    };
+                                                    featurItem.properties.id = el.id;
+                                                    featurItem.properties.position = el.position;
+                                                    featurItem.geometry.coordinates = [stnLongtitude, stnLatitude];
+                                                    switch (el.nameofmodel) {
+                                                        case 'DLS0201':
+                                                            featurItem.properties.sensor = 'rain';
+                                                            featurItem.properties.icon = 'marker1';
+                                                            featurItem.properties.description = `<strong> ایستگاه بارانسنجی: ${stnName}</strong><p>کد ایستگاه : ${stnCode}</p><p>محدوده : ${stnZone}</p><p>رودخانه : ${stnRiver}</p><p>سال تاسیس : ${stnEstablishYear}</p><p>utmx : ${stnUTMX}</p><p>utmy : ${stnUTMY}</p>`;
+                                                            break;
+                                                        case 'DLS0202':
+                                                            featurItem.properties.sensor = 'level';
+                                                            featurItem.properties.icon = 'marker2';
+                                                            featurItem.properties.description = `<strong> ایستگاه سطح سنجی: ${stnName}</strong><p>کد ایستگاه : ${stnCode}</p><p>محدوده : ${stnZone}</p><p>رودخانه : ${stnRiver}</p><p>سال تاسیس : ${stnEstablishYear}</p><p>utmx : ${stnUTMX}</p><p>utmy : ${stnUTMY}</p>`;
+                                                            break;
+                                                        case 'DLS120':
+                                                            featurItem.properties.sensor = 'clima';
+                                                            featurItem.properties.icon = 'marker3';
+                                                            featurItem.properties.description = `<strong> ایستگاه هواشناسی: ${stnName}</strong><p>کد ایستگاه : ${stnCode}</p><p>محدوده : ${stnZone}</p><p>رودخانه : ${stnRiver}</p><p>سال تاسیس : ${stnEstablishYear}</p><p>utmx : ${stnUTMX}</p><p>utmy : ${stnUTMY}</p>`;
+                                                            break;
+                                                    }
+                                                    // console.log(`feature===>>> ${JSON.stringify(featurItem)}   `);
+                                                    features.push(featurItem);
+                                                }
+
+                                            });
+                                        }
+                                        features = JSON.stringify(features);
+                                        features = JSON.parse(features);
+                                        stns.features = features;
+                                        mymap.addSource('stations', {
+                                            'type': 'geojson',
+                                            'data': stns
+                                        });
+                                        // Add a layer showing the places.
+                                        mymap.addLayer({
+                                            'id': 'stations',
+                                            'type': 'symbol',
+                                            'source': 'stations',
+                                            'minzoom': zoomDegreeOnZoomMap - 1,
+                                            'layout': {
+                                                'icon-image': '{icon}',
+                                                //'icon-ignore-placement':true,
+                                                'icon-allow-overlap': true,
+                                                'text-allow-overlap': true,
+                                                'text-field': ['get', 'position'],
+                                                //'text-font': ['Yekan'],
+                                                'text-offset': [0, 0.5],
+                                                'text-anchor': 'top'
+                                            }
+                                        });
+
+                                        // console.log(`features===>>> ${JSON.stringify(features)}   `);
+                                    }//end of success
+                                })
                             }
-                        });
+                        })
+
+
+
+                        ////////////////////////////////////////////////////////////////////E
+                        // mymap.addSource('stations', {
+                        //     'type': 'geojson',
+                        //     'data': stns
+                        // });
+                        // // Add a layer showing the places.
+                        // mymap.addLayer({
+                        //     'id': 'stations',
+                        //     'type': 'symbol',
+                        //     'source': 'stations',
+                        //     'minzoom': zoomDegreeOnZoomMap -1 ,
+                        //     'layout': {
+                        //         'icon-image': '{icon}',
+                        //         //'icon-ignore-placement':true,
+                        //         'icon-allow-overlap': true,
+                        //         'text-allow-overlap':true,
+                        //         'text-field': ['get', 'position'],
+                        //         //'text-font': ['Yekan'],
+                        //         'text-offset': [0, 0.5],
+                        //         'text-anchor': 'top'
+                        //     }
+                        // });
                         mymap.addLayer({
                             'id': 'shahrestan-labels',
                             'type': 'symbol',
@@ -1623,7 +1764,7 @@ div.content
                                         //     $.ajax({url: '/api/caches/rain/' + stnID + '/' + 'c' , success: function(){}});
                                         // else
                                         //     $.ajax({url: '/api/caches/rain/' + stnID + '/' + 'r' , success: function(){}});
-                                        console.log(`stnID= ${stnID} , status= ${status}`);
+                                        // console.log(`stnID= ${stnID} , status= ${status}`);
                                         rain = 1;
                                         //////////////////////////////B
 
@@ -1667,15 +1808,15 @@ div.content
                                         rain = 0;
                                     }
                                     result = rain.toString() + alarm1.toString() + alarm8.toString();
-                                    console.log(`resultresult= ${result} , rain= ${rain}`);
+                                    // console.log(`resultresult= ${result} , rain= ${rain}`);
                                     switch (result) {
                                         case '000':
                                             if (clima == true) {
-                                                console.log(`i= ${i}`);
+                                                // console.log(`i= ${i}`);
                                                 stns.features[i].properties.icon = 'marker3';
                                             }
                                             else {
-                                                console.log(`i= ${i}`);
+                                                // console.log(`i= ${i}`);
                                                 stns.features[i].properties.icon = 'marker1';
                                             }
                                             mymap.getSource('stations').setData(stns);
@@ -1741,7 +1882,7 @@ div.content
                         for(let i=0;i<stns.features.length;i++){
                             let id = stns.features[i].properties.id;
                             let type = stns.features[i].properties.sensor;
-                            console.log(`id= ${id} , type= ${type}`);
+                            // console.log(`id= ${id} , type= ${type}`);
                             if (type == 'rain') {
                                 checkRainStationStatusForMap(id, false,i);
 
@@ -1765,7 +1906,7 @@ div.content
                         for (let i = 0; i < stns.features.length; i++) {
                             let id = stns.features[i].properties.id;
                             let type = stns.features[i].properties.sensor;
-                            console.log(`id= ${id} , type= ${type}`);
+                            // console.log(`id= ${id} , type= ${type}`);
                             if (type == 'rain') {
                                 checkRainStationStatusForMap(id, false, i);
 

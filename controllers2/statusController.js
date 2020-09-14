@@ -114,10 +114,12 @@ async function enoughSpentTimeAfterRainStop(stnID,statusType) {
 }
 async function enoughSpentTimeWithoutNewData(lastSampleTime){
     let now = new Date();
+    now.setHours(now.getHours() - 1);
     now = my_date.convert_mongodate_to_isodate(now);
     let a = moment(now,'YYYY-MM-DD HH:mm:ss');
     let b = moment(lastSampleTime,'YYYY-MM-DD HH:mm:ss');
     let diff = a.diff(b, 'minutes');
+    console.log(`enoughSpentTimeWithoutNewData = ${now} >>> ${flood_started_time} >>> ${diff}`);
     if(diff >= rain_stop_time_no_data ){
         return true ;
     }else{
@@ -126,14 +128,16 @@ async function enoughSpentTimeWithoutNewData(lastSampleTime){
 }
 async function enoughSpentTimeAfterFloodStart(flood_started_time) {
     let now = new Date();
+    now.setHours(now.getHours() - 1);
     now = my_date.convert_mongodate_to_isodate(now);
+
     let a = moment(now,'YYYY-MM-DD HH:mm:ss');
     let b = moment(flood_started_time,'YYYY-MM-DD HH:mm:ss');
     let diff = a.diff(b, 'minutes');
 
     // let diff = Math.abs( now - flood_started_time);
     // let diffm = Math.ceil(diff / (1000 * 60 ));
-    console.log(`enough = ${now} >>> ${flood_started_time} >>> ${diff}`);
+    console.log(`enoughSpentTimeAfterFloodStart = ${now} >>> ${flood_started_time} >>> ${diff}`);
     console.log(`diff = ${diff}` );
     if(diff >= level_flood_stop_enough_time ){
         return true ;
@@ -196,8 +200,7 @@ async function checkLevelNewData(stnID,channel_index,lastTimeCheck){
     if(lastTimeCheck != undefined){
         lastTimeCheck = my_date.convert_mongodate_to_isodate(lastTimeCheck);
         let lastSampleTime = await Status.getLastSampleTime(stnID,channel_index);
-        if(stnID == 157)
-            console.log(`${stnID} from newData :lastSampleTime: ${JSON.stringify(lastSampleTime)} lastTimeCheck: ${lastTimeCheck}`);
+        console.log(`${stnID} from newData :lastSampleTime: ${JSON.stringify(lastSampleTime)} lastTimeCheck: ${lastTimeCheck}`);
         if(lastSampleTime &&  lastSampleTime[0]!= undefined){
             lastSampleTime = lastSampleTime[0]['sample_time'];
             if(lastSampleTime > lastTimeCheck)
@@ -295,7 +298,7 @@ exports.getRainAlarm1Status = catchAsync(async (req, res) => {
         channelIndexRainTotal = channel_index_rainc_total;
     else if(rain_rainrc_rainc === 'rainc' )
         channelIndexRainTotal = channel_index_rainc_total;
-    let result = await Status.getRainAlarmStatus(client_id,channelIndexRainTotal,rain_alarm1_period,rain_alarm1_height);
+    let result = await Status.getRainAlarm1Status(client_id,channelIndexRainTotal,rain_alarm1_period,rain_alarm1_height);
     let resultJson = JSON.stringify(result);
     resultJson = JSON.parse(resultJson);
 
@@ -325,7 +328,7 @@ exports.getRainAlarm8Status = catchAsync(async (req, res) => {
     else if(rain_rainrc_rainc === 'rainc' )
         channelIndexRainTotal = channel_index_rainc_total;
 
-    let result = await Status.getRainAlarmStatus(client_id,channelIndexRainTotal,rain_alarm8_period,rain_alarm8_height);
+    let result = await Status.getRainAlarm8Status(client_id,channelIndexRainTotal,rain_alarm8_period,rain_alarm8_height);
     let resultJson = JSON.stringify(result);
     resultJson = JSON.parse(resultJson);
 
@@ -350,15 +353,15 @@ exports.getLevelFloodStatus = catchAsync(async (req, res) => {
     let floodStartedTime ='';
     let lastTimeCheck ='';
     let result = await getLevelStatus(client_id);
-    // console.log(`floodStatusAndTime = ${JSON.stringify(result)}`);
+    console.log(`floodStatusAndTime = ${JSON.stringify(result)}`);
     let st = result['flood'];
     if(result['floodStartedTime'] != undefined){
         floodStartedTime = result['floodStartedTime'];
         floodStartedTime = my_date.convert_mongodate_to_isodate(floodStartedTime);
     }
     lastTimeCheck = result['lastTimeCheck'];
-    // console.log(`${client_id} floodStartedTime = ${floodStartedTime}`);
-    // console.log(`${client_id} st = ${st}`);
+    console.log(`${client_id} floodStartedTime = ${floodStartedTime}`);
+    console.log(`${client_id} st = ${st}`);
 
     let newData = await checkLevelNewData(client_id,channelIndexLevel,lastTimeCheck);
 
@@ -413,16 +416,17 @@ exports.getLevelFloodStatus = catchAsync(async (req, res) => {
 
             let floodStoped = result[0]['@flood_stop'];
             lastSampleTime = result[0]['@last_sample_time'];
-            // console.log(`result = ${result}`);
+            console.log(`result = ${result}`);
             if(floodStoped===1){//flood stoped
-                let enough = await enoughSpentTimeAfterFloodStart(floodStartedTime);
-                if(enough){
-                    console.log(`enough time spent after flood started at  = ${JSON.stringify(floodStartedTime)}`);
-                    resultJson =0;
-                    await setLevelStationFloodStatus(client_id,false,floodStartedTime,lastSampleTime);
-                }else{
-                    resultJson =1;
-                }
+                resultJson =0;
+                // let enough = await enoughSpentTimeAfterFloodStart(floodStartedTime);
+                // if(enough){
+                //     console.log(`enough time spent after flood started at  = ${JSON.stringify(floodStartedTime)}`);
+                //     resultJson =0;
+                //     await setLevelStationFloodStatus(client_id,false,floodStartedTime,lastSampleTime);
+                // }else{
+                //     resultJson =1;
+                // }
             }else if(floodStoped===0) {//flood has not stoped yet
                 console.log(`${client_id} flood has not stoped yet , lastSampleTime : ${JSON.stringify(lastSampleTime)}`);
                 await setStationLastTimeCheck('level',client_id,lastSampleTime)

@@ -151,7 +151,10 @@ function create_new_station(stnName,stnCode,zoneName,riverName,longitude,latitud
         dataType: 'json',
         data: data,
         success: (response) => {
-            alert('ایستگاه با موفقیت ثبت شد');
+            if(response.data == 1)
+                alert('ایستگاه با موفقیت ثبت شد');
+            else if(response.data == -1)
+                alert('ثبت ایستگاه با این کد مجاز نمی باشد');
         }
     })
 
@@ -235,8 +238,8 @@ function checkRainStart(stnID,clima){
                         $('#' + stnID + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                         $('#' + stnID + ' i' + '#rain_alarm1').text("").append('');
                         $('#' + stnID + ' i' + '#rain_alarm8').text("").append('');
-                        // getRainValues(stnID, 'r')//for refreshing data
-                        // getRainTotalOfEndOfPastMonthsForDrawingCharts(stnID, 'r')//for refreshing chart
+                        getRainValues(stnID, 'r')//for refreshing data
+                        getRainTotalOfEndOfPastMonthsForDrawingCharts(stnID, 'r')//for refreshing chart
                     }
                 } else if (clima === 'true') {
                     if (result === 1) {
@@ -265,8 +268,8 @@ function checkRainStart(stnID,clima){
                         $('#' + stnID + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                         $('#' + stnID + ' i' + '#rain_alarm1').text("").append('');
                         $('#' + stnID + ' i' + '#rain_alarm8').text("").append('');
-                        // getRainValues(stnID, 'c')//for refreshing data
-                        // getRainTotalOfEndOfPastMonthsForDrawingCharts(stnID, 'c')//for refreshing chart
+                        getRainValues(stnID, 'c')//for refreshing data
+                        getRainTotalOfEndOfPastMonthsForDrawingCharts(stnID, 'c')//for refreshing chart
                     }
                 }
 
@@ -293,7 +296,7 @@ function checkRainAlarm(stnID,clima,status){
         dataType: 'json',
         success: (response) => {
             //console.log("RESPONSE");
-            console.log(`${stnID} alarm 1 : ${response.data}`);
+            // console.log(`${stnID} alarm 1 : ${response.data}`);
             result = response.data;
             if(clima === 'false') {
                 if (result === 1) {
@@ -315,7 +318,7 @@ function checkRainAlarm(stnID,clima,status){
                 dataType: 'json',
                 success: (response) => {
                     // console.log("RESPONSE");
-                    console.log(`${stnID} alarm 8 : ${response.data}`);
+                    // console.log(`${stnID} alarm 8 : ${response.data}`);
                     result = response.data;
                     if(clima === 'false') {
                         if (result === 1) {
@@ -341,7 +344,7 @@ function checkRainAlarm(stnID,clima,status){
                         }
                     }
                     let finalStatus = status[0].toString() + status[1].toString() + status[2].toString();
-                    console.log(`${stnID} finalStatus : ${finalStatus} ${status[0]} ${status[1]} ${status[2]}`);
+                    // console.log(`${stnID} finalStatus : ${finalStatus} ${status[0]} ${status[1]} ${status[2]}`);
                     switch (finalStatus) {
 
                         case '100' :
@@ -451,8 +454,9 @@ function checkRainStartFromClima(stnID){
                     $('#' + stnID + 'RAINC'  + ' i' + '#rain_alarm').text("").append(' بدون هشدار').append("&nbsp&nbsp&nbsp;");
                     $('#' + stnID + 'RAINC'  + ' i' + '#rain_alarm1').text("").append('');
                     $('#' + stnID + 'RAINC'  + ' i' + '#rain_alarm8').text("").append('');
-                    let sensor = ['RAINC', 'mm'];
-                    // getClimaValues(stnID, 'RAINC', '');
+                    // let sensor = ['RAINC', 'mm'];
+                    getClimaValues(stnID, 'RAINC', '');
+                    getClimaLastHoursForDrawingCharts(stnID, 'RAINC');//for refreshing values
                     // getClimaLastHoursForDrawingCharts(stnID, sensor);//for refreshing values
                 }
             }
@@ -487,7 +491,7 @@ function checkRainAlarmFromClima(stnID){
                         status[2] = 0;
                     }
                     let finalStatus = status[0].toString() + status[1].toString() + status[2].toString();
-                    console.log(`${stnID} finalStatus : ${finalStatus} ${status[0]} ${status[1]} ${status[2]}`);
+                    // console.log(`${stnID} finalStatus : ${finalStatus} ${status[0]} ${status[1]} ${status[2]}`);
                     switch (finalStatus) {
 
                         case '100' :
@@ -679,6 +683,22 @@ function calcAmariAbsoluteValues(values) {
             if (x < 0) {
                 x = 0;
             }
+
+
+        x = round(x, 2);
+        values[i] = x;
+
+    }
+    return values;
+}
+function calcStartRainValues(values) {
+    let n = values.length;
+    for (let i = n-1; i >= 0; i--) {
+
+        let x = values[i] - values[0];
+        if (x < 0) {
+            x = 0;
+        }
 
 
         x = round(x, 2);
@@ -1405,7 +1425,7 @@ function getRainValuesFromStartTimeForDrawingRainStartChart(stnID, subtype){
                         values.push(el['value']);
                     }
                 })
-
+                values = calcStartRainValues(values);
                 console.log(`values => ${values}`);
                 console.log(`labels => ${labels}`);
                 //resetSmallCanvas(station_ID,'rain');
@@ -1497,6 +1517,7 @@ function getRainTotalOfEndOfPastMonthsForDrawingCharts(station_ID,subtype) {
     if(subtype === 'r'){
         url = '/api/values/raintotalsmonths/' + station_ID + '/' + 'r';
     }else if(subtype === 'c'){
+        console.log(`id = ${station_ID}`);
         url = '/api/values/raintotalsmonths/' + station_ID + '/' + 'c';
     }
         let rain_total_of_past_months;
@@ -1554,8 +1575,8 @@ function getRainStationsNamesAndIDs() {
             if (response.data.length > 0) {
                 rain_stations_names_and_ids = response.data;
                 rain_stations_names_and_ids.map(el => {
-                    getRainValues(el.id,'r');
-                    getRainTotalOfEndOfPastMonthsForDrawingCharts(el.id,'r');
+                    // getRainValues(el.id,'r');
+                    // getRainTotalOfEndOfPastMonthsForDrawingCharts(el.id,'r');
                 });
 
             }
@@ -1775,9 +1796,10 @@ function getLevelValue(id) {
                 let hour = response.data[0].hour;
                 date = lntpn(date);
                 hour = lntpn(hour);
+                console.log(`ckeck level value ${date}  ${hour}`);
                 $('#' + id + ' i' + '#level_total').text("").append("&nbsp&nbsp&nbsp;").append('ارتفاع ').append("&nbsp&nbsp&nbsp;");//.append(rt).append("&nbsp&nbsp&nbspmm") // ->rain_total
                 $('#' + id + ' i' + '#level_total_value').text("").append(lt)
-                $('#' + id + ' i' + '#level_total_unit').text("").append('mm').append("&nbsp&nbsp&nbsp;");
+                $('#' + id + ' i' + '#level_total_unit').text("").append('cm').append("&nbsp&nbsp&nbsp;");
                 $('#' + id + ' i' + '#date_of_last_recieved_data_label').text("").append('تاریخ آخرین داده').append("&nbsp&nbsp&nbsp;");
                 $('#' + id + ' i' + '#date_of_last_recieved_data_value').text("").append(hour).append("&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp;").append(date);
 
@@ -2173,7 +2195,7 @@ function getClimaValues(id, sensor, fa_unit) {
         type: 'GET',
         dataType: 'json',
         success: (response) => {
-            if (response.data.length > 0) {
+            if (response.data != undefined && response.data.length > 0) {
                 if (sensor === 'RAINC') {
                     //$("div.card-title  span").text(response.data[2].value);
                     var rt = JSON.stringify(response.data[2].value);
@@ -2235,9 +2257,9 @@ function getClimaValues(id, sensor, fa_unit) {
 }
 function getClimaLastHoursForDrawingCharts(station_ID, sensor) {
             let clima_last_hours;
-            if (sensor[0] === 'RAINC') {
+            if (sensor === 'RAINC') {
                 $.ajax({
-                    url: '/api/values/climaraintotalsmonths/' + sensor[0].toLowerCase() + '/' + station_ID,
+                    url: '/api/values/climaraintotalsmonths/' + sensor.toLowerCase() + '/' + station_ID,
                     type: 'GET',
                     dataType: 'json',
                     success: (response) => {
@@ -2266,13 +2288,13 @@ function getClimaLastHoursForDrawingCharts(station_ID, sensor) {
                                         i--;
                                     }
                                 }
-                                drawSmallChart_c(station_ID, labels, values, sensor[0],'bar');
+                                drawSmallChart_c(station_ID, labels, values, sensor,'bar');
                         }
                     }
                 })
             }else{
                 $.ajax({
-                    url: '/api/values/climalasthours/' + sensor[0].toLowerCase() + '/' + station_ID,
+                    url: '/api/values/climalasthours/' + sensor.toLowerCase() + '/' + station_ID,
                     type: 'GET',
                     dataType: 'json',
                     success: (response) => {
@@ -2290,7 +2312,7 @@ function getClimaLastHoursForDrawingCharts(station_ID, sensor) {
                                 //values = calcEachMonth(values);
                                 // console.log(labels);
                                 // console.log(values);
-                                drawSmallChart_c(station_ID, labels, values, sensor[0],'line');
+                                drawSmallChart_c(station_ID, labels, values, sensor,'line');
                         }
                     }
                 })
@@ -2313,7 +2335,7 @@ function getClimaStationsNamesAndIDs() {
                 clima_stations_names_and_ids.map(el => {
                     sensores.map(s => {
                         getClimaValues(el.id, s[0], s[1]);
-                        getClimaLastHoursForDrawingCharts(el.id,s);
+                        getClimaLastHoursForDrawingCharts(el.id,s[0]);
                     });
 
                 });
@@ -2390,13 +2412,13 @@ $(document).ready(() => {
         //console.log(`window.savedsi = ${window.savedsi}`);
         mysiema(window.savedsi);
         if(rv=='1'){
-            getRainStationsNamesAndIDs();
+            // getRainStationsNamesAndIDs();
         }
         if(lv=='1'){
-            getLevelStationsNamesAndIDs();
+            // getLevelStationsNamesAndIDs();
         }
         if(cv=='1'){
-            getClimaStationsNamesAndIDs();
+            // getClimaStationsNamesAndIDs();
         }
     }
     if (pageType.substr(0, 2) == 'dt') {

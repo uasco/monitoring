@@ -72,7 +72,7 @@ exports.clearRainValuesCache = () => {
         function ()  {
             flatCache.clearCacheById('rainValuesCache','../cache/');
             cacheController.clearRainValuesCache();
-            logger.info('clearRainValuesCache', { message: `time : ${new Date()}` });
+            // logger.info('clearRainValuesCache', { message: `time : ${new Date()}` });
             let rain_stations_names_and_ids;
             axios.get(url + '/api/stations/rain')
                 .then(response => {
@@ -131,7 +131,7 @@ exports.clearRainTotalsMonthsCache = () => {
         function ()  {
             flatCache.clearCacheById('rainTotalsMonthsCache','../cache/');
             cacheController.clearRainTotalsMonthsCache();
-            logger.info('clearRainTotalsMonthsCache', { message: `time : ${new Date()}` });
+            // logger.info('clearRainTotalsMonthsCache', { message: `time : ${new Date()}` });
 
 
             let rain_stations_names_and_ids;
@@ -184,7 +184,7 @@ exports.clearLevelValueCache = () => {
         function ()  {
             flatCache.clearCacheById('levelValueCache','../cache/');
             cacheController.clearLevelValueCache();
-            logger.info('clearLevelValueCache', { message: `time : ${new Date()}` });
+            // logger.info('clearLevelValueCache', { message: `time : ${new Date()}` });
 
             let level_stations_names_and_ids;
             axios.get(url + '/api/stations/level')
@@ -228,7 +228,7 @@ exports.clearLevelLastHoursCache = () => {
         function () {
             flatCache.clearCacheById('levelLastHoursCache','../cache/');
             cacheController.clearlevelLastHoursCache();
-            logger.info('clearLevelLastHoursCache', { message: `time : ${new Date()}` });
+            // logger.info('clearLevelLastHoursCache', { message: `time : ${new Date()}` });
 
 
             let level_stations_names_and_ids;
@@ -275,7 +275,7 @@ exports.clearClimaValuesCache = () => {
         function ()  {
             flatCache.clearCacheById('climaValuesCache','../cache/');
             cacheController.clearClimaValuesCache();
-            logger.info('clearClimaValuesCache', { message: `time : ${new Date()}` });
+            // logger.info('clearClimaValuesCache', { message: `time : ${new Date()}` });
 
 
             let clima_stations_names_and_ids;
@@ -327,7 +327,7 @@ exports.clearClimaLastHoursCache = () => {
         function ()  {
             flatCache.clearCacheById('climaLastHoursCache','../cache/');
             cacheController.clearClimaLastHoursCache();
-            logger.info('clearClimaLastHoursCache', { message: `time : ${new Date()}` });
+            // logger.info('clearClimaLastHoursCache', { message: `time : ${new Date()}` });
 
             let clima_stations_names_and_ids;
             const sensores = ['TMP', 'HUM', 'PRS', 'WSP', 'WDR', 'EVP', 'RAD'];
@@ -380,7 +380,7 @@ exports.clearClimaRainTotalsMonthsCache = () => {
         function ()  {
             flatCache.clearCacheById('climaRainTotalsMonthsCache','../cache/');
             cacheController.clearClimaRainTotalsMonthsCache();
-            logger.info('clearClimaRainTotalsMonthsCache', { message: `time : ${new Date()}` });
+            // logger.info('clearClimaRainTotalsMonthsCache', { message: `time : ${new Date()}` });
 
             let clima_stations_names_and_ids;
             axios.get(url + '/api/stations/clima')

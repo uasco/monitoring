@@ -87,15 +87,15 @@ mixin levelcard(stn)
                 $(document).ready(function () {
 
 
-                    setTimeout(function() { getLevelOfLastHoursForDrawingCharts(`#{stn.id}`);getLevelValue(`#{stn.id}`);checkFloodStatus(`#{stn.id}`);}, 6000);
+                    setTimeout(function() { getLevelOfLastHoursForDrawingCharts(`#{stn.id}`);getLevelValue(`#{stn.id}`);checkFloodStatus(`#{stn.id}`);}, 5000);
                 })
                 var chackAlarm = setInterval(function () {
                     checkFloodStatus(`#{stn.id}`);
-                }, 180000);
+                }, 90000);
                 var refreshValues = setInterval(function () {
                     getLevelValue(`#{stn.id}`);
                     getLevelOfLastHoursForDrawingCharts(`#{stn.id}`);
-                }, 1500000);
+                }, 1000000);
             div.card-header.level(onclick= 'loadDetailCard(' + '"' + stn.id + '"' + ',' + '"' + stn.position + '"' + ',' + '"' + 'level' + '"' +')' style='cursor: pointer;')
                 i.fal.fa-water.fa-fw.fa-pull-left.fa-3x(id='icon-status')
                 h3.card-category  #{stn.position}

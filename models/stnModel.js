@@ -94,7 +94,7 @@ const stnSchema = new mongoose.Schema(
         },
         last_time_check:{
             type: Date,
-            default: Date.now
+            default: new Date()
         },
     },
     {

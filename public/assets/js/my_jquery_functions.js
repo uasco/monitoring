@@ -605,6 +605,25 @@ function checkFloodStatus(stnID){
                     $('#' + stnID + ' svg' + '#icon-status').removeClass('fal');
                     $('#' + stnID + ' svg' + '#icon-status').addClass('fa-water');
                     $('#' + stnID).removeClass('flooding');
+                } else if (status === 2) {
+                    //clear cache befor refresh here
+                    try{
+                        $.ajax({url: "/api/caches/level/" + stnID , success: function(result){
+                                getLevelValue(stnID);//for refreshing values
+                                getLevelOfLastHoursForDrawingCharts(stnID);//for refreshing values
+                            }});
+                    }catch (e){
+                        getLevelValue(stnID);//for refreshing values
+                        getLevelOfLastHoursForDrawingCharts(stnID);//for refreshing values
+                        console.log(`e = ${e}`);
+                    }
+
+                    $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('بدون سیلاب');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('wi-flood');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('wi');
+                    $('#' + stnID + ' svg' + '#icon-status').removeClass('fal');
+                    $('#' + stnID + ' svg' + '#icon-status').addClass('fa-water');
+                    $('#' + stnID).removeClass('flooding');
                 }
             }
         }
@@ -636,6 +655,18 @@ function checkFloodStatusForDetailCard(stnID){
                 getLevelValueForDetailCard(stnID)//for refreshing values
                 // console.log('HHHAAAAPPPEEEENNNIIIINNNGGGGG');
             } else if (status === 0) {
+                $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('بدون سیلاب');
+            }
+            else if (status === 2) {
+                //clear cache befor refresh here
+                try{
+                    $.ajax({url: "/api/caches/level/" + stnID , success: function(result){
+                            getLevelValueForDetailCard(stnID);
+                        }});
+                }catch(e){
+                    getLevelValueForDetailCard(stnID);
+                    console.log(`e = ${e}`);
+                }
                 $('#' + stnID + ' i' + '#flood_status').text("").append("&nbsp&nbsp&nbsp;").append('بدون سیلاب');
             }
         }
@@ -725,6 +756,14 @@ function calcAmariRateValues(values,period) {
     return values;
 }
 function resetRainChart(stnID) {
+    let chID = 'small-chart' + stnID;
+    // console.log(chID);
+    // console.log($('#' + chID));
+    $('#' + chID).remove(); // this is my <canvas> element
+    $('.chartjs-size-monitor').remove();
+    $('#chart-container' + stnID).append('<canvas id=' + chID + '></canvas>');
+}
+function resetLevelChart(stnID) {
     let chID = 'small-chart' + stnID;
     // console.log(chID);
     // console.log($('#' + chID));
@@ -1832,6 +1871,7 @@ function getLevelOfLastHoursForDrawingCharts(station_ID) {
                     // console.log(labels);
                     // console.log(values);
                     // resetSmallCanvas(station_ID,'level');
+                    resetLevelChart(station_ID)
                     drawSmallChart_rl(station_ID, labels, values, 'ارتفاع رودخانه', 'level', 'line');
                 }
             }

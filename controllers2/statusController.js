@@ -5,6 +5,20 @@ const Status = require('../models2/statusModel');
 const Stn = require('../models/stnModel');
 let my_date = require('../utils/my_date');
 const moment = require('moment');
+const winston = require('winston');
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    defaultMeta: { service: 'user-service' },
+    transports: [
+        //
+        // - Write all logs with level `error` and below to `error.log`
+        // - Write all logs with level `info` and below to `combined.log`
+        //
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' }),
+    ],
+});
 const channel_index_rain_12 = process.env.CHANNEL_INDEX_RAIN_12;
 const channel_index_rain_24 = process.env.CHANNEL_INDEX_RAIN_24;
 const channel_index_rain_total = process.env.CHANNEL_INDEX_RAIN_TOTAL;
@@ -84,10 +98,14 @@ async  function setLevelStationFloodStatus(stnID,status,flood_started_time,lastS
     let date = new Date(); //ex 2019-01-18T16:26:44.982Z
     // let offset = - date.getTimezoneOffset();
     // date.setMinutes(date.getMinutes()+offset);
-    if(status)
+    if(status){
         await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_start_time:flood_started_time,last_time_check:lastSampleTime}});
-    else
+        logger.info('setLevelStationFloodStatus', { message: `time : ${new Date()} , status : ${status}` });
+    }
+    else{
         await Stn.findOneAndUpdate({ client_id:stnID },{$set:{flood:status,flood_stop_time:date}});
+        logger.info('setLevelStationFloodStatus', { message: `time : ${new Date()} , status : ${status}` });
+    }
 }
 async  function setStationLastTimeCheck(stnType,stnID,lastSampleTime) {
     if(stnType==='rain'){

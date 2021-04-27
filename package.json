@@ -51,7 +51,7 @@
     "persian-datepicker": "^1.2.0",
     "popper.js": "^1.16.1",
     "pug": "^2.0.4",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "rtlcss": "^2.5.0",
     "sequelize": "^5.21.3",
     "sharp": "^0.24.0",

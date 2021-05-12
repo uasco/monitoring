@@ -45,7 +45,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
     "node-cron": "^2.0.3",
-    "nodemailer": "^6.4.2",
+    "nodemailer": "^6.4.16",
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
     "persian-datepicker": "^1.2.0",
